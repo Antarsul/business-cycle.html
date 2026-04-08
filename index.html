@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Antar Wealth — Trust, Legacy & Growth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy:       #0d1b2a;
+      --navy-mid:   #112236;
+      --emerald:    #1a3d2b;
+      --emerald-mid:#1f4d35;
+      --gold:       #c9a84c;
+      --gold-light: #e8c97a;
+      --sand:       #f0e6d3;
+      --cream:      #faf6f0;
+      --plaster:    #e8ddd0;
+      --muted:      #8a8070;
+      --text:       #1c1c1c;
+      --border-light: rgba(201,168,76,0.15);
+      --border-dark:  rgba(201,168,76,0.25);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      color: var(--text);
+      background: var(--cream);
+      overflow-x: hidden;
+    }
+
+    /* ── GEOMETRIC PATTERN SVG (reusable) ── */
+    .geo-pattern {
+      position: absolute; inset: 0; z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cg fill='none' stroke='%23c9a84c' stroke-width='0.4' opacity='0.35'%3E%3Cpolygon points='60,6 80,20 80,50 60,64 40,50 40,20'/%3E%3Cpolygon points='60,15 75,26 75,48 60,58 45,48 45,26'/%3E%3Cline x1='60' y1='6' x2='60' y2='0'/%3E%3Cline x1='80' y1='20' x2='120' y2='0'/%3E%3Cline x1='80' y1='50' x2='120' y2='60'/%3E%3Cline x1='60' y1='64' x2='60' y2='120'/%3E%3Cline x1='40' y1='50' x2='0' y2='60'/%3E%3Cline x1='40' y1='20' x2='0' y2='0'/%3E%3Cline x1='80' y1='20' x2='120' y2='20'/%3E%3Cline x1='120' y1='20' x2='120' y2='50'/%3E%3Cline x1='120' y1='50' x2='80' y2='50'/%3E%3Cline x1='40' y1='20' x2='0' y2='20'/%3E%3Cline x1='0' y1='20' x2='0' y2='50'/%3E%3Cline x1='0' y1='50' x2='40' y2='50'/%3E%3Cline x1='60' y1='64' x2='80' y2='78'/%3E%3Cline x1='80' y1='78' x2='80' y2='108'/%3E%3Cline x1='80' y1='108' x2='60' y2='120'/%3E%3Cline x1='60' y1='64' x2='40' y2='78'/%3E%3Cline x1='40' y1='78' x2='40' y2='108'/%3E%3Cline x1='40' y1='108' x2='60' y2='120'/%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+      opacity: 0.06;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(13,27,42,0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-light);
+      padding: 0 2rem;
+      height: 68px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .nav-brand {
+      display: flex; align-items: center; gap: 12px;
+      text-decoration: none;
+    }
+
+    .nav-mark {
+      width: 28px; height: 28px;
+      border: 1px solid var(--gold);
+      transform: rotate(45deg);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .nav-mark-inner {
+      width: 11px; height: 11px;
+      background: var(--gold);
+    }
+
+    .nav-logo-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px; font-weight: 500;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: #f0e6d3;
+    }
+
+    .nav-links {
+      display: flex; gap: 2rem; list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(240,230,211,0.7); text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--gold-light); }
+
+    .nav-cta {
+      font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 9px 20px;
+      border: 1px solid var(--gold);
+      color: var(--gold); text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .nav-cta:hover {
+      background: var(--gold); color: var(--navy);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      background: var(--navy);
+      display: flex; align-items: center;
+      position: relative; overflow: hidden;
+      padding-top: 68px;
+    }
+
+    .hero .geo-pattern { opacity: 0.05; }
+
+    .hero-glow {
+      position: absolute; top: -200px; right: -100px;
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(26,61,43,0.4) 0%, rgba(201,168,76,0.05) 50%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-glow-2 {
+      position: absolute; bottom: -200px; left: -100px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative; z-index: 1;
+      max-width: 1100px; margin: 0 auto; padding: 0 3rem;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+    }
+
+    .hero-eyebrow {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1.5rem;
+    }
+
+    .eyebrow-line { width: 28px; height: 1px; background: var(--gold); }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(42px, 5vw, 72px);
+      font-weight: 300; line-height: 1.1;
+      color: var(--sand); margin-bottom: 1.5rem;
+      letter-spacing: 0.01em;
+    }
+
+    .hero-title em {
+      font-style: italic; color: var(--gold-light);
+    }
+
+    .hero-sub {
+      font-size: 15px; color: rgba(240,230,211,0.6);
+      line-height: 1.8; max-width: 420px; margin-bottom: 2.5rem;
+    }
+
+    .hero-actions { display: flex; gap: 1rem; align-items: center; }
+
+    .btn-primary {
+      padding: 14px 32px;
+      background: var(--gold); color: var(--navy);
+      font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+      font-weight: 500; text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary:hover { background: var(--gold-light); }
+
+    .btn-ghost {
+      padding: 14px 32px;
+      border: 1px solid rgba(240,230,211,0.3); color: rgba(240,230,211,0.7);
+      font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+      text-decoration: none; transition: all 0.2s;
+    }
+
+    .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* Hero right side — arch motif */
+    .hero-visual {
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+
+    .arch-frame {
+      width: 280px; height: 380px;
+      border: 1px solid rgba(201,168,76,0.3);
+      border-radius: 140px 140px 0 0;
+      position: relative;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .arch-frame::before {
+      content: '';
+      position: absolute; inset: 16px 16px 0;
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: 130px 130px 0 0;
+    }
+
+    .arch-frame::after {
+      content: '';
+      position: absolute; inset: 32px 32px 0;
+      border: 1px solid rgba(201,168,76,0.08);
+      border-radius: 120px 120px 0 0;
+    }
+
+    .arch-content {
+      text-align: center; z-index: 1;
+    }
+
+    .arch-stat {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 52px; font-weight: 300;
+      color: var(--gold); line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+
+    .arch-stat-label {
+      font-size: 10px; letter-spacing: 0.2em;
+      text-transform: uppercase; color: rgba(240,230,211,0.4);
+    }
+
+    .arch-divider {
+      width: 1px; height: 40px;
+      background: rgba(201,168,76,0.3);
+      margin: 1.5rem auto;
+    }
+
+    /* ── SECTION BASE ── */
+    section { position: relative; overflow: hidden; }
+
+    .section-inner {
+      max-width: 1100px; margin: 0 auto; padding: 6rem 3rem;
+      position: relative; z-index: 1;
+    }
+
+    .section-label {
+      font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 0.75rem; display: block;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 300; line-height: 1.2;
+      color: var(--navy); margin-bottom: 1rem;
+    }
+
+    .section-title.light { color: var(--sand); }
+
+    .divider {
+      display: flex; align-items: center; gap: 12px; margin: 1.5rem 0 2.5rem;
+    }
+
+    .divider-line { width: 40px; height: 1px; background: var(--gold); }
+    .divider-diamond {
+      width: 6px; height: 6px;
+      border: 1px solid var(--gold); transform: rotate(45deg);
+    }
+
+    /* ── ABOUT ── */
+    .about { background: var(--cream); }
+
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;
+    }
+
+    .about-body {
+      font-size: 15px; color: #4a4540; line-height: 1.9;
+      margin-bottom: 1.5rem;
+    }
+
+    .about-stats {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2.5rem;
+    }
+
+    .stat-card {
+      padding: 1.5rem; border: 1px solid var(--plaster);
+      background: white; position: relative; overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: ''; position: absolute; top: 0; left: 0;
+      width: 2px; height: 100%; background: var(--gold);
+    }
+
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 36px; font-weight: 300; color: var(--emerald);
+      line-height: 1; margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+      font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+    }
+
+    .about-visual {
+      position: relative; display: flex; align-items: center; justify-content: center;
+    }
+
+    .about-arch {
+      width: 240px; height: 320px;
+      border: 1px solid var(--plaster);
+      border-radius: 120px 120px 0 0;
+      position: relative; overflow: hidden;
+      background: linear-gradient(180deg, #e8f0eb 0%, var(--plaster) 100%);
+    }
+
+    .about-arch-geo {
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cg fill='none' stroke='%231a3d2b' stroke-width='0.4' opacity='0.3'%3E%3Cpolygon points='30,3 40,10 40,25 30,32 20,25 20,10'/%3E%3Cpolygon points='30,8 38,14 38,24 30,30 22,24 22,14'/%3E%3C/g%3E%3C/svg%3E");
+      opacity: 0.4;
+    }
+
+    /* ── SERVICES ── */
+    .services { background: var(--navy); }
+    .services .geo-pattern { opacity: 0.04; }
+
+    .services-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+      background: var(--border-light); margin-top: 3rem;
+      border: 1px solid var(--border-light);
+    }
+
+    .service-card {
+      background: var(--navy-mid); padding: 2.5rem 2rem;
+      position: relative; overflow: hidden; transition: background 0.3s;
+    }
+
+    .service-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--emerald), var(--gold));
+      transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease;
+    }
+
+    .service-card:hover { background: rgba(26,61,43,0.3); }
+    .service-card:hover::before { transform: scaleX(1); }
+
+    .service-icon {
+      width: 48px; height: 48px;
+      border: 1px solid var(--border-dark);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1.5rem; transition: border-color 0.3s;
+    }
+
+    .service-card:hover .service-icon { border-color: var(--gold); }
+
+    .service-icon svg { width: 20px; height: 20px; stroke: var(--gold); fill: none; stroke-width: 1.2; }
+
+    .service-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 11px; letter-spacing: 0.2em;
+      color: rgba(201,168,76,0.4); margin-bottom: 0.75rem; display: block;
+    }
+
+    .service-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px; font-weight: 400; color: var(--sand);
+      margin-bottom: 1rem; letter-spacing: 0.02em;
+    }
+
+    .service-desc {
+      font-size: 13px; color: rgba(200,184,154,0.65);
+      line-height: 1.75; margin-bottom: 1.5rem;
+    }
+
+    .service-link {
+      font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--gold); text-decoration: none;
+    }
+
+    /* ── TOOLS ── */
+    .tools-section { background: var(--sand); }
+
+    .tools-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.5rem; margin-top: 3rem;
+    }
+
+    .tool-card {
+      background: white; border: 1px solid var(--plaster);
+      padding: 2rem; text-decoration: none; display: block;
+      transition: all 0.25s; position: relative; overflow: hidden;
+    }
+
+    .tool-card::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--emerald), var(--gold));
+      transform: scaleX(0); transform-origin: left; transition: transform 0.35s ease;
+    }
+
+    .tool-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.08); transform: translateY(-2px); }
+    .tool-card:hover::after { transform: scaleX(1); }
+
+    .tool-tag {
+      font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--emerald); margin-bottom: 0.6rem; display: block;
+    }
+
+    .tool-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px; font-weight: 400; color: var(--navy);
+      margin-bottom: 0.6rem; line-height: 1.3;
+    }
+
+    .tool-desc { font-size: 13px; color: var(--muted); line-height: 1.65; margin-bottom: 1.25rem; }
+    .tool-arrow { font-size: 11px; letter-spacing: 0.1em; color: var(--gold); text-transform: uppercase; }
+
+    .tool-card.coming-soon { opacity: 0.5; pointer-events: none; }
+
+    /* ── INSIGHTS ── */
+    .insights { background: white; }
+
+    .insights-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 3rem;
+    }
+
+    .insight-card {
+      border-top: 1px solid var(--plaster); padding-top: 1.5rem;
+      transition: all 0.2s; cursor: pointer;
+    }
+
+    .insight-card:hover .insight-title { color: var(--emerald); }
+
+    .insight-date {
+      font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 0.75rem; display: block;
+    }
+
+    .insight-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px; font-weight: 400; color: var(--navy);
+      margin-bottom: 0.75rem; line-height: 1.3;
+      transition: color 0.2s;
+    }
+
+    .insight-excerpt { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 1rem; }
+    .insight-link { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); }
+
+    /* ── CLIENT PORTAL CTA ── */
+    .portal { background: var(--emerald); position: relative; overflow: hidden; }
+    .portal .geo-pattern { opacity: 0.08; }
+
+    .portal-inner {
+      text-align: center; padding: 7rem 3rem;
+      max-width: 700px; margin: 0 auto;
+      position: relative; z-index: 1;
+    }
+
+    .portal-eyebrow {
+      font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase;
+      color: rgba(201,168,76,0.8); margin-bottom: 1.5rem; display: block;
+    }
+
+    .portal-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 4vw, 56px); font-weight: 300;
+      color: var(--sand); margin-bottom: 1rem; line-height: 1.2;
+    }
+
+    .portal-sub {
+      font-size: 15px; color: rgba(240,230,211,0.6);
+      line-height: 1.8; margin-bottom: 2.5rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--navy); border-top: 1px solid var(--border-light);
+    }
+
+    .footer-inner {
+      max-width: 1100px; margin: 0 auto; padding: 4rem 3rem 2rem;
+    }
+
+    .footer-top {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem;
+    }
+
+    .footer-brand-col .nav-logo-text {
+      display: block; margin-bottom: 1rem; font-size: 20px;
+    }
+
+    .footer-tagline { font-size: 13px; color: rgba(200,184,154,0.5); line-height: 1.7; }
+
+    .footer-col-title {
+      font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1rem; display: block;
+    }
+
+    .footer-links { list-style: none; }
+    .footer-links li { margin-bottom: 0.6rem; }
+    .footer-links a {
+      font-size: 13px; color: rgba(200,184,154,0.5); text-decoration: none; transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--gold-light); }
+
+    .footer-bottom {
+      border-top: 1px solid var(--border-light); padding-top: 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .footer-copy { font-size: 12px; color: rgba(200,184,154,0.35); letter-spacing: 0.05em; }
+    .footer-mark {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 14px; letter-spacing: 0.2em; color: var(--gold);
+    }
+
+    /* ── ORNAMENTAL DIVIDER ── */
+    .orn-divider {
+      display: flex; align-items: center; justify-content: center;
+      gap: 10px; padding: 1rem 0; opacity: 0.4;
+    }
+
+    .orn-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--gold)); max-width: 100px; }
+    .orn-line.r { background: linear-gradient(90deg, var(--gold), transparent); }
+    .orn-d { width: 6px; height: 6px; border: 1px solid var(--gold); transform: rotate(45deg); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-eyebrow   { animation: fadeUp 0.6s ease both; }
+    .hero-title     { animation: fadeUp 0.6s 0.1s ease both; }
+    .hero-sub       { animation: fadeUp 0.6s 0.2s ease both; }
+    .hero-actions   { animation: fadeUp 0.6s 0.3s ease both; }
+    .hero-visual    { animation: fadeUp 0.8s 0.2s ease both; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-visual { display: none; }
+      .about-grid { grid-template-columns: 1fr; }
+      .about-visual { display: none; }
+      .services-grid { grid-template-columns: 1fr; }
+      .insights-grid { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav>
+  <a href="#" class="nav-brand">
+    <div class="nav-mark"><div class="nav-mark-inner"></div></div>
+    <span class="nav-logo-text">Antar Wealth</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#tools">Tools</a></li>
+    <li><a href="#insights">Insights</a></li>
+  </ul>
+  <a href="#portal" class="nav-cta">Client Portal</a>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero" id="home">
+  <div class="geo-pattern"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow-2"></div>
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-eyebrow">
+        <span class="eyebrow-line"></span>
+        Wealth Management
+      </div>
+      <h1 class="hero-title">
+        Trust,<br>
+        <em>Legacy</em>,<br>
+        and Growth.
+      </h1>
+      <p class="hero-sub">Where classical wisdom meets modern financial precision. We build enduring wealth strategies rooted in integrity and long-term thinking.</p>
+      <div class="hero-actions">
+        <a href="#services" class="btn-primary">Manage Your Wealth</a>
+        <a href="#about" class="btn-ghost">Our Philosophy</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="arch-frame">
+        <div class="arch-content">
+          <div class="arch-stat">15+</div>
+          <div class="arch-stat-label">Years of expertise</div>
+          <div class="arch-divider"></div>
+          <div class="arch-stat">$2B+</div>
+          <div class="arch-stat-label">Assets under management</div>
+          <div class="arch-divider"></div>
+          <div class="arch-stat">98%</div>
+          <div class="arch-stat-label">Client retention</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ABOUT ── -->
+<section class="about" id="about">
+  <div class="section-inner">
+    <div class="about-grid">
+      <div>
+        <span class="section-label">Our Heritage</span>
+        <h2 class="section-title">Rooted in wisdom.<br>Built for tomorrow.</h2>
+        <div class="divider">
+          <div class="divider-line"></div>
+          <div class="divider-diamond"></div>
+        </div>
+        <p class="about-body">Inspired by the intellectual legacy of Al-Andalus — a civilization that unified knowledge, artistry, and commerce — Antar Wealth brings that same spirit of synthesis to modern wealth management.</p>
+        <p class="about-body">We believe that enduring wealth is not built through speculation, but through disciplined thinking, deep research, and an unwavering commitment to our clients' long-term interests.</p>
+        <div class="about-stats">
+          <div class="stat-card">
+            <div class="stat-num">500+</div>
+            <div class="stat-label">Client families</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">40+</div>
+            <div class="stat-label">Markets covered</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">CFA</div>
+            <div class="stat-label">Certified advisors</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">24/7</div>
+            <div class="stat-label">Client support</div>
+          </div>
+        </div>
+      </div>
+      <div class="about-visual">
+        <div class="about-arch">
+          <div class="about-arch-geo"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SERVICES ── -->
+<section class="services" id="services">
+  <div class="geo-pattern"></div>
+  <div class="section-inner">
+    <span class="section-label">What We Offer</span>
+    <h2 class="section-title light">Our Services</h2>
+    <div class="divider">
+      <div class="divider-line"></div>
+      <div class="divider-diamond"></div>
+    </div>
+    <div class="services-grid">
+
+      <div class="service-card">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+        </div>
+        <span class="service-num">01</span>
+        <div class="service-title">Portfolio Management</div>
+        <p class="service-desc">Disciplined, research-driven portfolio construction across equities, fixed income, and alternative assets. Aligned to your risk profile and long-term objectives.</p>
+        <a href="#" class="service-link">Learn more →</a>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <span class="service-num">02</span>
+        <div class="service-title">Financial Planning</div>
+        <p class="service-desc">Comprehensive wealth planning encompassing tax optimization, estate planning, retirement strategy, and intergenerational wealth transfer.</p>
+        <a href="#" class="service-link">Learn more →</a>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        </div>
+        <span class="service-num">03</span>
+        <div class="service-title">Alternative Investments</div>
+        <p class="service-desc">Access to private equity, real assets, hedge funds, and structured products — carefully vetted and sized to complement your core portfolio.</p>
+        <a href="#" class="service-link">Learn more →</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── TOOLS ── -->
+<section class="tools-section" id="tools">
+  <div class="section-inner">
+    <span class="section-label">Research Tools</span>
+    <h2 class="section-title">Analytical Frameworks</h2>
+    <div class="divider">
+      <div class="divider-line"></div>
+      <div class="divider-diamond"></div>
+    </div>
+    <div class="tools-grid">
+
+      <a href="business-cycle.html" class="tool-card">
+        <span class="tool-tag">Asset Allocation</span>
+        <div class="tool-title">Business Cycle Allocator</div>
+        <p class="tool-desc">Explore how optimal asset allocations shift across the four phases of the business cycle.</p>
+        <span class="tool-arrow">Open tool →</span>
+      </a>
+
+      <div class="tool-card coming-soon">
+        <span class="tool-tag">Portfolio Construction</span>
+        <div class="tool-title">Mean–Variance Optimizer</div>
+        <p class="tool-desc">Build efficient frontiers and visualize the impact of constraints on portfolio construction.</p>
+        <span class="tool-arrow">Coming soon</span>
+      </div>
+
+      <div class="tool-card coming-soon">
+        <span class="tool-tag">Derivatives</span>
+        <div class="tool-title">Options Strategy Payoff</div>
+        <p class="tool-desc">Model payoff diagrams for common options strategies used in portfolio risk management.</p>
+        <span class="tool-arrow">Coming soon</span>
+      </div>
+
+      <div class="tool-card coming-soon">
+        <span class="tool-tag">Performance</span>
+        <div class="tool-title">Attribution Analyzer</div>
+        <p class="tool-desc">Decompose portfolio returns into allocation, selection, and interaction effects.</p>
+        <span class="tool-arrow">Coming soon</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── INSIGHTS ── -->
+<section class="insights" id="insights">
+  <div class="section-inner">
+    <span class="section-label">Market Commentary</span>
+    <h2 class="section-title">Insights</h2>
+    <div class="divider">
+      <div class="divider-line"></div>
+      <div class="divider-diamond"></div>
+    </div>
+    <div class="insights-grid">
+
+      <div class="insight-card">
+        <span class="insight-date">April 2026</span>
+        <div class="insight-title">Business Cycle Positioning in a Late-Expansion Environment</div>
+        <p class="insight-excerpt">As growth peaks and inflation remains elevated, we examine how to rotate portfolios defensively while preserving upside participation.</p>
+        <span class="insight-link">Read more →</span>
+      </div>
+
+      <div class="insight-card">
+        <span class="insight-date">March 2026</span>
+        <div class="insight-title">The Case for Alternative Investments in a Volatile Rate Environment</div>
+        <p class="insight-excerpt">With traditional 60/40 portfolios under pressure, private markets and real assets offer compelling diversification benefits.</p>
+        <span class="insight-link">Read more →</span>
+      </div>
+
+      <div class="insight-card">
+        <span class="insight-date">February 2026</span>
+        <div class="insight-title">Capital Market Expectations: A Forward-Looking Framework</div>
+        <p class="insight-excerpt">Setting return assumptions based on current yields, valuations, and macro conditions — not historical averages.</p>
+        <span class="insight-link">Read more →</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── CLIENT PORTAL ── -->
+<section class="portal" id="portal">
+  <div class="geo-pattern"></div>
+  <div class="portal-inner">
+    <span class="portal-eyebrow">Secure Access</span>
+    <h2 class="portal-title">Your wealth, always within reach.</h2>
+    <p class="portal-sub">Access your portfolio, performance reports, and advisor communications through our secure client portal — built for clarity and confidence.</p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <a href="#" class="btn-primary">Access Client Portal</a>
+      <a href="#" class="btn-ghost">Schedule a Consultation</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand-col">
+        <span class="nav-logo-text">Antar Wealth</span>
+        <p class="footer-tagline">Inspired by the intellectual heritage of Al-Andalus. Built for the modern investor.</p>
+      </div>
+      <div>
+        <span class="footer-col-title">Services</span>
+        <ul class="footer-links">
+          <li><a href="#">Portfolio Management</a></li>
+          <li><a href="#">Financial Planning</a></li>
+          <li><a href="#">Alternative Investments</a></li>
+          <li><a href="#">Estate Planning</a></li>
+        </ul>
+      </div>
+      <div>
+        <span class="footer-col-title">Research</span>
+        <ul class="footer-links">
+          <li><a href="#">Market Insights</a></li>
+          <li><a href="#">Analytical Tools</a></li>
+          <li><a href="#">CFA Resources</a></li>
+          <li><a href="#">Publications</a></li>
+        </ul>
+      </div>
+      <div>
+        <span class="footer-col-title">Company</span>
+        <ul class="footer-links">
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Our Team</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Client Portal</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2026 Antar Wealth. All rights reserved.</span>
+      <span class="footer-mark">AW</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
