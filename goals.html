@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    :root{--linen:#f0ebe0;--linen-dark:#e6dfd2;--green:#1a3d2a;--green-mid:#1f4d35;--green-light:#2a6644;--gold:#b8952a;--gold-light:#d4ae4a;--cream:#faf6ee;--text:#0f2d1e;--text-mid:#3a5a47;--muted:#7a8c80;--border:rgba(184,149,42,0.2);--red:#E24B4A;--amber:#BA7517;}
+    :root{--linen:#f0ebe0;--linen-dark:#e6dfd2;--green:#1a3d2a;--green-mid:#1f4d35;--green-light:#2a6644;--gold:#b8952a;--cream:#faf6ee;--text:#0f2d1e;--text-mid:#3a5a47;--muted:#7a8c80;--border:rgba(184,149,42,0.2);--red:#E24B4A;--amber:#BA7517;}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
     body{font-family:'DM Sans',sans-serif;font-weight:300;background:var(--linen);color:var(--text);min-height:100vh;}
     nav{background:rgba(240,235,224,0.97);border-bottom:1px solid var(--border);padding:0 3rem;height:68px;display:flex;align-items:center;justify-content:space-between;}
@@ -16,7 +16,7 @@
     .nav-brand-text{display:flex;flex-direction:column;line-height:1.2;}
     .nav-brand-name{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;letter-spacing:0.1em;color:var(--green);}
     .nav-brand-sub{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);}
-    .nav-back{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-mid);text-decoration:none;transition:color 0.2s;}
+    .nav-back{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-mid);text-decoration:none;}
     .nav-back:hover{color:var(--gold);}
     .page-header{background:var(--green);padding:3.5rem 3rem;}
     .page-header-inner{max-width:920px;margin:0 auto;}
@@ -26,6 +26,14 @@
     .page-sub{font-size:14px;color:rgba(240,235,224,0.55);line-height:1.7;max-width:580px;}
     .cfa-badge{display:inline-flex;align-items:center;gap:6px;margin-top:1rem;padding:5px 12px;border:1px solid rgba(184,149,42,0.4);font-size:11px;letter-spacing:0.1em;color:var(--gold);text-transform:uppercase;}
     .tool-body{max-width:920px;margin:0 auto;padding:2.5rem 3rem 4rem;}
+
+    /* Mode toggle */
+    .mode-toggle{display:flex;gap:0;margin-bottom:2rem;border:1px solid var(--linen-dark);overflow:hidden;width:fit-content;}
+    .mode-btn{padding:10px 24px;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;background:var(--cream);color:var(--muted);border:none;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+    .mode-btn.active{background:var(--green);color:var(--linen);}
+    .mode-desc{font-size:13px;color:var(--muted);margin-bottom:1.5rem;line-height:1.6;padding:10px 14px;background:var(--cream);border:1px solid var(--linen-dark);}
+
+    /* Portfolio bar (allocation mode only) */
     .portfolio-bar{display:flex;align-items:center;gap:14px;background:var(--cream);border:1px solid var(--linen-dark);padding:14px 18px;margin-bottom:1.75rem;flex-wrap:wrap;}
     .port-label{font-size:12px;color:var(--muted);white-space:nowrap;}
     .port-prefix{font-size:16px;color:var(--muted);}
@@ -35,7 +43,10 @@
     .port-stat{text-align:right;}
     .port-stat-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;}
     .port-stat-val{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;}
+
     .section-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:1rem;}
+
+    /* Goal card */
     .goal-card{background:var(--cream);border:1px solid var(--linen-dark);padding:1.5rem;margin-bottom:12px;}
     .goal-card.over{border-color:var(--red);}
     .goal-header{display:flex;align-items:center;gap:12px;margin-bottom:1.25rem;}
@@ -44,22 +55,38 @@
     .goal-name-input:focus{border-bottom:1px solid var(--gold);}
     .goal-remove{font-size:11px;color:var(--muted);cursor:pointer;padding:4px 10px;border:1px solid var(--linen-dark);background:var(--linen);font-family:'DM Sans',sans-serif;transition:all 0.15s;}
     .goal-remove:hover{color:var(--red);border-color:var(--red);}
-    .goal-fields{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:1rem;}
+
+    /* Fields */
+    .goal-fields-alloc{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:1rem;}
+    .goal-fields-savings{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:1rem;}
     .gf{display:flex;flex-direction:column;gap:5px;}
     .gf label{font-size:11px;color:var(--text-mid);letter-spacing:0.03em;}
     .gf input,.gf select{font-size:13px;padding:8px 10px;border:1px solid var(--linen-dark);background:var(--linen);color:var(--text);font-family:'DM Sans',sans-serif;}
     .gf input:focus,.gf select:focus{outline:none;border-color:var(--green);}
-    .bucket-recommendation{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;margin-top:0.75rem;}
+
+    /* Bucket recommendation */
+    .bucket-rec{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;margin-bottom:0.75rem;}
     .bucket-rec-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;}
-    .bucket-rec-content{flex:1;}
     .bucket-rec-label{font-size:11px;text-transform:uppercase;letter-spacing:0.08em;font-weight:500;margin-bottom:3px;}
     .bucket-rec-reason{font-size:12px;color:var(--text-mid);line-height:1.6;}
-    .goal-progress-row{display:flex;align-items:center;gap:10px;margin-top:10px;}
+
+    /* Savings output */
+    .savings-output{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:0.75rem;}
+    .sout-card{background:var(--linen);padding:10px 12px;}
+    .sout-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;}
+    .sout-val{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;}
+    .sout-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+
+    /* Allocation progress */
+    .goal-progress-row{display:flex;align-items:center;gap:10px;margin-top:6px;}
     .goal-progress{flex:1;height:5px;background:var(--linen-dark);}
     .goal-progress-fill{height:100%;transition:width 0.4s ease;}
     .goal-amount-lbl{font-size:11px;color:var(--muted);white-space:nowrap;}
+
     .add-goal-btn{width:100%;padding:12px;border:1px dashed var(--linen-dark);background:transparent;color:var(--muted);font-size:13px;cursor:pointer;margin-bottom:2rem;font-family:'DM Sans',sans-serif;letter-spacing:0.05em;transition:all 0.15s;}
     .add-goal-btn:hover{border-color:var(--gold);color:var(--gold);}
+
+    /* Summary (allocation mode) */
     .summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:1.25rem;}
     .bucket-card{border:1px solid var(--linen-dark);overflow:hidden;}
     .bucket-card-header{padding:12px 14px;display:flex;align-items:center;gap:8px;}
@@ -76,11 +103,21 @@
     .ob-legend{display:flex;gap:14px;margin-top:8px;flex-wrap:wrap;}
     .ob-legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);}
     .ob-legend-dot{width:10px;height:10px;border-radius:50%;}
+
+    /* Savings summary */
+    .savings-summary{background:var(--cream);border:1px solid var(--linen-dark);padding:1.5rem;margin-bottom:1.25rem;}
+    .savings-summary-title{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:1rem;}
+    .savings-total-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+    .st-card{text-align:center;padding:1rem;background:var(--linen);}
+    .st-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;}
+    .st-val{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;}
+
     .insight{padding:1.25rem 1.5rem;background:var(--cream);border-left:2px solid var(--green);font-size:13px;color:var(--text-mid);line-height:1.8;}
+    .hidden{display:none;}
     footer{background:var(--green);border-top:1px solid var(--border);padding:1.5rem 3rem;display:flex;align-items:center;justify-content:space-between;margin-top:2rem;}
     .footer-copy{font-size:12px;color:rgba(240,235,224,0.3);}
     .footer-mark{font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:0.2em;color:var(--gold);}
-    @media(max-width:700px){.tool-body{padding:1.5rem;}.goal-fields{grid-template-columns:1fr 1fr;}.summary-grid{grid-template-columns:1fr;}nav{padding:0 1.5rem;}.nav-brand-name{font-size:15px;}.port-stats{margin-left:0;}}
+    @media(max-width:700px){.tool-body{padding:1.5rem;}.goal-fields-alloc,.goal-fields-savings{grid-template-columns:1fr 1fr;}.summary-grid,.savings-total-row{grid-template-columns:1fr;}nav{padding:0 1.5rem;}.nav-brand-name{font-size:15px;}.port-stats{margin-left:0;}.savings-output{grid-template-columns:1fr 1fr;}}
   </style>
 </head>
 <body>
@@ -99,25 +136,37 @@
   <div class="page-header-inner">
     <div class="page-eyebrow"><span class="eyebrow-line"></span>Wealth Planning</div>
     <h1 class="page-title">Goals-Based Allocation Planner</h1>
-    <p class="page-sub">Assign your portfolio to specific life goals. Based on your time horizon and priority, we recommend which risk bucket fits each goal — and explain why.</p>
+    <p class="page-sub">Plan your financial goals two ways — allocate your existing portfolio across goals, or calculate how much you need to save monthly to reach each goal on time.</p>
     <div class="cfa-badge">CFA Level III · Goals-Based Asset Allocation Framework</div>
   </div>
 </div>
 
 <div class="tool-body">
 
-  <div class="portfolio-bar">
-    <span class="port-label">Total portfolio value</span>
-    <span class="port-prefix">$</span>
-    <input class="port-input" type="number" id="totalPort" value="150000" step="5000"/>
-    <div class="port-stats">
-      <div class="port-stat">
-        <div class="port-stat-label">Allocated</div>
-        <div class="port-stat-val" id="allocVal" style="color:var(--green);">$0</div>
-      </div>
-      <div class="port-stat">
-        <div class="port-stat-label">Remaining</div>
-        <div class="port-stat-val" id="remainVal">$150K</div>
+  <div class="mode-toggle">
+    <button class="mode-btn active" id="btn-alloc" onclick="setMode('allocation')">Allocation mode</button>
+    <button class="mode-btn" id="btn-savings" onclick="setMode('savings')">Savings mode</button>
+  </div>
+
+  <div class="mode-desc" id="modeDesc">
+    I have an existing portfolio and want to see how to split it across my financial goals.
+  </div>
+
+  <!-- Allocation mode: portfolio input -->
+  <div id="allocPortBar">
+    <div class="portfolio-bar">
+      <span class="port-label">Total portfolio value</span>
+      <span class="port-prefix">$</span>
+      <input class="port-input" type="number" id="totalPort" value="150000" step="5000"/>
+      <div class="port-stats">
+        <div class="port-stat">
+          <div class="port-stat-label">Allocated</div>
+          <div class="port-stat-val" id="allocVal" style="color:var(--green);">$0</div>
+        </div>
+        <div class="port-stat">
+          <div class="port-stat-label">Remaining</div>
+          <div class="port-stat-val" id="remainVal">$150K</div>
+        </div>
       </div>
     </div>
   </div>
@@ -126,17 +175,42 @@
   <div id="goalsList"></div>
   <button class="add-goal-btn" onclick="addGoal()">+ Add a goal</button>
 
-  <div class="section-label">Portfolio bucket summary</div>
-  <div class="summary-grid" id="summaryGrid"></div>
-  <div class="overall-bar-wrap">
-    <div class="overall-bar" id="overallBar"></div>
-    <div class="ob-legend">
-      <div class="ob-legend-item"><div class="ob-legend-dot" style="background:#888780;"></div>Safety</div>
-      <div class="ob-legend-item"><div class="ob-legend-dot" style="background:#b8952a;"></div>Income</div>
-      <div class="ob-legend-item"><div class="ob-legend-dot" style="background:#1a3d2a;"></div>Growth</div>
-      <div class="ob-legend-item"><div class="ob-legend-dot" style="background:var(--linen-dark);"></div>Unallocated</div>
+  <!-- Allocation summary -->
+  <div id="allocSummary">
+    <div class="section-label">Portfolio bucket summary</div>
+    <div class="summary-grid" id="summaryGrid"></div>
+    <div class="overall-bar-wrap">
+      <div class="overall-bar" id="overallBar"></div>
+      <div class="ob-legend">
+        <div class="ob-legend-item"><div class="ob-legend-dot" style="background:#888780;"></div>Safety</div>
+        <div class="ob-legend-item"><div class="ob-legend-dot" style="background:#b8952a;"></div>Income</div>
+        <div class="ob-legend-item"><div class="ob-legend-dot" style="background:#1a3d2a;"></div>Growth</div>
+        <div class="ob-legend-item"><div class="ob-legend-dot" style="background:var(--linen-dark);"></div>Unallocated</div>
+      </div>
     </div>
   </div>
+
+  <!-- Savings summary -->
+  <div id="savingsSummary" class="hidden">
+    <div class="savings-summary">
+      <div class="savings-summary-title">Total monthly savings needed</div>
+      <div class="savings-total-row">
+        <div class="st-card">
+          <div class="st-label">Total monthly contribution</div>
+          <div class="st-val" id="totalMonthly" style="color:var(--green);">$0</div>
+        </div>
+        <div class="st-card">
+          <div class="st-label">Total goal amount</div>
+          <div class="st-val" id="totalGoalAmt">$0</div>
+        </div>
+        <div class="st-card">
+          <div class="st-label">Goals tracked</div>
+          <div class="st-val" id="goalCount">0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="insight" id="insightBox"></div>
 </div>
 
@@ -147,196 +221,251 @@
 
 <script>
 const BUCKETS = [
-  { id:'safety', label:'Safety',  color:'#888780', headerBg:'rgba(136,135,128,0.1)', desc:'Cash, money market, short-term bonds. Capital preservation for near-term needs.' },
-  { id:'income', label:'Income',  color:'#b8952a', headerBg:'rgba(184,149,42,0.1)',  desc:'Bonds, dividend equities, REITs. Stable returns for medium-term goals.' },
-  { id:'growth', label:'Growth',  color:'#1a3d2a', headerBg:'rgba(26,61,43,0.1)',    desc:'Equities and alternatives. Maximum long-term growth for distant goals.' },
+  { id:'safety', label:'Safety',  color:'#888780', headerBg:'rgba(136,135,128,0.1)', desc:'Cash, money market, short-term bonds. Capital preservation for near-term needs.', expectedReturn: 0.035 },
+  { id:'income', label:'Income',  color:'#b8952a', headerBg:'rgba(184,149,42,0.1)',  desc:'Bonds, dividend equities, REITs. Stable returns for medium-term goals.',          expectedReturn: 0.065 },
+  { id:'growth', label:'Growth',  color:'#1a3d2a', headerBg:'rgba(26,61,43,0.1)',    desc:'Equities and alternatives. Maximum long-term growth for distant goals.',           expectedReturn: 0.09  },
 ];
-
 const BUCKET_ICONS = { safety:'🛡️', income:'⚖️', growth:'🌱' };
 
+let mode = 'allocation';
+
+let goals = [
+  { id:1, name:'Emergency fund',    icon:'🛡️', iconBg:'rgba(136,135,128,0.15)', goalAmt:15000, savedAmt:5000,  horizon:1,  priority:'essential' },
+  { id:2, name:'Home down payment', icon:'🏠', iconBg:'rgba(184,149,42,0.15)',   goalAmt:60000, savedAmt:10000, horizon:4,  priority:'high'      },
+  { id:3, name:'Retirement',        icon:'🌿', iconBg:'rgba(26,61,43,0.15)',     goalAmt:500000,savedAmt:50000, horizon:25, priority:'high'      },
+];
+let nextId = 4;
+
+function setMode(m) {
+  mode = m;
+  document.getElementById('btn-alloc').classList.toggle('active', m==='allocation');
+  document.getElementById('btn-savings').classList.toggle('active', m==='savings');
+  document.getElementById('allocPortBar').classList.toggle('hidden', m==='savings');
+  document.getElementById('allocSummary').classList.toggle('hidden', m==='savings');
+  document.getElementById('savingsSummary').classList.toggle('hidden', m==='allocation');
+  document.getElementById('modeDesc').textContent = m==='allocation'
+    ? 'I have an existing portfolio and want to see how to split it across my financial goals.'
+    : 'I have a specific goal in mind — show me how much I need to save each month to reach it on time.';
+  render();
+}
+
 function recommendBucket(horizon, priority) {
-  if (priority === 'essential') {
-    if (horizon <= 5) return 'safety';
-    return 'income';
-  }
-  if (priority === 'high') {
-    if (horizon <= 2) return 'safety';
-    if (horizon <= 7) return 'income';
-    return 'growth';
-  }
-  if (priority === 'medium') {
-    if (horizon <= 2) return 'safety';
-    if (horizon <= 7) return 'income';
-    return 'growth';
-  }
-  if (priority === 'aspirational') {
-    if (horizon <= 2) return 'income';
-    return 'growth';
-  }
+  if (priority==='essential') return horizon<=5?'safety':'income';
+  if (priority==='high')      return horizon<=2?'safety':horizon<=7?'income':'growth';
+  if (priority==='medium')    return horizon<=2?'safety':horizon<=7?'income':'growth';
+  if (priority==='aspirational') return horizon<=2?'income':'growth';
   return 'income';
 }
 
 function bucketReason(bucket, horizon, priority) {
-  const horizonLabel = horizon <= 2 ? 'short' : horizon <= 7 ? 'medium' : 'long';
   const reasons = {
     safety: {
-      essential: `This is an essential need. Regardless of time horizon, capital preservation takes priority — you cannot afford to lose this money.`,
-      high:      `With a ${horizon}-year timeline, this high-priority goal needs to be safe and accessible. Growth risk is not appropriate this close to the target date.`,
-      medium:    `Your ${horizon}-year timeline is short. Even at medium priority, preserving capital is more important than chasing returns at this horizon.`,
-      aspirational: `Though aspirational, your ${horizon}-year horizon is too short to take on meaningful risk. Keep this in stable, liquid instruments.`,
+      essential:    `Essential goals require capital preservation. With a ${horizon}-year timeline, you cannot afford losses — keep this in safe, liquid instruments.`,
+      high:         `A ${horizon}-year high-priority goal needs to be accessible and protected. The safety bucket ensures the money is there when you need it.`,
+      medium:       `Your ${horizon}-year timeline is short. Even at medium priority, preserving capital outweighs chasing returns at this horizon.`,
+      aspirational: `Though aspirational, your ${horizon}-year timeline is too short for meaningful investment risk. Keep it stable and accessible.`,
     },
     income: {
-      essential: `This essential goal has a medium timeline (${horizon} years). A conservative income approach balances the need for stability with modest growth to keep pace with inflation.`,
-      high:      `A ${horizon}-year timeline with high priority is well-suited to income investments — enough time to benefit from yield, but not enough to absorb equity volatility.`,
-      medium:    `With ${horizon} years and medium priority, a balanced income approach works well — steady returns without excessive risk.`,
-      aspirational: `Aspirational goals with a ${horizon}-year horizon benefit from income investments that provide some growth while limiting downside.`,
+      essential:    `This essential goal has a ${horizon}-year timeline — long enough to benefit from yield, but short enough that capital safety still matters. Income balances both.`,
+      high:         `A ${horizon}-year high-priority goal is well-suited to income investments — enough time to compound returns, not enough to absorb equity swings.`,
+      medium:       `With ${horizon} years and medium priority, income investments deliver steady returns without taking on unnecessary volatility.`,
+      aspirational: `Aspirational goals with a ${horizon}-year horizon benefit from income assets that provide growth while limiting downside risk.`,
     },
     growth: {
-      essential: `Your ${horizon}-year horizon gives time to recover from market volatility. Growth assets are appropriate even for essential long-term needs like retirement.`,
-      high:      `${horizon} years is a long runway. High-priority long-term goals like retirement or education benefit most from equity-driven compounding over time.`,
-      medium:    `With ${horizon} years and medium priority, equities offer the best chance of meaningful wealth accumulation. Time is your greatest asset here.`,
-      aspirational: `Aspirational long-term goals are ideal candidates for maximum growth. You have ${horizon} years to let compounding work — take advantage of it.`,
+      essential:    `With ${horizon} years, your portfolio can absorb short-term volatility. Growth assets compound powerfully over long periods — appropriate even for essential long-term needs.`,
+      high:         `${horizon} years is a long runway. High-priority long-term goals benefit most from equity-driven compounding — time is your greatest ally here.`,
+      medium:       `With ${horizon} years and medium priority, equities offer the best path to meaningful wealth accumulation. Let compounding do the work.`,
+      aspirational: `Aspirational long-term goals are ideal for the growth bucket. ${horizon} years of compounding at equity returns can dramatically multiply your investment.`,
     },
   };
   return reasons[bucket]?.[priority] || `Based on your ${horizon}-year horizon and ${priority} priority, the ${bucket} bucket is the most appropriate fit.`;
 }
 
-let goals = [
-  { id:1, name:'Emergency fund',    icon:'🛡️', iconBg:'rgba(136,135,128,0.15)', amount:15000, horizon:1,  priority:'essential' },
-  { id:2, name:'Home down payment', icon:'🏠', iconBg:'rgba(184,149,42,0.15)',   amount:40000, horizon:3,  priority:'high'      },
-  { id:3, name:'Retirement',        icon:'🌿', iconBg:'rgba(26,61,43,0.15)',     amount:80000, horizon:25, priority:'high'      },
-];
-let nextId = 4;
+function calcMonthlySavings(goalAmt, savedAmt, horizon, annualReturn) {
+  const needed = Math.max(0, goalAmt - savedAmt);
+  const r = annualReturn / 12;
+  const n = horizon * 12;
+  if (n <= 0) return needed;
+  if (r === 0) return needed / n;
+  return (needed * r) / (Math.pow(1 + r, n) - 1);
+}
 
-function getBucketColor(b){ return BUCKETS.find(x=>x.id===b)?.color||'#888780'; }
-
-function fmtM(n){
+function fmtM(n) {
   const abs=Math.abs(n), s=n<0?'-':'';
-  if(abs>=1e6) return s+'$'+(abs/1e6).toFixed(1)+'M';
-  if(abs>=1000) return s+'$'+Math.round(abs/1000)+'K';
+  if(abs>=1e6) return s+'$'+(abs/1e6).toFixed(2)+'M';
+  if(abs>=1000) return s+'$'+Math.round(abs/1000).toLocaleString()+'K';
   return s+'$'+Math.round(abs);
 }
 
-function addGoal(){
-  goals.push({id:nextId++, name:'New goal', icon:'⭐', iconBg:'rgba(127,119,221,0.15)', amount:10000, horizon:5, priority:'medium'});
+function fmtMo(n) {
+  return '$'+Math.round(n).toLocaleString()+'/mo';
+}
+
+function addGoal() {
+  goals.push({id:nextId++, name:'New goal', icon:'⭐', iconBg:'rgba(127,119,221,0.15)', goalAmt:20000, savedAmt:0, horizon:5, priority:'medium'});
   render();
 }
 
-function removeGoal(id){ goals=goals.filter(g=>g.id!==id); render(); }
+function removeGoal(id) { goals=goals.filter(g=>g.id!==id); render(); }
 
-function updateGoal(id, field, value){
+function updateGoal(id, field, value) {
   const g=goals.find(g=>g.id===id); if(!g) return;
-  if(field==='amount'||field==='horizon') g[field]=parseFloat(value)||0;
+  if(['goalAmt','savedAmt','horizon'].includes(field)) g[field]=parseFloat(value)||0;
   else g[field]=value;
   render();
 }
 
-function render(){
-  const total=parseFloat(document.getElementById('totalPort').value)||0;
-  const allocated=goals.reduce((s,g)=>s+(g.amount||0),0);
-  const remaining=total-allocated;
+function render() {
+  const total = parseFloat(document.getElementById('totalPort').value)||0;
 
-  document.getElementById('allocVal').textContent=fmtM(allocated);
-  document.getElementById('allocVal').style.color=allocated>total?'#E24B4A':'#1a3d2a';
-  document.getElementById('remainVal').textContent=fmtM(Math.abs(remaining))+(remaining<0?' over':'');
-  document.getElementById('remainVal').style.color=remaining<0?'#E24B4A':remaining===0?'#1D9E75':'#BA7517';
+  // Build goal cards
+  document.getElementById('goalsList').innerHTML = goals.map(g => {
+    const rec = recommendBucket(g.horizon, g.priority);
+    const reason = bucketReason(rec, g.horizon, g.priority);
+    const bucket = BUCKETS.find(b=>b.id===rec);
+    const bc = bucket.color;
+    const annRet = bucket.expectedReturn;
+    const monthly = calcMonthlySavings(g.goalAmt, g.savedAmt, g.horizon, annRet);
+    const stillNeeded = Math.max(0, g.goalAmt - g.savedAmt);
+    const progPct = g.goalAmt>0 ? Math.min(100,(g.savedAmt/g.goalAmt)*100) : 0;
 
-  document.getElementById('goalsList').innerHTML=goals.map(g=>{
-    const rec=recommendBucket(g.horizon, g.priority);
-    const reason=bucketReason(rec, g.horizon, g.priority);
-    const bc=getBucketColor(rec);
-    const progPct=total>0?Math.min(100,(g.amount/total)*100):0;
-    const isOver=g.amount>total;
+    const allocFields = `
+      <div class="goal-fields-alloc">
+        <div class="gf">
+          <label>Amount to allocate from portfolio</label>
+          <input type="number" value="${g.goalAmt}" step="1000" onchange="updateGoal(${g.id},'goalAmt',this.value)"/>
+        </div>
+        <div class="gf">
+          <label>Time horizon (years)</label>
+          <input type="number" value="${g.horizon}" min="1" max="40" step="1" onchange="updateGoal(${g.id},'horizon',this.value)"/>
+        </div>
+        <div class="gf">
+          <label>Priority</label>
+          <select onchange="updateGoal(${g.id},'priority',this.value)">
+            <option value="essential"${g.priority==='essential'?' selected':''}>Essential</option>
+            <option value="high"${g.priority==='high'?' selected':''}>High</option>
+            <option value="medium"${g.priority==='medium'?' selected':''}>Medium</option>
+            <option value="aspirational"${g.priority==='aspirational'?' selected':''}>Aspirational</option>
+          </select>
+        </div>
+      </div>
+      <div class="goal-progress-row">
+        <div class="goal-progress"><div class="goal-progress-fill" style="width:${Math.min(100,total>0?(g.goalAmt/total)*100:0).toFixed(1)}%;background:${bc};"></div></div>
+        <div class="goal-amount-lbl">${fmtM(g.goalAmt)} of ${fmtM(total)} portfolio</div>
+      </div>
+    `;
+
+    const savingsFields = `
+      <div class="goal-fields-savings">
+        <div class="gf">
+          <label>Goal target amount</label>
+          <input type="number" value="${g.goalAmt}" step="1000" onchange="updateGoal(${g.id},'goalAmt',this.value)"/>
+        </div>
+        <div class="gf">
+          <label>Already saved</label>
+          <input type="number" value="${g.savedAmt}" step="500" onchange="updateGoal(${g.id},'savedAmt',this.value)"/>
+        </div>
+        <div class="gf">
+          <label>Time horizon (years)</label>
+          <input type="number" value="${g.horizon}" min="1" max="40" step="1" onchange="updateGoal(${g.id},'horizon',this.value)"/>
+        </div>
+        <div class="gf">
+          <label>Priority</label>
+          <select onchange="updateGoal(${g.id},'priority',this.value)">
+            <option value="essential"${g.priority==='essential'?' selected':''}>Essential</option>
+            <option value="high"${g.priority==='high'?' selected':''}>High</option>
+            <option value="medium"${g.priority==='medium'?' selected':''}>Medium</option>
+            <option value="aspirational"${g.priority==='aspirational'?' selected':''}>Aspirational</option>
+          </select>
+        </div>
+      </div>
+      <div class="savings-output">
+        <div class="sout-card">
+          <div class="sout-label">Monthly savings needed</div>
+          <div class="sout-val" style="color:${bc};">${fmtMo(monthly)}</div>
+          <div class="sout-sub">to reach goal in ${g.horizon}yr</div>
+        </div>
+        <div class="sout-card">
+          <div class="sout-label">Still needed</div>
+          <div class="sout-val">${fmtM(stillNeeded)}</div>
+          <div class="sout-sub">${fmtM(g.savedAmt)} already saved</div>
+        </div>
+        <div class="sout-card">
+          <div class="sout-label">Expected return (${rec})</div>
+          <div class="sout-val">${(annRet*100).toFixed(1)}%</div>
+          <div class="sout-sub">annual, assumed</div>
+        </div>
+      </div>
+      <div class="goal-progress-row">
+        <div class="goal-progress"><div class="goal-progress-fill" style="width:${progPct.toFixed(1)}%;background:${bc};"></div></div>
+        <div class="goal-amount-lbl">${fmtM(g.savedAmt)} saved of ${fmtM(g.goalAmt)} goal (${Math.round(progPct)}%)</div>
+      </div>
+    `;
+
     return `
-      <div class="goal-card${isOver?' over':''}">
+      <div class="goal-card">
         <div class="goal-header">
           <div class="goal-icon" style="background:${g.iconBg};">${g.icon}</div>
           <input class="goal-name-input" value="${g.name}" onchange="updateGoal(${g.id},'name',this.value)"/>
           <button class="goal-remove" onclick="removeGoal(${g.id})">Remove</button>
         </div>
-        <div class="goal-fields">
-          <div class="gf">
-            <label>Amount needed</label>
-            <input type="number" value="${g.amount}" step="1000" onchange="updateGoal(${g.id},'amount',this.value)"/>
-          </div>
-          <div class="gf">
-            <label>Time horizon (years)</label>
-            <input type="number" value="${g.horizon}" min="1" max="40" step="1" onchange="updateGoal(${g.id},'horizon',this.value)"/>
-          </div>
-          <div class="gf">
-            <label>Priority</label>
-            <select onchange="updateGoal(${g.id},'priority',this.value)">
-              <option value="essential"${g.priority==='essential'?' selected':''}>Essential</option>
-              <option value="high"${g.priority==='high'?' selected':''}>High</option>
-              <option value="medium"${g.priority==='medium'?' selected':''}>Medium</option>
-              <option value="aspirational"${g.priority==='aspirational'?' selected':''}>Aspirational</option>
-            </select>
-          </div>
-        </div>
-        <div class="bucket-recommendation" style="background:${bc}12;border-left:3px solid ${bc};">
+        ${mode==='allocation' ? allocFields : savingsFields}
+        <div class="bucket-rec" style="background:${bc}12;border-left:3px solid ${bc};">
           <div class="bucket-rec-icon" style="background:${bc}22;">${BUCKET_ICONS[rec]}</div>
-          <div class="bucket-rec-content">
-            <div class="bucket-rec-label" style="color:${bc};">Recommended: ${rec.charAt(0).toUpperCase()+rec.slice(1)} bucket</div>
+          <div>
+            <div class="bucket-rec-label" style="color:${bc};">Recommended: ${rec.charAt(0).toUpperCase()+rec.slice(1)} bucket · ${(annRet*100).toFixed(1)}% expected return</div>
             <div class="bucket-rec-reason">${reason}</div>
           </div>
         </div>
-        <div class="goal-progress-row">
-          <div class="goal-progress">
-            <div class="goal-progress-fill" style="width:${progPct.toFixed(1)}%;background:${bc};"></div>
-          </div>
-          <div class="goal-amount-lbl">${fmtM(g.amount)} of ${fmtM(total)} portfolio</div>
-        </div>
       </div>
     `;
   }).join('');
 
-  const bt={safety:0,income:0,growth:0};
-  const bgNames={safety:[],income:[],growth:[]};
-  goals.forEach(g=>{
-    const rec=recommendBucket(g.horizon,g.priority);
-    if(bt[rec]!==undefined){ bt[rec]+=g.amount||0; bgNames[rec].push(g.name); }
-  });
+  if (mode === 'allocation') {
+    const allocated = goals.reduce((s,g)=>s+(g.goalAmt||0),0);
+    const remaining = total - allocated;
+    document.getElementById('allocVal').textContent=fmtM(allocated);
+    document.getElementById('allocVal').style.color=allocated>total?'#E24B4A':'#1a3d2a';
+    document.getElementById('remainVal').textContent=fmtM(Math.abs(remaining))+(remaining<0?' over':'');
+    document.getElementById('remainVal').style.color=remaining<0?'#E24B4A':remaining===0?'#1D9E75':'#BA7517';
 
-  document.getElementById('summaryGrid').innerHTML=BUCKETS.map(b=>{
-    const pct=total>0?Math.round(bt[b.id]/total*100):0;
-    return `
-      <div class="bucket-card">
-        <div class="bucket-card-header" style="background:${b.headerBg};">
-          <div class="bucket-card-dot" style="background:${b.color};"></div>
-          <span class="bucket-card-name">${b.label} bucket</span>
-        </div>
-        <div class="bucket-card-body">
-          <div class="bucket-pct" style="color:${b.color};">${pct}%</div>
-          <div class="bucket-amt">${fmtM(bt[b.id])}</div>
-          <div class="bucket-desc">${b.desc}</div>
-          ${bgNames[b.id].length>0?`<div class="bucket-goals-list">Goals: ${bgNames[b.id].join(', ')}</div>`:''}
-        </div>
-      </div>
-    `;
-  }).join('');
+    const bt={safety:0,income:0,growth:0}, bgNames={safety:[],income:[],growth:[]};
+    goals.forEach(g=>{const rec=recommendBucket(g.horizon,g.priority);bt[rec]+=g.goalAmt||0;bgNames[rec].push(g.name);});
 
-  const sp=total>0?Math.max(0,(bt.safety/total)*100):0;
-  const ip=total>0?Math.max(0,(bt.income/total)*100):0;
-  const gp=total>0?Math.max(0,(bt.growth/total)*100):0;
-  const up=Math.max(0,100-sp-ip-gp);
+    document.getElementById('summaryGrid').innerHTML=BUCKETS.map(b=>{
+      const pct=total>0?Math.round(bt[b.id]/total*100):0;
+      return `<div class="bucket-card"><div class="bucket-card-header" style="background:${b.headerBg};"><div class="bucket-card-dot" style="background:${b.color};"></div><span class="bucket-card-name">${b.label} bucket</span></div><div class="bucket-card-body"><div class="bucket-pct" style="color:${b.color};">${pct}%</div><div class="bucket-amt">${fmtM(bt[b.id])}</div><div class="bucket-desc">${b.desc}</div>${bgNames[b.id].length?`<div class="bucket-goals-list">Goals: ${bgNames[b.id].join(', ')}</div>`:''}</div></div>`;
+    }).join('');
 
-  document.getElementById('overallBar').innerHTML=`
-    ${sp>1?`<div class="ob-seg" style="width:${sp.toFixed(1)}%;background:#888780;">${Math.round(sp)>5?Math.round(sp)+'%':''}</div>`:''}
-    ${ip>1?`<div class="ob-seg" style="width:${ip.toFixed(1)}%;background:#b8952a;">${Math.round(ip)>5?Math.round(ip)+'%':''}</div>`:''}
-    ${gp>1?`<div class="ob-seg" style="width:${gp.toFixed(1)}%;background:#1a3d2a;">${Math.round(gp)>5?Math.round(gp)+'%':''}</div>`:''}
-    ${up>1?`<div class="ob-seg" style="width:${up.toFixed(1)}%;background:var(--linen-dark);"></div>`:''}
-  `;
+    const sp=total>0?Math.max(0,(bt.safety/total)*100):0, ip=total>0?Math.max(0,(bt.income/total)*100):0, gp=total>0?Math.max(0,(bt.growth/total)*100):0, up=Math.max(0,100-sp-ip-gp);
+    document.getElementById('overallBar').innerHTML=`${sp>1?`<div class="ob-seg" style="width:${sp.toFixed(1)}%;background:#888780;">${Math.round(sp)>5?Math.round(sp)+'%':''}</div>`:''}${ip>1?`<div class="ob-seg" style="width:${ip.toFixed(1)}%;background:#b8952a;">${Math.round(ip)>5?Math.round(ip)+'%':''}</div>`:''}${gp>1?`<div class="ob-seg" style="width:${gp.toFixed(1)}%;background:#1a3d2a;">${Math.round(gp)>5?Math.round(gp)+'%':''}</div>`:''}${up>1?`<div class="ob-seg" style="width:${up.toFixed(1)}%;background:var(--linen-dark);"></div>`:''}`;
 
-  let msg='';
-  if(allocated>total) msg=`Your goals exceed your portfolio by ${fmtM(allocated-total)}. Reduce goal amounts, extend time horizons, or plan to grow your portfolio before these goals can be fully funded.`;
-  else if(gp>75) msg=`${Math.round(gp)}% of your portfolio is in the growth bucket — appropriate for long-term goals, but make sure all essential and near-term goals are fully funded first.`;
-  else if(sp>50) msg=`Over half your portfolio (${Math.round(sp)}%) is in the safety bucket. While this protects capital, consider whether some medium-term goals could move to income to improve long-run returns.`;
-  else if(up>20) msg=`${fmtM(remaining)} (${Math.round(up)}%) remains unallocated. Add it to an existing goal or create a new long-term growth goal to put that capital to work.`;
-  else msg=`Your goals are well-matched to their recommended buckets. Each goal is funded at a risk level appropriate to its time horizon and priority. Review annually as your circumstances evolve.`;
-  document.getElementById('insightBox').textContent=msg;
+    let msg='';
+    if(allocated>total) msg=`Your goals exceed your portfolio by ${fmtM(allocated-total)}. Reduce allocations, extend time horizons, or grow your portfolio before fully funding all goals.`;
+    else if(gp>75) msg=`${Math.round(gp)}% is in the growth bucket — appropriate for long-term goals, but ensure near-term essential goals are fully funded in safety first.`;
+    else if(sp>50) msg=`Over half your portfolio is in the safety bucket. Consider whether some medium-term goals could move to income to improve long-run returns.`;
+    else if(up>20) msg=`${fmtM(remaining)} (${Math.round(up)}%) is unallocated. Assign it to a goal or add a long-term growth goal to put that capital to work.`;
+    else msg='Your portfolio is well-distributed. Each goal is matched to an appropriate risk level based on its time horizon and priority.';
+    document.getElementById('insightBox').textContent=msg;
+
+  } else {
+    const totalMonthly = goals.reduce((s,g)=>{
+      const rec=recommendBucket(g.horizon,g.priority);
+      const bucket=BUCKETS.find(b=>b.id===rec);
+      return s+calcMonthlySavings(g.goalAmt,g.savedAmt,g.horizon,bucket.expectedReturn);
+    },0);
+    const totalGoalAmt = goals.reduce((s,g)=>s+(g.goalAmt||0),0);
+    document.getElementById('totalMonthly').textContent=fmtMo(totalMonthly);
+    document.getElementById('totalGoalAmt').textContent=fmtM(totalGoalAmt);
+    document.getElementById('goalCount').textContent=goals.length;
+
+    const highestMonthly = Math.max(...goals.map(g=>{const rec=recommendBucket(g.horizon,g.priority);const bucket=BUCKETS.find(b=>b.id===rec);return calcMonthlySavings(g.goalAmt,g.savedAmt,g.horizon,bucket.expectedReturn);}));
+    const biggestGoal = goals.reduce((max,g)=>g.goalAmt>max.goalAmt?g:max,goals[0]);
+    document.getElementById('insightBox').textContent=`You need to save a total of ${fmtMo(totalMonthly)} across all goals. Your largest goal is ${biggestGoal?.name} at ${fmtM(biggestGoal?.goalAmt||0)}. Remember — these calculations assume consistent monthly contributions at the expected return for each bucket. Actual returns will vary. Review contributions annually and adjust as your income and goals evolve.`;
+  }
 }
 
-document.getElementById('totalPort').addEventListener('input',render);
+document.getElementById('totalPort').addEventListener('input', render);
 render();
 </script>
 </body>
