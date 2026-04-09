@@ -1,7 +1,8 @@
 {
-  "functions": {
-    "api/fred.js": {
-      "runtime": "edge"
+  "rewrites": [
+    {
+      "source": "/api/fred",
+      "destination": "/api/fred.js"
     }
-  }
+  ]
 }
