@@ -2,7 +2,9 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET');
 
-  const { series_id, limit = 14, sort_order = 'desc' } = req.query;
+  const series_id = req.query.series_id;
+  const limit = req.query.limit || 14;
+  const sort_order = req.query.sort_order || 'desc';
 
   if (!series_id) {
     return res.status(400).json({ error: 'Missing series_id' });
@@ -16,6 +18,6 @@ export default async function handler(req, res) {
     const data = await response.json();
     return res.status(200).json(data);
   } catch (error) {
-    return res.status(500).json({ error: 'Failed to fetch from FRED' });
+    return res.status(500).json({ error: 'Failed to fetch from FRED', details: error.message });
   }
 }
