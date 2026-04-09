@@ -305,7 +305,7 @@ async function addTicker(){
     setStatus(`${ticker} added — trailing 252-day data loaded.`,false);
     renderStockMode();
   }catch(e){
-    setStatus(`Could not load ${ticker}. Check the ticker symbol and try again.`,true);
+    setStatus(`Could not load ${ticker}: ${e.message}. Check the ticker and try again.`,true);
   }
 }
 

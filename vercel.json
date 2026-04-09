@@ -1,8 +1,10 @@
 {
-  "rewrites": [
-    {
-      "source": "/api/fred",
-      "destination": "/api/fred.js"
+  "functions": {
+    "api/fred.js": {
+      "runtime": "edge"
+    },
+    "api/fmp.js": {
+      "runtime": "edge"
     }
-  ]
+  }
 }
