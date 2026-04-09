@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    :root{--linen:#f0ebe0;--linen-dark:#e6dfd2;--green:#1a3d2a;--green-mid:#1f4d35;--green-light:#2a6644;--gold:#b8952a;--gold-light:#d4ae4a;--cream:#faf6ee;--text:#0f2d1e;--text-mid:#3a5a47;--muted:#7a8c80;--border:rgba(184,149,42,0.2);--border-strong:rgba(184,149,42,0.4);--red:#E24B4A;--amber:#BA7517;}
+    :root{--linen:#f0ebe0;--linen-dark:#e6dfd2;--green:#1a3d2a;--green-mid:#1f4d35;--green-light:#2a6644;--gold:#b8952a;--gold-light:#d4ae4a;--cream:#faf6ee;--text:#0f2d1e;--text-mid:#3a5a47;--muted:#7a8c80;--border:rgba(184,149,42,0.2);--red:#E24B4A;--amber:#BA7517;}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
     body{font-family:'DM Sans',sans-serif;font-weight:300;background:var(--linen);color:var(--text);min-height:100vh;}
     nav{background:rgba(240,235,224,0.97);border-bottom:1px solid var(--border);padding:0 3rem;height:68px;display:flex;align-items:center;justify-content:space-between;}
@@ -26,9 +26,8 @@
     .page-sub{font-size:14px;color:rgba(240,235,224,0.55);line-height:1.7;max-width:580px;}
     .cfa-badge{display:inline-flex;align-items:center;gap:6px;margin-top:1rem;padding:5px 12px;border:1px solid rgba(184,149,42,0.4);font-size:11px;letter-spacing:0.1em;color:var(--gold);text-transform:uppercase;}
     .tool-body{max-width:920px;margin:0 auto;padding:2.5rem 3rem 4rem;}
-
     .portfolio-bar{display:flex;align-items:center;gap:14px;background:var(--cream);border:1px solid var(--linen-dark);padding:14px 18px;margin-bottom:1.75rem;flex-wrap:wrap;}
-    .port-label{font-size:12px;color:var(--muted);letter-spacing:0.03em;white-space:nowrap;}
+    .port-label{font-size:12px;color:var(--muted);white-space:nowrap;}
     .port-prefix{font-size:16px;color:var(--muted);}
     .port-input{font-size:16px;padding:6px 10px;border:1px solid var(--linen-dark);background:var(--linen);color:var(--text);width:140px;font-family:'DM Sans',sans-serif;}
     .port-input:focus{outline:none;border-color:var(--green);}
@@ -36,33 +35,31 @@
     .port-stat{text-align:right;}
     .port-stat-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;}
     .port-stat-val{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;}
-
     .section-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:1rem;}
-
-    .goal-card{background:var(--cream);border:1px solid var(--linen-dark);padding:1.5rem;margin-bottom:12px;position:relative;}
+    .goal-card{background:var(--cream);border:1px solid var(--linen-dark);padding:1.5rem;margin-bottom:12px;}
     .goal-card.over{border-color:var(--red);}
-    .goal-card.mismatch{border-left:3px solid var(--amber);}
     .goal-header{display:flex;align-items:center;gap:12px;margin-bottom:1.25rem;}
     .goal-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
     .goal-name-input{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:400;color:var(--green);border:none;background:transparent;outline:none;flex:1;}
     .goal-name-input:focus{border-bottom:1px solid var(--gold);}
     .goal-remove{font-size:11px;color:var(--muted);cursor:pointer;padding:4px 10px;border:1px solid var(--linen-dark);background:var(--linen);font-family:'DM Sans',sans-serif;transition:all 0.15s;}
     .goal-remove:hover{color:var(--red);border-color:var(--red);}
-    .goal-fields{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:1rem;}
+    .goal-fields{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:1rem;}
     .gf{display:flex;flex-direction:column;gap:5px;}
     .gf label{font-size:11px;color:var(--text-mid);letter-spacing:0.03em;}
     .gf input,.gf select{font-size:13px;padding:8px 10px;border:1px solid var(--linen-dark);background:var(--linen);color:var(--text);font-family:'DM Sans',sans-serif;}
     .gf input:focus,.gf select:focus{outline:none;border-color:var(--green);}
-    .goal-footer{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-    .bucket-pill{font-size:11px;padding:4px 10px;font-weight:500;}
-    .warn-pill{font-size:11px;padding:4px 10px;color:var(--amber);background:#FAEEDA;}
-    .goal-progress{flex:1;height:6px;background:var(--linen-dark);min-width:80px;}
+    .bucket-recommendation{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;margin-top:0.75rem;}
+    .bucket-rec-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;}
+    .bucket-rec-content{flex:1;}
+    .bucket-rec-label{font-size:11px;text-transform:uppercase;letter-spacing:0.08em;font-weight:500;margin-bottom:3px;}
+    .bucket-rec-reason{font-size:12px;color:var(--text-mid);line-height:1.6;}
+    .goal-progress-row{display:flex;align-items:center;gap:10px;margin-top:10px;}
+    .goal-progress{flex:1;height:5px;background:var(--linen-dark);}
     .goal-progress-fill{height:100%;transition:width 0.4s ease;}
-    .goal-amount-lbl{font-size:12px;color:var(--muted);white-space:nowrap;}
-
+    .goal-amount-lbl{font-size:11px;color:var(--muted);white-space:nowrap;}
     .add-goal-btn{width:100%;padding:12px;border:1px dashed var(--linen-dark);background:transparent;color:var(--muted);font-size:13px;cursor:pointer;margin-bottom:2rem;font-family:'DM Sans',sans-serif;letter-spacing:0.05em;transition:all 0.15s;}
     .add-goal-btn:hover{border-color:var(--gold);color:var(--gold);}
-
     .summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:1.25rem;}
     .bucket-card{border:1px solid var(--linen-dark);overflow:hidden;}
     .bucket-card-header{padding:12px 14px;display:flex;align-items:center;gap:8px;}
@@ -72,18 +69,14 @@
     .bucket-pct{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;line-height:1;}
     .bucket-amt{font-size:12px;color:var(--muted);margin-top:2px;margin-bottom:8px;}
     .bucket-desc{font-size:11px;color:var(--muted);line-height:1.6;}
-    .bucket-goals{font-size:11px;color:var(--text-mid);margin-top:6px;}
-
+    .bucket-goals-list{font-size:11px;color:var(--text-mid);margin-top:6px;}
     .overall-bar-wrap{margin-bottom:1.25rem;}
     .overall-bar{height:24px;display:flex;overflow:hidden;}
     .ob-seg{height:100%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:rgba(255,255,255,0.9);min-width:0;overflow:hidden;transition:width 0.5s ease;}
-    .ob-unalloc{background:var(--linen-dark);}
     .ob-legend{display:flex;gap:14px;margin-top:8px;flex-wrap:wrap;}
     .ob-legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);}
     .ob-legend-dot{width:10px;height:10px;border-radius:50%;}
-
     .insight{padding:1.25rem 1.5rem;background:var(--cream);border-left:2px solid var(--green);font-size:13px;color:var(--text-mid);line-height:1.8;}
-
     footer{background:var(--green);border-top:1px solid var(--border);padding:1.5rem 3rem;display:flex;align-items:center;justify-content:space-between;margin-top:2rem;}
     .footer-copy{font-size:12px;color:rgba(240,235,224,0.3);}
     .footer-mark{font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:0.2em;color:var(--gold);}
@@ -106,7 +99,7 @@
   <div class="page-header-inner">
     <div class="page-eyebrow"><span class="eyebrow-line"></span>Wealth Planning</div>
     <h1 class="page-title">Goals-Based Allocation Planner</h1>
-    <p class="page-sub">Assign your portfolio to specific life goals — each with its own time horizon, priority, and risk bucket. See your complete allocation picture at a glance.</p>
+    <p class="page-sub">Assign your portfolio to specific life goals. Based on your time horizon and priority, we recommend which risk bucket fits each goal — and explain why.</p>
     <div class="cfa-badge">CFA Level III · Goals-Based Asset Allocation Framework</div>
   </div>
 </div>
@@ -124,7 +117,7 @@
       </div>
       <div class="port-stat">
         <div class="port-stat-label">Remaining</div>
-        <div class="port-stat-val" id="remainVal" style="color:var(--amber);">$150K</div>
+        <div class="port-stat-val" id="remainVal">$150K</div>
       </div>
     </div>
   </div>
@@ -135,7 +128,6 @@
 
   <div class="section-label">Portfolio bucket summary</div>
   <div class="summary-grid" id="summaryGrid"></div>
-
   <div class="overall-bar-wrap">
     <div class="overall-bar" id="overallBar"></div>
     <div class="ob-legend">
@@ -145,9 +137,7 @@
       <div class="ob-legend-item"><div class="ob-legend-dot" style="background:var(--linen-dark);"></div>Unallocated</div>
     </div>
   </div>
-
   <div class="insight" id="insightBox"></div>
-
 </div>
 
 <footer>
@@ -162,36 +152,82 @@ const BUCKETS = [
   { id:'growth', label:'Growth',  color:'#1a3d2a', headerBg:'rgba(26,61,43,0.1)',    desc:'Equities and alternatives. Maximum long-term growth for distant goals.' },
 ];
 
+const BUCKET_ICONS = { safety:'🛡️', income:'⚖️', growth:'🌱' };
+
+function recommendBucket(horizon, priority) {
+  if (priority === 'essential') {
+    if (horizon <= 5) return 'safety';
+    return 'income';
+  }
+  if (priority === 'high') {
+    if (horizon <= 2) return 'safety';
+    if (horizon <= 7) return 'income';
+    return 'growth';
+  }
+  if (priority === 'medium') {
+    if (horizon <= 2) return 'safety';
+    if (horizon <= 7) return 'income';
+    return 'growth';
+  }
+  if (priority === 'aspirational') {
+    if (horizon <= 2) return 'income';
+    return 'growth';
+  }
+  return 'income';
+}
+
+function bucketReason(bucket, horizon, priority) {
+  const horizonLabel = horizon <= 2 ? 'short' : horizon <= 7 ? 'medium' : 'long';
+  const reasons = {
+    safety: {
+      essential: `This is an essential need. Regardless of time horizon, capital preservation takes priority — you cannot afford to lose this money.`,
+      high:      `With a ${horizon}-year timeline, this high-priority goal needs to be safe and accessible. Growth risk is not appropriate this close to the target date.`,
+      medium:    `Your ${horizon}-year timeline is short. Even at medium priority, preserving capital is more important than chasing returns at this horizon.`,
+      aspirational: `Though aspirational, your ${horizon}-year horizon is too short to take on meaningful risk. Keep this in stable, liquid instruments.`,
+    },
+    income: {
+      essential: `This essential goal has a medium timeline (${horizon} years). A conservative income approach balances the need for stability with modest growth to keep pace with inflation.`,
+      high:      `A ${horizon}-year timeline with high priority is well-suited to income investments — enough time to benefit from yield, but not enough to absorb equity volatility.`,
+      medium:    `With ${horizon} years and medium priority, a balanced income approach works well — steady returns without excessive risk.`,
+      aspirational: `Aspirational goals with a ${horizon}-year horizon benefit from income investments that provide some growth while limiting downside.`,
+    },
+    growth: {
+      essential: `Your ${horizon}-year horizon gives time to recover from market volatility. Growth assets are appropriate even for essential long-term needs like retirement.`,
+      high:      `${horizon} years is a long runway. High-priority long-term goals like retirement or education benefit most from equity-driven compounding over time.`,
+      medium:    `With ${horizon} years and medium priority, equities offer the best chance of meaningful wealth accumulation. Time is your greatest asset here.`,
+      aspirational: `Aspirational long-term goals are ideal candidates for maximum growth. You have ${horizon} years to let compounding work — take advantage of it.`,
+    },
+  };
+  return reasons[bucket]?.[priority] || `Based on your ${horizon}-year horizon and ${priority} priority, the ${bucket} bucket is the most appropriate fit.`;
+}
+
 let goals = [
-  { id:1, name:'Emergency fund',    icon:'🛡️', iconBg:'rgba(136,135,128,0.15)', amount:15000, horizon:1,  priority:'essential', bucket:'safety' },
-  { id:2, name:'Home down payment', icon:'🏠', iconBg:'rgba(184,149,42,0.15)',   amount:40000, horizon:3,  priority:'high',      bucket:'income' },
-  { id:3, name:'Retirement',        icon:'🌿', iconBg:'rgba(26,61,43,0.15)',     amount:80000, horizon:25, priority:'high',      bucket:'growth' },
+  { id:1, name:'Emergency fund',    icon:'🛡️', iconBg:'rgba(136,135,128,0.15)', amount:15000, horizon:1,  priority:'essential' },
+  { id:2, name:'Home down payment', icon:'🏠', iconBg:'rgba(184,149,42,0.15)',   amount:40000, horizon:3,  priority:'high'      },
+  { id:3, name:'Retirement',        icon:'🌿', iconBg:'rgba(26,61,43,0.15)',     amount:80000, horizon:25, priority:'high'      },
 ];
 let nextId = 4;
 
 function getBucketColor(b){ return BUCKETS.find(x=>x.id===b)?.color||'#888780'; }
 
-function autoB(horizon){ return horizon<=2?'safety':horizon<=7?'income':'growth'; }
-
 function fmtM(n){
-  const abs=Math.abs(n),s=n<0?'-':'';
-  if(abs>=1e6)return s+'$'+(abs/1e6).toFixed(1)+'M';
-  if(abs>=1000)return s+'$'+Math.round(abs/1000)+'K';
+  const abs=Math.abs(n), s=n<0?'-':'';
+  if(abs>=1e6) return s+'$'+(abs/1e6).toFixed(1)+'M';
+  if(abs>=1000) return s+'$'+Math.round(abs/1000)+'K';
   return s+'$'+Math.round(abs);
 }
 
 function addGoal(){
-  goals.push({id:nextId++,name:'New goal',icon:'⭐',iconBg:'rgba(127,119,221,0.15)',amount:10000,horizon:5,priority:'medium',bucket:'income'});
+  goals.push({id:nextId++, name:'New goal', icon:'⭐', iconBg:'rgba(127,119,221,0.15)', amount:10000, horizon:5, priority:'medium'});
   render();
 }
 
 function removeGoal(id){ goals=goals.filter(g=>g.id!==id); render(); }
 
-function updateGoal(id,field,value){
-  const g=goals.find(g=>g.id===id); if(!g)return;
+function updateGoal(id, field, value){
+  const g=goals.find(g=>g.id===id); if(!g) return;
   if(field==='amount'||field==='horizon') g[field]=parseFloat(value)||0;
   else g[field]=value;
-  if(field==='horizon') g.bucket=autoB(g.horizon);
   render();
 }
 
@@ -206,13 +242,13 @@ function render(){
   document.getElementById('remainVal').style.color=remaining<0?'#E24B4A':remaining===0?'#1D9E75':'#BA7517';
 
   document.getElementById('goalsList').innerHTML=goals.map(g=>{
-    const suggested=autoB(g.horizon);
-    const isMismatch=g.bucket!==suggested;
-    const isOver=total>0&&g.amount>total;
+    const rec=recommendBucket(g.horizon, g.priority);
+    const reason=bucketReason(rec, g.horizon, g.priority);
+    const bc=getBucketColor(rec);
     const progPct=total>0?Math.min(100,(g.amount/total)*100):0;
-    const bc=getBucketColor(g.bucket);
+    const isOver=g.amount>total;
     return `
-      <div class="goal-card${isOver?' over':''}${isMismatch?' mismatch':''}">
+      <div class="goal-card${isOver?' over':''}">
         <div class="goal-header">
           <div class="goal-icon" style="background:${g.iconBg};">${g.icon}</div>
           <input class="goal-name-input" value="${g.name}" onchange="updateGoal(${g.id},'name',this.value)"/>
@@ -236,30 +272,33 @@ function render(){
               <option value="aspirational"${g.priority==='aspirational'?' selected':''}>Aspirational</option>
             </select>
           </div>
-          <div class="gf">
-            <label>Bucket</label>
-            <select onchange="updateGoal(${g.id},'bucket',this.value)">
-              ${BUCKETS.map(b=>`<option value="${b.id}"${g.bucket===b.id?' selected':''}>${b.label}</option>`).join('')}
-            </select>
+        </div>
+        <div class="bucket-recommendation" style="background:${bc}12;border-left:3px solid ${bc};">
+          <div class="bucket-rec-icon" style="background:${bc}22;">${BUCKET_ICONS[rec]}</div>
+          <div class="bucket-rec-content">
+            <div class="bucket-rec-label" style="color:${bc};">Recommended: ${rec.charAt(0).toUpperCase()+rec.slice(1)} bucket</div>
+            <div class="bucket-rec-reason">${reason}</div>
           </div>
         </div>
-        <div class="goal-footer">
-          <div class="bucket-pill" style="background:${bc}22;color:${bc};">${g.bucket.charAt(0).toUpperCase()+g.bucket.slice(1)} · ${g.horizon}yr horizon</div>
-          ${isMismatch?`<div class="warn-pill">Suggested: ${suggested} bucket for ${g.horizon}yr goal</div>`:''}
-          <div class="goal-progress" style="flex:1;"><div class="goal-progress-fill" style="width:${progPct.toFixed(1)}%;background:${bc};"></div></div>
-          <div class="goal-amount-lbl">${fmtM(g.amount)} / ${fmtM(total)}</div>
+        <div class="goal-progress-row">
+          <div class="goal-progress">
+            <div class="goal-progress-fill" style="width:${progPct.toFixed(1)}%;background:${bc};"></div>
+          </div>
+          <div class="goal-amount-lbl">${fmtM(g.amount)} of ${fmtM(total)} portfolio</div>
         </div>
       </div>
     `;
   }).join('');
 
   const bt={safety:0,income:0,growth:0};
-  const bgCount={safety:[],income:[],growth:[]};
-  goals.forEach(g=>{if(bt[g.bucket]!==undefined){bt[g.bucket]+=g.amount||0;bgCount[g.bucket].push(g.name);}});
+  const bgNames={safety:[],income:[],growth:[]};
+  goals.forEach(g=>{
+    const rec=recommendBucket(g.horizon,g.priority);
+    if(bt[rec]!==undefined){ bt[rec]+=g.amount||0; bgNames[rec].push(g.name); }
+  });
 
   document.getElementById('summaryGrid').innerHTML=BUCKETS.map(b=>{
     const pct=total>0?Math.round(bt[b.id]/total*100):0;
-    const goalNames=bgCount[b.id];
     return `
       <div class="bucket-card">
         <div class="bucket-card-header" style="background:${b.headerBg};">
@@ -270,7 +309,7 @@ function render(){
           <div class="bucket-pct" style="color:${b.color};">${pct}%</div>
           <div class="bucket-amt">${fmtM(bt[b.id])}</div>
           <div class="bucket-desc">${b.desc}</div>
-          ${goalNames.length>0?`<div class="bucket-goals">Goals: ${goalNames.join(', ')}</div>`:''}
+          ${bgNames[b.id].length>0?`<div class="bucket-goals-list">Goals: ${bgNames[b.id].join(', ')}</div>`:''}
         </div>
       </div>
     `;
@@ -285,18 +324,15 @@ function render(){
     ${sp>1?`<div class="ob-seg" style="width:${sp.toFixed(1)}%;background:#888780;">${Math.round(sp)>5?Math.round(sp)+'%':''}</div>`:''}
     ${ip>1?`<div class="ob-seg" style="width:${ip.toFixed(1)}%;background:#b8952a;">${Math.round(ip)>5?Math.round(ip)+'%':''}</div>`:''}
     ${gp>1?`<div class="ob-seg" style="width:${gp.toFixed(1)}%;background:#1a3d2a;">${Math.round(gp)>5?Math.round(gp)+'%':''}</div>`:''}
-    ${up>1?`<div class="ob-seg ob-unalloc" style="width:${up.toFixed(1)}%;"></div>`:''}
+    ${up>1?`<div class="ob-seg" style="width:${up.toFixed(1)}%;background:var(--linen-dark);"></div>`:''}
   `;
 
   let msg='';
-  const essentialFunded=goals.filter(g=>g.priority==='essential').every(g=>g.amount>0);
-  if(allocated>total) msg=`Your goals exceed your portfolio by ${fmtM(allocated-total)}. Reduce goal amounts, extend time horizons, or plan to increase contributions before these goals can be fully funded.`;
-  else if(!essentialFunded) msg='You have essential goals with no amount allocated. Fund essential goals first — they represent non-negotiable financial needs that should take priority over aspirational goals.';
-  else if(gp>75) msg=`Your portfolio is ${Math.round(gp)}% in the growth bucket. This is appropriate for long time horizons but ensure all near-term essential goals are fully funded in the safety bucket first.`;
-  else if(sp>50) msg=`Over half your portfolio is in the safety bucket (${Math.round(sp)}%). While capital preservation is important, excess cash-like holdings may limit long-term wealth compounding. Consider whether medium-term goals could shift to the income bucket.`;
-  else if(up>20) msg=`${fmtM(remaining)} (${Math.round(up)}%) remains unallocated. Assign it to an existing goal or consider adding a long-term growth goal to put that capital to work.`;
-  else msg=`Your portfolio is well-distributed across all three buckets — each goal is matched to an appropriate risk level based on its time horizon and priority. Review and rebalance annually as your goals and circumstances evolve.`;
-
+  if(allocated>total) msg=`Your goals exceed your portfolio by ${fmtM(allocated-total)}. Reduce goal amounts, extend time horizons, or plan to grow your portfolio before these goals can be fully funded.`;
+  else if(gp>75) msg=`${Math.round(gp)}% of your portfolio is in the growth bucket — appropriate for long-term goals, but make sure all essential and near-term goals are fully funded first.`;
+  else if(sp>50) msg=`Over half your portfolio (${Math.round(sp)}%) is in the safety bucket. While this protects capital, consider whether some medium-term goals could move to income to improve long-run returns.`;
+  else if(up>20) msg=`${fmtM(remaining)} (${Math.round(up)}%) remains unallocated. Add it to an existing goal or create a new long-term growth goal to put that capital to work.`;
+  else msg=`Your goals are well-matched to their recommended buckets. Each goal is funded at a risk level appropriate to its time horizon and priority. Review annually as your circumstances evolve.`;
   document.getElementById('insightBox').textContent=msg;
 }
 
