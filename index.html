@@ -74,7 +74,7 @@
     .service-desc{font-size:13px;color:rgba(240,235,224,0.5);line-height:1.75;margin-bottom:1.5rem;}
     .service-link{font-size:11px;letter-spacing:0.12em;color:var(--gold);text-decoration:none;text-transform:uppercase;}
     .tools-section{background:var(--linen);}
-    .tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.5rem;margin-top:3rem;}
+    .tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1.5rem;margin-top:3rem;}
     .tool-card{background:var(--cream);border:1px solid var(--linen-dark);padding:2rem;text-decoration:none;display:block;transition:all 0.25s;position:relative;overflow:hidden;}
     .tool-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),var(--gold));transform:scaleX(0);transform-origin:left;transition:transform 0.35s;}
     .tool-card:hover{border-color:var(--border-strong);transform:translateY(-2px);}
@@ -124,7 +124,6 @@
   </style>
 </head>
 <body>
-
 <nav>
   <a href="#" class="nav-brand">
     <img src="emblem.jpg" alt="Antar Wealth" class="nav-emblem"/>
@@ -141,10 +140,8 @@
   </ul>
   <a href="#portal" class="nav-cta">Client Portal</a>
 </nav>
-
 <section class="hero" id="home">
-  <div class="geo"></div>
-  <div class="hero-glow"></div>
+  <div class="geo"></div><div class="hero-glow"></div>
   <div class="hero-inner">
     <div>
       <div class="hero-eyebrow"><span class="eyebrow-line"></span>Wealth Management</div>
@@ -158,13 +155,11 @@
     <div class="hero-visual">
       <div class="hero-emblem-wrap">
         <img src="emblem.jpg" alt="Antar Wealth" class="hero-emblem"/>
-        <div class="hero-ring"></div>
-        <div class="hero-ring2"></div>
+        <div class="hero-ring"></div><div class="hero-ring2"></div>
       </div>
     </div>
   </div>
 </section>
-
 <section class="about" id="about">
   <div class="section-inner">
     <div class="about-grid">
@@ -181,13 +176,10 @@
           <div class="stat-card"><div class="stat-num">24/7</div><div class="stat-label">Client support</div></div>
         </div>
       </div>
-      <div class="about-emblem-wrap">
-        <img src="emblem.jpg" alt="Antar Wealth" class="about-emblem"/>
-      </div>
+      <div class="about-emblem-wrap"><img src="emblem.jpg" alt="Antar Wealth" class="about-emblem"/></div>
     </div>
   </div>
 </section>
-
 <section class="services" id="services">
   <div class="geo"></div>
   <div class="section-inner">
@@ -199,27 +191,26 @@
         <div class="service-icon"><svg viewBox="0 0 24 24"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div>
         <span class="service-num">01</span>
         <div class="service-title">Portfolio Management</div>
-        <p class="service-desc">Disciplined, research-driven portfolio construction across equities, fixed income, and alternative assets. Aligned to your risk profile and long-term objectives.</p>
+        <p class="service-desc">Disciplined, research-driven portfolio construction across equities, fixed income, and alternative assets.</p>
         <a href="#" class="service-link">Learn more →</a>
       </div>
       <div class="service-card">
         <div class="service-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
         <span class="service-num">02</span>
         <div class="service-title">Financial Planning</div>
-        <p class="service-desc">Comprehensive wealth planning encompassing tax optimization, estate planning, retirement strategy, and intergenerational wealth transfer.</p>
+        <p class="service-desc">Comprehensive wealth planning encompassing tax optimization, estate planning, and retirement strategy.</p>
         <a href="#" class="service-link">Learn more →</a>
       </div>
       <div class="service-card">
         <div class="service-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
         <span class="service-num">03</span>
         <div class="service-title">Alternative Investments</div>
-        <p class="service-desc">Access to private equity, real assets, hedge funds, and structured products — carefully vetted and sized to complement your core portfolio.</p>
+        <p class="service-desc">Access to private equity, real assets, hedge funds, and structured products.</p>
         <a href="#" class="service-link">Learn more →</a>
       </div>
     </div>
   </div>
 </section>
-
 <section class="tools-section" id="tools">
   <div class="section-inner">
     <span class="section-label">Research Tools</span>
@@ -241,9 +232,21 @@
       <a href="ebs.html" class="tool-card">
         <span class="tool-tag">Wealth Planning</span>
         <div class="tool-title">Economic Balance Sheet</div>
-        <p class="tool-desc">See your complete financial picture — human capital, future income, lifetime obligations, and implied investment allocation.</p>
+        <p class="tool-desc">See your complete financial picture — human capital, future income, lifetime obligations, and implied allocation.</p>
         <span class="tool-arrow">Open tool →</span>
       </a>
+      <a href="cme.html" class="tool-card">
+        <span class="tool-tag">Capital Market Expectations</span>
+        <div class="tool-title">Macro Dashboard</div>
+        <p class="tool-desc">Live FRED data combined with your macro view to derive forward-looking return expectations for each asset class.</p>
+        <span class="tool-arrow">Open tool →</span>
+      </a>
+      <div class="tool-card coming-soon">
+        <span class="tool-tag">Derivatives</span>
+        <div class="tool-title">Options Strategy Payoff</div>
+        <p class="tool-desc">Model payoff diagrams for common options strategies used in portfolio risk management.</p>
+        <span class="tool-arrow">Coming soon</span>
+      </div>
       <div class="tool-card coming-soon">
         <span class="tool-tag">Performance</span>
         <div class="tool-title">Attribution Analyzer</div>
@@ -253,7 +256,6 @@
     </div>
   </div>
 </section>
-
 <section class="insights" id="insights">
   <div class="section-inner">
     <span class="section-label">Market Commentary</span>
@@ -281,7 +283,6 @@
     </div>
   </div>
 </section>
-
 <section class="portal" id="portal">
   <div class="geo"></div>
   <div class="portal-inner">
@@ -294,7 +295,6 @@
     </div>
   </div>
 </section>
-
 <footer>
   <div class="footer-inner">
     <div class="footer-top">
@@ -321,6 +321,7 @@
           <li><a href="business-cycle.html">Business Cycle Tool</a></li>
           <li><a href="mvo.html">MVO Tool</a></li>
           <li><a href="ebs.html">Economic Balance Sheet</a></li>
+          <li><a href="cme.html">Macro Dashboard</a></li>
         </ul>
       </div>
       <div>
@@ -339,6 +340,5 @@
     </div>
   </div>
 </footer>
-
 </body>
 </html>
