@@ -256,6 +256,9 @@ function addGoal(){
 }
 function removeGoal(id){ goals=goals.filter(g=>g.id!==id); render(); }
 
+let renderTimer=null;
+function debouncedRender(){ clearTimeout(renderTimer); renderTimer=setTimeout(render,300); }
+
 function updateGoal(id,field,rawValue){
   const g=goals.find(g=>g.id===id); if(!g) return;
   let value=parseFloat(rawValue)||0;
@@ -304,12 +307,13 @@ function render(){
           <input type="number" value="${g.goalAmt}" step="1000" min="0" max="${maxAlloc}"
             data-goalid="${g.id}" data-field="goalAmt"
             class="${isCapped?'capped':''}"
-            oninput="updateGoal(${g.id},'goalAmt',this.value)"/>
+            oninput="updateGoal(${g.id},'goalAmt',this.value)"
+            onchange="updateGoal(${g.id},'goalAmt',this.value)"/>
           ${isCapped?`<span class="cap-warn">Max reached — no remaining portfolio balance</span>`:''}
         </div>
         <div class="gf">
           <label>Time horizon (years)</label>
-          <input type="number" value="${g.horizon}" min="1" max="40" step="1" oninput="updateGoal(${g.id},'horizon',this.value)"/>
+          <input type="number" value="${g.horizon}" min="1" max="40" step="1" onchange="updateGoal(${g.id},'horizon',this.value)"/>
         </div>
         <div class="gf">
           <label>Priority</label>
@@ -331,15 +335,15 @@ function render(){
       <div class="goal-fields-savings">
         <div class="gf">
           <label>Goal target amount</label>
-          <input type="number" value="${g.goalAmt}" step="1000" oninput="updateGoal(${g.id},'goalAmt',this.value)"/>
+          <input type="number" value="${g.goalAmt}" step="1000" onchange="updateGoal(${g.id},'goalAmt',this.value)"/>
         </div>
         <div class="gf">
           <label>Already saved</label>
-          <input type="number" value="${g.savedAmt}" step="500" oninput="updateGoal(${g.id},'savedAmt',this.value)"/>
+          <input type="number" value="${g.savedAmt}" step="500" onchange="updateGoal(${g.id},'savedAmt',this.value)"/>
         </div>
         <div class="gf">
           <label>Time horizon (years)</label>
-          <input type="number" value="${g.horizon}" min="1" max="40" step="1" oninput="updateGoal(${g.id},'horizon',this.value)"/>
+          <input type="number" value="${g.horizon}" min="1" max="40" step="1" onchange="updateGoal(${g.id},'horizon',this.value)"/>
         </div>
         <div class="gf">
           <label>Priority</label>
