@@ -307,7 +307,6 @@ function render(){
           <input type="number" value="${g.goalAmt}" step="1000" min="0" max="${maxAlloc}"
             data-goalid="${g.id}" data-field="goalAmt"
             class="${isCapped?'capped':''}"
-            oninput="updateGoal(${g.id},'goalAmt',this.value)"
             onchange="updateGoal(${g.id},'goalAmt',this.value)"/>
           ${isCapped?`<span class="cap-warn">Max reached — no remaining portfolio balance</span>`:''}
         </div>
