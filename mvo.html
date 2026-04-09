@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    :root{--linen:#f0ebe0;--linen-dark:#e6dfd2;--green:#1a3d2a;--green-mid:#1f4d35;--green-light:#2a6644;--gold:#b8952a;--gold-light:#d4ae4a;--cream:#faf6ee;--text:#0f2d1e;--text-mid:#3a5a47;--muted:#7a8c80;--border:rgba(184,149,42,0.2);--border-strong:rgba(184,149,42,0.4);}
+    :root{--linen:#f0ebe0;--linen-dark:#e6dfd2;--green:#1a3d2a;--green-mid:#1f4d35;--green-light:#2a6644;--gold:#b8952a;--gold-light:#d4ae4a;--cream:#faf6ee;--text:#0f2d1e;--text-mid:#3a5a47;--muted:#7a8c80;--border:rgba(184,149,42,0.2);--border-strong:rgba(184,149,42,0.4);--red:#E24B4A;--amber:#BA7517;}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
     body{font-family:'DM Sans',sans-serif;font-weight:300;background:var(--linen);color:var(--text);min-height:100vh;}
     nav{background:rgba(240,235,224,0.97);border-bottom:1px solid var(--border);padding:0 3rem;height:68px;display:flex;align-items:center;justify-content:space-between;}
@@ -24,13 +24,16 @@
     .eyebrow-line{width:24px;height:1px;background:var(--gold);}
     .page-title{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,4vw,52px);font-weight:300;color:var(--linen);margin-bottom:0.75rem;}
     .page-sub{font-size:14px;color:rgba(240,235,224,0.55);line-height:1.7;max-width:560px;}
-    .tool-body{max-width:900px;margin:0 auto;padding:3rem;}
+    .tool-body{max-width:900px;margin:0 auto;padding:2.5rem 3rem 4rem;}
+    .mode-toggle{display:flex;gap:0;margin-bottom:1.25rem;border:1px solid var(--linen-dark);overflow:hidden;width:fit-content;}
+    .mode-btn{padding:10px 26px;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;background:var(--cream);color:var(--muted);border:none;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+    .mode-btn.active{background:var(--green);color:var(--linen);}
     .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:2rem;}
     .metric{background:var(--cream);border:1px solid var(--linen-dark);border-left:2px solid var(--gold);padding:1rem 1.25rem;}
     .metric-label{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
     .metric-val{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--green);}
     .metric-val.highlight{color:var(--gold);}
-    .slider-section{background:var(--cream);border:1px solid var(--linen-dark);padding:1.5rem;margin-bottom:2rem;}
+    .slider-section{background:var(--cream);border:1px solid var(--linen-dark);padding:1.5rem;margin-bottom:1.5rem;}
     .slider-label-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;}
     .slider-heading{font-size:13px;font-weight:500;color:var(--text-mid);}
     .slider-profile{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:400;color:var(--green);}
@@ -42,17 +45,45 @@
     .pt-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
     .chart-section{background:var(--cream);border:1px solid var(--linen-dark);padding:1.5rem;margin-bottom:2rem;}
     .section-label-sm{font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
-    .chart-wrap{position:relative;height:300px;}
+    .chart-wrap{position:relative;height:340px;}
     .alloc-section{background:var(--cream);border:1px solid var(--linen-dark);padding:1.5rem;}
     .bar-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
     .bar-name{font-size:13px;color:var(--text-mid);width:150px;flex-shrink:0;}
     .bar-track{flex:1;height:18px;background:var(--linen-dark);border-radius:2px;overflow:hidden;}
     .bar-fill{height:100%;border-radius:2px;transition:width 0.4s ease;}
     .bar-pct{font-size:12px;font-weight:500;color:var(--text);width:36px;text-align:right;}
-    footer{background:var(--green);border-top:1px solid var(--border);padding:1.5rem 3rem;display:flex;align-items:center;justify-content:space-between;margin-top:4rem;}
+    .ticker-row{display:flex;gap:8px;margin-bottom:1rem;}
+    .ticker-input{font-size:14px;padding:9px 12px;border:1px solid var(--linen-dark);background:var(--linen);color:var(--text);width:130px;text-transform:uppercase;font-family:'DM Sans',sans-serif;letter-spacing:0.08em;}
+    .ticker-input:focus{outline:none;border-color:var(--green);}
+    .add-btn{padding:9px 20px;border:1px solid var(--green);background:var(--green);color:var(--linen);cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
+    .add-btn:hover{background:var(--green-mid);}
+    .status{font-size:12px;color:var(--muted);margin-bottom:1rem;min-height:18px;font-style:italic;}
+    .status.err{color:var(--red);}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.25rem;min-height:32px;}
+    .chip{display:flex;align-items:center;gap:6px;padding:5px 10px;font-size:12px;font-weight:500;}
+    .chip-x{cursor:pointer;opacity:0.6;font-size:15px;line-height:1;}
+    .chip-x:hover{opacity:1;}
+    .legend-row{display:flex;gap:14px;margin-bottom:1rem;flex-wrap:wrap;}
+    .leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);}
+    .leg-dot{width:9px;height:9px;border-radius:50%;}
+    .port-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.5rem;}
+    .pm-card{background:var(--cream);border:1px solid var(--linen-dark);border-left:2px solid var(--green);padding:1rem 1.25rem;}
+    .pm-label{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+    .pm-val{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:var(--green);}
+    .stock-table{width:100%;border-collapse:collapse;font-size:13px;}
+    .stock-table th{font-size:11px;color:var(--muted);text-align:left;padding:7px 12px;border-bottom:1px solid var(--linen-dark);font-weight:500;letter-spacing:0.04em;text-transform:uppercase;}
+    .stock-table td{padding:9px 12px;border-bottom:1px solid var(--linen-dark);color:var(--text);}
+    .stock-table tr:last-child td{border-bottom:none;}
+    .weight-input{width:64px;font-size:13px;padding:5px 7px;border:1px solid var(--linen-dark);background:var(--linen);color:var(--text);text-align:right;font-family:'DM Sans',sans-serif;}
+    .weight-input:focus{outline:none;border-color:var(--green);}
+    .weight-warn{font-size:11px;color:var(--amber);padding:6px 12px;}
+    .disclaimer{font-size:11px;color:var(--muted);padding:10px 0;line-height:1.6;}
+    .disclaimer strong{color:var(--text-mid);}
+    .hidden{display:none;}
+    footer{background:var(--green);border-top:1px solid var(--border);padding:1.5rem 3rem;display:flex;align-items:center;justify-content:space-between;margin-top:2rem;}
     .footer-copy{font-size:12px;color:rgba(240,235,224,0.3);}
     .footer-mark{font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:0.2em;color:var(--gold);}
-    @media(max-width:700px){.tool-body{padding:1.5rem;}.metrics{grid-template-columns:1fr;}nav{padding:0 1.5rem;}.nav-brand-name{font-size:15px;}}
+    @media(max-width:700px){.tool-body{padding:1.5rem;}.metrics{grid-template-columns:1fr;}.port-metrics{grid-template-columns:1fr;}nav{padding:0 1.5rem;}.nav-brand-name{font-size:15px;}}
   </style>
 </head>
 <body>
@@ -66,60 +97,334 @@
   </a>
   <a href="index.html" class="nav-back">← Back to home</a>
 </nav>
+
 <div class="page-header">
   <div class="page-header-inner">
     <div class="page-eyebrow"><span class="eyebrow-line"></span>Portfolio Construction</div>
     <h1 class="page-title">Mean–Variance Optimizer</h1>
-    <p class="page-sub">Adjust your risk appetite and see how the optimal portfolio shifts along the efficient frontier — balancing expected return against volatility across seven asset classes.</p>
+    <p class="page-sub">Explore the efficient frontier and see where individual stocks sit in risk-return space. Plot any ticker using live data to see how it compares.</p>
   </div>
 </div>
+
 <div class="tool-body">
-  <div class="metrics" id="metrics"></div>
-  <div class="slider-section">
-    <div class="slider-label-row">
-      <span class="slider-heading">Risk appetite</span>
-      <span class="slider-profile" id="sliderProfile">Balanced</span>
+
+  <div class="mode-toggle">
+    <button class="mode-btn active" id="btn-frontier" onclick="setMode('frontier')">Efficient frontier</button>
+    <button class="mode-btn" id="btn-stocks" onclick="setMode('stocks')">Stock plotter</button>
+  </div>
+
+  <!-- FRONTIER MODE -->
+  <div id="frontierMode">
+    <div class="metrics" id="metrics"></div>
+    <div class="slider-section">
+      <div class="slider-label-row">
+        <span class="slider-heading">Risk appetite</span>
+        <span class="slider-profile" id="sliderProfile">Balanced</span>
+      </div>
+      <div class="slider-track-row">
+        <span class="slider-end">Conservative</span>
+        <input type="range" min="0" max="100" step="1" value="40" id="riskSlider"/>
+        <span class="slider-end">Aggressive</span>
+      </div>
     </div>
-    <div class="slider-track-row">
-      <span class="slider-end">Conservative</span>
-      <input type="range" min="0" max="100" step="1" value="40" id="riskSlider"/>
-      <span class="slider-end">Aggressive</span>
+    <div class="points-row">
+      <div class="pt-badge"><span class="pt-dot" style="background:#b4b2a9;"></span>Minimum variance</div>
+      <div class="pt-badge" style="border-color:rgba(184,149,42,0.4);"><span class="pt-dot" style="background:#b8952a;"></span>Optimal Sharpe</div>
+      <div class="pt-badge" style="border-color:rgba(26,61,43,0.4);"><span class="pt-dot" style="background:#1a3d2a;"></span>Your portfolio</div>
+    </div>
+    <div class="chart-section">
+      <div class="section-label-sm">Efficient frontier — risk vs. return</div>
+      <div class="chart-wrap"><canvas id="frontierChart" role="img" aria-label="Efficient frontier scatter chart">Efficient frontier.</canvas></div>
+    </div>
+    <div class="alloc-section">
+      <div class="section-label-sm">Portfolio allocation</div>
+      <div id="allocBars"></div>
     </div>
   </div>
-  <div class="points-row">
-    <div class="pt-badge"><span class="pt-dot" style="background:#b4b2a9;"></span>Minimum variance</div>
-    <div class="pt-badge" style="border-color:rgba(184,149,42,0.4);"><span class="pt-dot" style="background:#b8952a;"></span>Optimal Sharpe</div>
-    <div class="pt-badge" style="border-color:rgba(26,61,43,0.4);"><span class="pt-dot" style="background:#1a3d2a;"></span>Your portfolio</div>
+
+  <!-- STOCK PLOTTER MODE -->
+  <div id="stockMode" class="hidden">
+    <div class="ticker-row">
+      <input class="ticker-input" type="text" id="tickerInput" placeholder="e.g. NVDA" maxlength="6"/>
+      <button class="add-btn" onclick="addTicker()">Add stock</button>
+    </div>
+    <div class="status" id="statusMsg">Enter a ticker symbol above and press Enter or click Add stock.</div>
+    <div class="chips" id="stockChips"></div>
+
+    <div class="legend-row">
+      <div class="leg-item"><div style="width:20px;height:2px;background:#b8952a;"></div>Efficient frontier</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#E24B4A;"></div>Individual stock</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#1a3d2a;width:13px;height:13px;"></div>Your portfolio</div>
+    </div>
+
+    <div class="chart-section">
+      <div class="section-label-sm">Stocks vs efficient frontier — trailing 1-year data</div>
+      <div class="chart-wrap"><canvas id="stockChart" role="img" aria-label="Stock positions plotted against the efficient frontier">Stocks vs frontier.</canvas></div>
+    </div>
+
+    <div class="port-metrics" id="portMetrics"></div>
+
+    <div class="alloc-section" style="margin-bottom:1.5rem;">
+      <div class="section-label-sm">Stock positions & portfolio weights</div>
+      <div style="overflow-x:auto;">
+        <table class="stock-table">
+          <thead><tr>
+            <th>Ticker</th><th>1yr return</th><th>Volatility</th><th>Sharpe</th><th>Weight</th>
+          </tr></thead>
+          <tbody id="stockTableBody"></tbody>
+        </table>
+      </div>
+      <div id="weightWarn"></div>
+    </div>
+
+    <div class="disclaimer">
+      <strong>Data source:</strong> Historical price data from Financial Modeling Prep (FMP). Return and volatility are calculated from trailing 252 trading days of adjusted closing prices. <strong>These are backward-looking figures</strong> — not forecasts. The efficient frontier uses forward-looking assumptions. Stocks sitting to the right of the frontier are not necessarily bad investments — they may carry idiosyncratic risk that diversification can reduce.
+    </div>
   </div>
-  <div class="chart-section">
-    <div class="section-label-sm">Efficient frontier — risk vs. return</div>
-    <div class="chart-wrap"><canvas id="frontierChart" role="img" aria-label="Scatter chart showing the efficient frontier with your selected portfolio position">Efficient frontier showing risk versus return tradeoff.</canvas></div>
-  </div>
-  <div class="alloc-section">
-    <div class="section-label-sm">Portfolio allocation</div>
-    <div id="allocBars"></div>
-  </div>
+
 </div>
+
 <footer>
   <span class="footer-copy">© 2026 Antar Wealth Management. For illustrative purposes only. Not financial advice.</span>
   <span class="footer-mark">AWM</span>
 </footer>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
+const FMP_KEY='dz3Lx2iSE0OcuZmpDfJF8bUVLPF8wOwi';
+const CACHE={};
+const STOCK_COLORS=['#E24B4A','#378ADD','#7f77dd','#d4537e','#d85a30','#1D9E75','#BA7517','#3C3489','#0F6E56','#993556'];
 const ASSETS=['Equities','Intl equities','Fixed income','Real estate','Commodities','Cash','Alternatives'];
-const COLORS=['#1a3d2a','#2a6644','#b8952a','#d4537e','#d85a30','#888780','#7f77dd'];
+const ALLOC_COLORS=['#1a3d2a','#2a6644','#b8952a','#d4537e','#d85a30','#888780','#7f77dd'];
 const N=21;
+let mode='frontier';
+let frontierChart=null, stockChart=null;
+let stocks=[];
+
+function setMode(m){
+  mode=m;
+  document.getElementById('btn-frontier').classList.toggle('active',m==='frontier');
+  document.getElementById('btn-stocks').classList.toggle('active',m==='stocks');
+  document.getElementById('frontierMode').classList.toggle('hidden',m==='stocks');
+  document.getElementById('stockMode').classList.toggle('hidden',m==='frontier');
+  if(m==='stocks') renderStockMode();
+}
+
 function lerp(a,b,t){return a+(b-a)*t;}
-function genFrontier(){const pts=[];for(let i=0;i<N;i++){const t=i/(N-1),vol=+(lerp(6,22,t*t)).toFixed(1),ret=+(lerp(4.5,14.5,Math.pow(t,0.7))).toFixed(1),sharpe=+((ret-3)/vol).toFixed(2);const w0=[5,5,45,10,5,25,5],w5=[30,15,25,10,5,5,10],w1=[40,20,3,5,10,2,20];let weights;if(t<0.5){const s=t*2;weights=w0.map((v,j)=>Math.round(lerp(v,w5[j],s)));}else{const s=(t-0.5)*2;weights=w5.map((v,j)=>Math.round(lerp(v,w1[j],s)));}const sum=weights.reduce((a,b)=>a+b,0);weights=weights.map(w=>Math.round(w/sum*100));weights[0]+=100-weights.reduce((a,b)=>a+b,0);pts.push({vol,ret,sharpe,weights});}return pts;}
+
+function genFrontier(){
+  const pts=[];
+  for(let i=0;i<N;i++){
+    const t=i/(N-1),vol=+(lerp(6,22,t*t)).toFixed(1),ret=+(lerp(4.5,14.5,Math.pow(t,0.7))).toFixed(1),sharpe=+((ret-3)/vol).toFixed(2);
+    const w0=[5,5,45,10,5,25,5],w5=[30,15,25,10,5,5,10],w1=[40,20,3,5,10,2,20];
+    let weights;
+    if(t<0.5){const s=t*2;weights=w0.map((v,j)=>Math.round(lerp(v,w5[j],s)));}
+    else{const s=(t-0.5)*2;weights=w5.map((v,j)=>Math.round(lerp(v,w1[j],s)));}
+    const sum=weights.reduce((a,b)=>a+b,0);
+    weights=weights.map(w=>Math.round(w/sum*100));
+    weights[0]+=100-weights.reduce((a,b)=>a+b,0);
+    pts.push({vol,ret,sharpe,weights});
+  }
+  return pts;
+}
+
 const frontier=genFrontier();
 const minVarIdx=0;
 const maxSharpeIdx=frontier.reduce((best,p,i)=>p.sharpe>frontier[best].sharpe?i:best,0);
-function getProfile(idx){const t=idx/(N-1);if(t<0.2)return'Conservative';if(t<0.4)return'Moderately conservative';if(t<0.6)return'Balanced';if(t<0.8)return'Moderately aggressive';return'Aggressive';}
-let chart;
-function buildChart(idx){const selected=frontier[idx];const datasets=[{label:'Frontier',data:frontier.map(p=>({x:p.vol,y:p.ret})),type:'line',borderColor:'#b8952a',backgroundColor:'transparent',borderWidth:2,pointRadius:0,tension:0.4,order:3},{label:'Min var',data:[{x:frontier[minVarIdx].vol,y:frontier[minVarIdx].ret}],type:'scatter',backgroundColor:'#b4b2a9',borderColor:'#fff',borderWidth:2,pointRadius:7,order:2},{label:'Max Sharpe',data:[{x:frontier[maxSharpeIdx].vol,y:frontier[maxSharpeIdx].ret}],type:'scatter',backgroundColor:'#b8952a',borderColor:'#fff',borderWidth:2,pointRadius:7,order:2},{label:'Selected',data:[{x:selected.vol,y:selected.ret}],type:'scatter',backgroundColor:'#1a3d2a',borderColor:'#fff',borderWidth:2,pointRadius:11,order:1}];if(chart){chart.data.datasets[3].data=[{x:selected.vol,y:selected.ret}];chart.update('none');return;}chart=new Chart(document.getElementById('frontierChart'),{type:'scatter',data:{datasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`Return: ${ctx.parsed.y.toFixed(1)}%  |  Volatility: ${ctx.parsed.x.toFixed(1)}%`}}},scales:{x:{title:{display:true,text:'Expected volatility (%)',color:'#7a8c80',font:{size:11}},min:4,max:25,grid:{color:'rgba(26,61,43,0.07)'},ticks:{color:'#7a8c80',font:{size:11},callback:v=>v+'%'}},y:{title:{display:true,text:'Expected return (%)',color:'#7a8c80',font:{size:11}},min:3,max:16,grid:{color:'rgba(26,61,43,0.07)'},ticks:{color:'#7a8c80',font:{size:11},callback:v=>v+'%'}}}}});}
-function render(val){const idx=Math.round(val/100*(N-1)),p=frontier[idx];document.getElementById('sliderProfile').textContent=getProfile(idx);document.getElementById('metrics').innerHTML=`<div class="metric"><div class="metric-label">Expected return</div><div class="metric-val highlight">${p.ret.toFixed(1)}%</div></div><div class="metric"><div class="metric-label">Expected volatility</div><div class="metric-val">${p.vol.toFixed(1)}%</div></div><div class="metric"><div class="metric-label">Sharpe ratio</div><div class="metric-val">${p.sharpe.toFixed(2)}</div></div>`;document.getElementById('allocBars').innerHTML=ASSETS.map((a,i)=>`<div class="bar-row"><div class="bar-name">${a}</div><div class="bar-track"><div class="bar-fill" style="width:${p.weights[i]}%;background:${COLORS[i]}"></div></div><div class="bar-pct">${p.weights[i]}%</div></div>`).join('');buildChart(idx);}
-document.getElementById('riskSlider').addEventListener('input',e=>render(+e.target.value));
-render(40);
+
+function getProfile(idx){
+  const t=idx/(N-1);
+  if(t<0.2)return'Conservative';if(t<0.4)return'Moderately conservative';
+  if(t<0.6)return'Balanced';if(t<0.8)return'Moderately aggressive';return'Aggressive';
+}
+
+function buildFrontierChart(selectedIdx){
+  const selected=frontier[selectedIdx];
+  const datasets=[
+    {label:'Frontier',data:frontier.map(p=>({x:p.vol,y:p.ret})),type:'line',borderColor:'#b8952a',backgroundColor:'transparent',borderWidth:2,pointRadius:0,tension:0.4,order:3},
+    {label:'Min var',data:[{x:frontier[minVarIdx].vol,y:frontier[minVarIdx].ret}],type:'scatter',backgroundColor:'#b4b2a9',borderColor:'#fff',borderWidth:2,pointRadius:7,order:2},
+    {label:'Max Sharpe',data:[{x:frontier[maxSharpeIdx].vol,y:frontier[maxSharpeIdx].ret}],type:'scatter',backgroundColor:'#b8952a',borderColor:'#fff',borderWidth:2,pointRadius:7,order:2},
+    {label:'Selected',data:[{x:selected.vol,y:selected.ret}],type:'scatter',backgroundColor:'#1a3d2a',borderColor:'#fff',borderWidth:2,pointRadius:11,order:1}
+  ];
+  if(frontierChart){frontierChart.data.datasets[3].data=[{x:selected.vol,y:selected.ret}];frontierChart.update('none');return;}
+  frontierChart=new Chart(document.getElementById('frontierChart'),{
+    type:'scatter',data:{datasets},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`Return: ${ctx.parsed.y.toFixed(1)}%  |  Volatility: ${ctx.parsed.x.toFixed(1)}%`}}},
+      scales:{x:{title:{display:true,text:'Expected volatility (%)',color:'#7a8c80',font:{size:11}},min:4,max:25,grid:{color:'rgba(26,61,43,0.07)'},ticks:{color:'#7a8c80',font:{size:11},callback:v=>v+'%'}},
+              y:{title:{display:true,text:'Expected return (%)',color:'#7a8c80',font:{size:11}},min:3,max:16,grid:{color:'rgba(26,61,43,0.07)'},ticks:{color:'#7a8c80',font:{size:11},callback:v=>v+'%'}}}}
+  });
+}
+
+function renderFrontier(val){
+  const idx=Math.round(val/100*(N-1)),p=frontier[idx];
+  document.getElementById('sliderProfile').textContent=getProfile(idx);
+  document.getElementById('metrics').innerHTML=`
+    <div class="metric"><div class="metric-label">Expected return</div><div class="metric-val highlight">${p.ret.toFixed(1)}%</div></div>
+    <div class="metric"><div class="metric-label">Expected volatility</div><div class="metric-val">${p.vol.toFixed(1)}%</div></div>
+    <div class="metric"><div class="metric-label">Sharpe ratio</div><div class="metric-val">${p.sharpe.toFixed(2)}</div></div>
+  `;
+  document.getElementById('allocBars').innerHTML=ASSETS.map((a,i)=>`
+    <div class="bar-row"><div class="bar-name">${a}</div><div class="bar-track"><div class="bar-fill" style="width:${p.weights[i]}%;background:${ALLOC_COLORS[i]}"></div></div><div class="bar-pct">${p.weights[i]}%</div></div>
+  `).join('');
+  buildFrontierChart(idx);
+}
+
+document.getElementById('riskSlider').addEventListener('input',e=>renderFrontier(+e.target.value));
+renderFrontier(40);
+
+async function fetchStock(ticker){
+  if(CACHE[ticker]) return CACHE[ticker];
+  const url=`https://financialmodelingprep.com/api/v3/historical-price-full/${ticker}?timeseries=252&apikey=${FMP_KEY}`;
+  const res=await fetch(url);
+  const json=await res.json();
+  if(!json.historical||json.historical.length<50) throw new Error('No data');
+  const prices=json.historical.map(d=>d.adjClose||d.close).reverse();
+  const rets=[];
+  for(let i=1;i<prices.length;i++) rets.push((prices[i]-prices[i-1])/prices[i-1]);
+  const mean=rets.reduce((a,b)=>a+b,0)/rets.length;
+  const variance=rets.reduce((s,r)=>s+Math.pow(r-mean,2),0)/(rets.length-1);
+  const annReturn=+(mean*252*100).toFixed(2);
+  const annVol=+(Math.sqrt(variance*252)*100).toFixed(2);
+  const sharpe=+((annReturn-3)/annVol).toFixed(2);
+  const result={ticker,annReturn,annVol,sharpe,weight:0};
+  CACHE[ticker]=result;
+  return result;
+}
+
+async function addTicker(){
+  const input=document.getElementById('tickerInput');
+  const ticker=input.value.trim().toUpperCase();
+  if(!ticker) return;
+  if(stocks.find(s=>s.ticker===ticker)){setStatus(`${ticker} is already on the chart.`,false);return;}
+  setStatus(`Loading ${ticker} from FMP...`,false);
+  try{
+    const data=await fetchStock(ticker);
+    stocks.push({...data});
+    rebalance();
+    input.value='';
+    setStatus(`${ticker} added — trailing 252-day data loaded.`,false);
+    renderStockMode();
+  }catch(e){
+    setStatus(`Could not load ${ticker}. Check the ticker symbol and try again.`,true);
+  }
+}
+
+function rebalance(){
+  if(!stocks.length) return;
+  const eq=Math.floor(100/stocks.length);
+  stocks.forEach((s,i)=>s.weight=i<stocks.length-1?eq:100-eq*(stocks.length-1));
+}
+
+function removeStock(ticker){
+  stocks=stocks.filter(s=>s.ticker!==ticker);
+  rebalance();
+  renderStockMode();
+}
+
+function updateWeight(ticker,val){
+  const s=stocks.find(x=>x.ticker===ticker);
+  if(s) s.weight=parseFloat(val)||0;
+  renderStockChart();
+  renderStockTable();
+  renderPortMetrics();
+}
+
+function setStatus(msg,isErr){
+  const el=document.getElementById('statusMsg');
+  el.textContent=msg;
+  el.className='status'+(isErr?' err':'');
+}
+
+function calcPortfolio(){
+  if(!stocks.length) return null;
+  const totalW=stocks.reduce((s,x)=>s+x.weight,0);
+  if(!totalW) return null;
+  const portRet=stocks.reduce((s,x)=>s+(x.annReturn*(x.weight/totalW)),0);
+  const portVol=Math.sqrt(stocks.reduce((s,x)=>s+Math.pow((x.weight/totalW)*x.annVol,2),0));
+  return{annReturn:+portRet.toFixed(2),annVol:+portVol.toFixed(2),sharpe:+((portRet-3)/portVol).toFixed(2)};
+}
+
+function renderStockMode(){
+  document.getElementById('stockChips').innerHTML=stocks.map((s,i)=>`
+    <div class="chip" style="background:${STOCK_COLORS[i%STOCK_COLORS.length]}20;color:${STOCK_COLORS[i%STOCK_COLORS.length]};">
+      ${s.ticker}<span class="chip-x" onclick="removeStock('${s.ticker}')">×</span>
+    </div>
+  `).join('');
+  renderStockChart();
+  renderStockTable();
+  renderPortMetrics();
+}
+
+function renderStockChart(){
+  const port=calcPortfolio();
+  const stockDatasets=stocks.map((s,i)=>({
+    label:s.ticker,
+    data:[{x:s.annVol,y:s.annReturn}],
+    type:'scatter',
+    backgroundColor:STOCK_COLORS[i%STOCK_COLORS.length],
+    borderColor:'#fff',
+    borderWidth:2,
+    pointRadius:10,
+    order:1
+  }));
+  const portDs=port?[{
+    label:'Your portfolio',
+    data:[{x:port.annVol,y:port.annReturn}],
+    type:'scatter',
+    backgroundColor:'#1a3d2a',
+    borderColor:'#fff',
+    borderWidth:3,
+    pointRadius:14,
+    order:0
+  }]:[];
+  const datasets=[
+    {label:'Efficient frontier',data:frontier.map(p=>({x:p.vol,y:p.ret})),type:'line',borderColor:'#b8952a',backgroundColor:'transparent',borderWidth:2,pointRadius:0,tension:0.4,order:3},
+    ...stockDatasets,
+    ...portDs
+  ];
+  if(stockChart){stockChart.destroy();stockChart=null;}
+  const allVols=stocks.map(s=>s.annVol).concat([25]);
+  const allRets=stocks.map(s=>s.annReturn).concat([3,16]);
+  const maxVol=Math.min(80,Math.max(...allVols)+10);
+  const minRet=Math.min(-10,Math.min(...allRets)-5);
+  const maxRet=Math.max(20,Math.max(...allRets)+5);
+  stockChart=new Chart(document.getElementById('stockChart'),{
+    type:'scatter',data:{datasets},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)}% return | ${ctx.parsed.x.toFixed(1)}% vol`}}},
+      scales:{
+        x:{title:{display:true,text:'Volatility % (trailing 1yr)',color:'#7a8c80',font:{size:11}},min:0,max:maxVol,grid:{color:'rgba(26,61,43,0.07)'},ticks:{color:'#7a8c80',font:{size:11},callback:v=>v+'%'}},
+        y:{title:{display:true,text:'Annual return % (trailing 1yr)',color:'#7a8c80',font:{size:11}},min:minRet,max:maxRet,grid:{color:'rgba(26,61,43,0.07)'},ticks:{color:'#7a8c80',font:{size:11},callback:v=>v+'%'}}
+      }
+    }
+  });
+}
+
+function renderStockTable(){
+  const totalW=stocks.reduce((s,x)=>s+x.weight,0);
+  document.getElementById('stockTableBody').innerHTML=stocks.map((s,i)=>`
+    <tr>
+      <td style="font-weight:500;color:${STOCK_COLORS[i%STOCK_COLORS.length]};">${s.ticker}</td>
+      <td style="color:${s.annReturn>=0?'#1D9E75':'#E24B4A'}">${s.annReturn.toFixed(1)}%</td>
+      <td>${s.annVol.toFixed(1)}%</td>
+      <td style="color:${s.sharpe>=1?'#1D9E75':s.sharpe>=0?'#BA7517':'#E24B4A'}">${s.sharpe.toFixed(2)}</td>
+      <td><input class="weight-input" type="number" value="${s.weight}" min="0" max="100" onchange="updateWeight('${s.ticker}',this.value)"/>%</td>
+    </tr>
+  `).join('');
+  document.getElementById('weightWarn').innerHTML=totalW!==100&&stocks.length?`<div class="weight-warn">Weights sum to ${totalW}% — adjust to reach 100% for accurate portfolio metrics.</div>`:'';
+}
+
+function renderPortMetrics(){
+  const port=calcPortfolio();
+  if(!port||!stocks.length){document.getElementById('portMetrics').innerHTML='';return;}
+  document.getElementById('portMetrics').innerHTML=`
+    <div class="pm-card"><div class="pm-label">Portfolio return</div><div class="pm-val" style="color:${port.annReturn>=0?'#1a3d2a':'#E24B4A'}">${port.annReturn.toFixed(1)}%</div></div>
+    <div class="pm-card"><div class="pm-label">Portfolio volatility</div><div class="pm-val">${port.annVol.toFixed(1)}%</div></div>
+    <div class="pm-card"><div class="pm-label">Portfolio Sharpe</div><div class="pm-val" style="color:${port.sharpe>=1?'#1a3d2a':port.sharpe>=0?'#BA7517':'#E24B4A'}">${port.sharpe.toFixed(2)}</div></div>
+  `;
+}
+
+document.getElementById('tickerInput').addEventListener('keydown',e=>{if(e.key==='Enter') addTicker();});
 </script>
 </body>
 </html>
