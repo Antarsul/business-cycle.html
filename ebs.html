@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    :root{--linen:#f0ebe0;--linen-dark:#e6dfd2;--green:#1a3d2a;--green-mid:#1f4d35;--green-light:#2a6644;--gold:#b8952a;--gold-light:#d4ae4a;--cream:#faf6ee;--text:#0f2d1e;--text-mid:#3a5a47;--muted:#7a8c80;--border:rgba(184,149,42,0.2);--border-strong:rgba(184,149,42,0.4);--teal:#1D9E75;--teal-light:#E1F5EE;--teal-dark:#085041;--red:#E24B4A;--red-light:#FCEBEB;--blue:#185FA5;--amber:#BA7517;--amber-light:#FAEEDA;}
+    :root{--linen:#f0ebe0;--linen-dark:#e6dfd2;--green:#1a3d2a;--green-mid:#1f4d35;--green-light:#2a6644;--gold:#b8952a;--gold-light:#d4ae4a;--cream:#faf6ee;--text:#0f2d1e;--text-mid:#3a5a47;--muted:#7a8c80;--border:rgba(184,149,42,0.2);--border-strong:rgba(184,149,42,0.4);}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
     body{font-family:'DM Sans',sans-serif;font-weight:300;background:var(--linen);color:var(--text);min-height:100vh;}
     nav{background:rgba(240,235,224,0.97);border-bottom:1px solid var(--border);padding:0 3rem;height:68px;display:flex;align-items:center;justify-content:space-between;}
@@ -26,24 +26,16 @@
     .page-sub{font-size:14px;color:rgba(240,235,224,0.55);line-height:1.7;max-width:580px;}
     .cfa-badge{display:inline-flex;align-items:center;gap:6px;margin-top:1rem;padding:5px 12px;border:1px solid rgba(184,149,42,0.4);font-size:11px;letter-spacing:0.1em;color:var(--gold);text-transform:uppercase;}
     .tool-body{max-width:860px;margin:0 auto;padding:2.5rem 3rem 4rem;}
-
-    /* Steps */
     .steps{display:flex;gap:6px;margin-bottom:2rem;flex-wrap:wrap;}
     .step-btn{flex:1;min-width:80px;padding:8px 6px;border:1px solid var(--linen-dark);background:var(--cream);cursor:pointer;font-size:11px;color:var(--muted);text-align:center;transition:all 0.15s;letter-spacing:0.03em;}
     .step-btn.active{border-color:var(--green);background:var(--green);color:var(--linen);font-weight:500;}
     .step-btn.done{border-color:var(--gold);color:var(--gold);}
-
-    /* Panels */
     .panel{background:var(--cream);border:1px solid var(--linen-dark);padding:1.75rem;margin-bottom:1rem;}
     .panel-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:var(--green);margin-bottom:1.25rem;}
     .panel-sub{font-size:12px;color:var(--muted);margin-top:-0.75rem;margin-bottom:1.25rem;line-height:1.6;}
-
-    /* Toggle */
     .toggle-row{display:flex;gap:8px;margin-bottom:1.5rem;}
     .toggle-btn{flex:1;padding:12px;border:1px solid var(--linen-dark);cursor:pointer;text-align:center;background:var(--cream);font-size:13px;color:var(--muted);transition:all 0.15s;}
     .toggle-btn.active{border-color:var(--green);background:var(--green);color:var(--linen);font-weight:500;}
-
-    /* Fields */
     .field{margin-bottom:1.1rem;}
     .field label{display:block;font-size:12px;color:var(--text-mid);margin-bottom:5px;letter-spacing:0.02em;}
     .field-hint{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.5;}
@@ -51,45 +43,28 @@
     .prefix{font-size:13px;color:var(--muted);}
     .field input,.field select{flex:1;font-size:14px;padding:9px 12px;border:1px solid var(--linen-dark);background:var(--linen);color:var(--text);font-family:'DM Sans',sans-serif;}
     .field input:focus,.field select:focus{outline:none;border-color:var(--green);}
-
-    /* Two col */
     .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-
-    /* Career grid */
     .career-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
     .career-opt{padding:10px 8px;border:1px solid var(--linen-dark);cursor:pointer;text-align:center;background:var(--linen);transition:all 0.15s;}
     .career-opt.selected{border-color:var(--green);background:rgba(26,61,43,0.06);}
     .career-opt .ci{font-size:18px;margin-bottom:4px;}
     .career-opt .cl{font-size:11px;color:var(--muted);line-height:1.4;}
     .career-opt.selected .cl{color:var(--green);font-weight:500;}
-
-    /* Education opts */
     .edu-opts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px;}
     .edu-opt{padding:10px 8px;border:1px solid var(--linen-dark);cursor:pointer;text-align:center;background:var(--linen);font-size:12px;color:var(--muted);transition:all 0.15s;line-height:1.4;}
-    .edu-opt.selected{border-color:var(--gold);background:var(--amber-light);color:var(--amber);}
-
-    /* Person block */
+    .edu-opt.selected{border-color:var(--gold);background:#FAEEDA;color:#633806;}
     .person-block{padding:1.25rem;border:1px solid var(--linen-dark);background:var(--linen);margin-bottom:1rem;}
     .person-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:1rem;}
-
-    /* HC banner */
     .hc-banner{background:rgba(26,61,43,0.06);border-left:2px solid var(--green);padding:0.9rem 1.1rem;margin-top:0.75rem;display:flex;justify-content:space-between;align-items:center;}
     .hc-lbl{font-size:11px;color:var(--green-light);text-transform:uppercase;letter-spacing:0.06em;}
     .hc-sub-txt{font-size:11px;color:var(--muted);margin-top:2px;}
     .hc-val{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:var(--green);}
-
-    /* Calc box */
     .calc-box{background:var(--linen);border:1px solid var(--linen-dark);padding:10px 14px;margin-top:8px;font-size:12px;color:var(--muted);line-height:1.7;}
     .calc-box strong{color:var(--text-mid);}
-
-    /* Nav */
     .nav-row{display:flex;justify-content:space-between;margin-top:1.5rem;}
     .btn{padding:11px 24px;border:1px solid var(--linen-dark);background:var(--cream);color:var(--text-mid);cursor:pointer;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;transition:all 0.2s;font-family:'DM Sans',sans-serif;}
-    .btn:hover{border-color:var(--text-mid);}
     .btn-primary{background:var(--green);border-color:var(--green);color:var(--linen);}
     .btn-primary:hover{background:var(--green-mid);}
-
-    /* Results */
     .sum-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.5rem;}
     .sum-card{background:var(--cream);border:1px solid var(--linen-dark);padding:1.1rem;text-align:center;}
     .sum-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;}
@@ -124,7 +99,6 @@
   </style>
 </head>
 <body>
-
 <nav>
   <a href="index.html" class="nav-brand">
     <img src="emblem.jpg" alt="Antar Wealth" class="nav-emblem"/>
@@ -135,7 +109,6 @@
   </a>
   <a href="index.html" class="nav-back">← Back to home</a>
 </nav>
-
 <div class="page-header">
   <div class="page-header-inner">
     <div class="page-eyebrow"><span class="eyebrow-line"></span>Wealth Planning</div>
@@ -144,9 +117,7 @@
     <div class="cfa-badge">Inspired by CFA Level III Asset Allocation Framework</div>
   </div>
 </div>
-
 <div class="tool-body">
-
   <div class="steps">
     <div class="step-btn active" id="s1">1 · Household</div>
     <div class="step-btn" id="s2">2 · Income</div>
@@ -154,8 +125,6 @@
     <div class="step-btn" id="s4">4 · Liabilities</div>
     <div class="step-btn" id="s5">5 · Results</div>
   </div>
-
-  <!-- PAGE 1 -->
   <div class="page active" id="p1">
     <div class="panel">
       <div class="panel-title">Who are we planning for?</div>
@@ -166,9 +135,9 @@
       <div class="divider"></div>
       <div class="panel-title" style="font-size:16px;margin-bottom:0.75rem;">Children</div>
       <div class="two-col">
-        <div class="field"><label>Current children</label><div class="field-row"><input type="number" id="kidsNow" value="1" min="0" max="10" style="max-width:90px;"/></div></div>
-        <div class="field"><label>Planned children</label><div class="field-row"><input type="number" id="kidsPlanned" value="1" min="0" max="10" style="max-width:90px;"/></div></div>
-        <div class="field"><label>Average age of current kids</label><div class="field-row"><input type="number" id="kidsAge" value="2" min="0" max="17" style="max-width:90px;"/><span class="prefix">yrs</span></div></div>
+        <div class="field"><label>Current children</label><div class="field-row"><input type="number" id="kidsNow" value="0" min="0" max="10" style="max-width:90px;"/></div></div>
+        <div class="field"><label>Planned children</label><div class="field-row"><input type="number" id="kidsPlanned" value="0" min="0" max="10" style="max-width:90px;"/></div></div>
+        <div class="field"><label>Average age of current kids</label><div class="field-row"><input type="number" id="kidsAge" value="5" min="0" max="17" style="max-width:90px;"/><span class="prefix">yrs</span></div></div>
         <div class="field"><label>Years until planned kids</label><div class="field-row"><input type="number" id="kidsYrs" value="3" min="0" max="15" style="max-width:90px;"/><span class="prefix">yrs</span></div></div>
       </div>
       <div class="field">
@@ -183,82 +152,68 @@
     </div>
     <div class="nav-row"><div></div><button class="btn btn-primary" onclick="goTo(2)">Next →</button></div>
   </div>
-
-  <!-- PAGE 2 -->
   <div class="page" id="p2">
     <div class="panel">
       <div class="panel-title">Income & human capital</div>
       <div class="panel-sub">Human capital is the present value of your future income — your single largest asset. We discount it based on how stable your income is.</div>
-
       <div class="person-block">
         <div class="person-label" id="p1label">Your income profile</div>
         <div class="two-col">
-          <div class="field"><label>Current age</label><div class="field-row"><input type="number" id="age1" value="32" min="18" max="70" style="max-width:90px;"/></div></div>
+          <div class="field"><label>Current age</label><div class="field-row"><input type="number" id="age1" value="35" min="18" max="70" style="max-width:90px;"/></div></div>
           <div class="field"><label>Planned retirement age</label><div class="field-row"><input type="number" id="ret1" value="65" min="40" max="80" style="max-width:90px;"/></div></div>
         </div>
-        <div class="field"><label>Annual gross income</label><div class="field-row"><span class="prefix">$</span><input type="number" id="inc1" value="120000" step="5000"/></div></div>
-        <div class="field"><label>Expected annual income growth</label><div class="field-row"><input type="number" id="grow1" value="3" step="0.5" min="0" max="15" style="max-width:90px;"/><span class="prefix">% per year</span></div><div class="field-hint">Typical range: 2–4% for most professionals. Include expected promotions.</div></div>
+        <div class="field"><label>Annual gross income</label><div class="field-row"><span class="prefix">$</span><input type="number" id="inc1" value="85000" step="5000"/></div></div>
+        <div class="field"><label>Expected annual income growth</label><div class="field-row"><input type="number" id="grow1" value="3" step="0.5" min="0" max="15" style="max-width:90px;"/><span class="prefix">% per year</span></div><div class="field-hint">Typical range: 2–4% for most professionals.</div></div>
         <div class="field">
           <label>Career stability — determines your discount rate</label>
           <div class="career-grid" id="career1">
-            <div class="career-opt selected" data-rate="3.5"><div class="ci">🏛️</div><div class="cl">Stable / Government<br><span style="color:var(--green);font-size:10px;">3.5% discount rate</span></div></div>
-            <div class="career-opt" data-rate="5.5"><div class="ci">🏢</div><div class="cl">Corporate professional<br><span style="color:var(--amber);font-size:10px;">5.5% discount rate</span></div></div>
+            <div class="career-opt" data-rate="3.5"><div class="ci">🏛️</div><div class="cl">Stable / Government<br><span style="color:var(--green);font-size:10px;">3.5% discount rate</span></div></div>
+            <div class="career-opt selected" data-rate="5.5"><div class="ci">🏢</div><div class="cl">Corporate professional<br><span style="color:var(--gold);font-size:10px;">5.5% discount rate</span></div></div>
             <div class="career-opt" data-rate="8.0"><div class="ci">📈</div><div class="cl">Entrepreneur / Variable<br><span style="color:#E24B4A;font-size:10px;">8.0% discount rate</span></div></div>
           </div>
-          <div class="field-hint">Stable income is bond-like → low discount rate → higher human capital value. Variable income is equity-like → higher discount rate → lower present value.</div>
+          <div class="field-hint">Stable income is bond-like → low discount rate. Variable income is equity-like → higher discount rate.</div>
         </div>
-        <div class="hc-banner">
-          <div><div class="hc-lbl">Your human capital</div><div class="hc-sub-txt" id="hcSub1">PV of future income stream</div></div>
-          <div class="hc-val" id="hcVal1">—</div>
-        </div>
+        <div class="hc-banner"><div><div class="hc-lbl">Your human capital</div><div class="hc-sub-txt" id="hcSub1">PV of future income stream</div></div><div class="hc-val" id="hcVal1">—</div></div>
       </div>
-
       <div class="person-block hidden" id="p2block">
         <div class="person-label">Partner's income profile</div>
         <div class="two-col">
-          <div class="field"><label>Partner's age</label><div class="field-row"><input type="number" id="age2" value="30" min="18" max="70" style="max-width:90px;"/></div></div>
-          <div class="field"><label>Partner's retirement age</label><div class="field-row"><input type="number" id="ret2" value="62" min="40" max="80" style="max-width:90px;"/></div></div>
+          <div class="field"><label>Partner's age</label><div class="field-row"><input type="number" id="age2" value="33" min="18" max="70" style="max-width:90px;"/></div></div>
+          <div class="field"><label>Partner's retirement age</label><div class="field-row"><input type="number" id="ret2" value="65" min="40" max="80" style="max-width:90px;"/></div></div>
         </div>
-        <div class="field"><label>Partner's annual gross income</label><div class="field-row"><span class="prefix">$</span><input type="number" id="inc2" value="90000" step="5000"/></div></div>
+        <div class="field"><label>Partner's annual gross income</label><div class="field-row"><span class="prefix">$</span><input type="number" id="inc2" value="75000" step="5000"/></div></div>
         <div class="field"><label>Partner's expected income growth</label><div class="field-row"><input type="number" id="grow2" value="3" step="0.5" min="0" max="15" style="max-width:90px;"/><span class="prefix">% per year</span></div></div>
         <div class="field">
           <label>Partner's career stability</label>
           <div class="career-grid" id="career2">
             <div class="career-opt" data-rate="3.5"><div class="ci">🏛️</div><div class="cl">Stable / Government<br><span style="color:var(--green);font-size:10px;">3.5% discount rate</span></div></div>
-            <div class="career-opt selected" data-rate="5.5"><div class="ci">🏢</div><div class="cl">Corporate professional<br><span style="color:var(--amber);font-size:10px;">5.5% discount rate</span></div></div>
+            <div class="career-opt selected" data-rate="5.5"><div class="ci">🏢</div><div class="cl">Corporate professional<br><span style="color:var(--gold);font-size:10px;">5.5% discount rate</span></div></div>
             <div class="career-opt" data-rate="8.0"><div class="ci">📈</div><div class="cl">Entrepreneur / Variable<br><span style="color:#E24B4A;font-size:10px;">8.0% discount rate</span></div></div>
           </div>
         </div>
-        <div class="hc-banner">
-          <div><div class="hc-lbl">Partner's human capital</div><div class="hc-sub-txt" id="hcSub2">PV of future income stream</div></div>
-          <div class="hc-val" id="hcVal2">—</div>
-        </div>
+        <div class="hc-banner"><div><div class="hc-lbl">Partner's human capital</div><div class="hc-sub-txt" id="hcSub2">PV of future income stream</div></div><div class="hc-val" id="hcVal2">—</div></div>
       </div>
     </div>
     <div class="nav-row"><button class="btn" onclick="goTo(1)">← Back</button><button class="btn btn-primary" onclick="goTo(3)">Next →</button></div>
   </div>
-
-  <!-- PAGE 3 -->
   <div class="page" id="p3">
     <div class="panel">
       <div class="panel-title">Financial & real assets</div>
-      <div class="field"><label>Investment portfolio (stocks, bonds, 401k, IRA, brokerage accounts)</label><div class="field-row"><span class="prefix">$</span><input type="number" id="finPort" value="200000" step="5000"/></div></div>
-      <div class="field"><label>Home market value</label><div class="field-row"><span class="prefix">$</span><input type="number" id="homeVal" value="855000" step="5000"/></div><div class="field-hint">Enter the full current market value — we will subtract your mortgage balance on the next page to get your home equity.</div></div>
+      <div class="field"><label>Investment portfolio (stocks, bonds, 401k, IRA, brokerage)</label><div class="field-row"><span class="prefix">$</span><input type="number" id="finPort" value="50000" step="5000"/></div></div>
+      <div class="field"><label>Home market value</label><div class="field-row"><span class="prefix">$</span><input type="number" id="homeVal" value="350000" step="5000"/></div><div class="field-hint">Enter the full current market value — we will subtract your mortgage balance on the next page.</div></div>
       <div class="field"><label>Business interests or other assets</label><div class="field-row"><span class="prefix">$</span><input type="number" id="bizAsset" value="0" step="5000"/></div></div>
     </div>
     <div class="nav-row"><button class="btn" onclick="goTo(2)">← Back</button><button class="btn btn-primary" onclick="goTo(4)">Next →</button></div>
   </div>
-
-  <!-- PAGE 4 -->
   <div class="page" id="p4">
     <div class="panel">
       <div class="panel-title">Debts & future obligations</div>
-      <div class="field"><label>Mortgage balance outstanding</label><div class="field-row"><span class="prefix">$</span><input type="number" id="mortgage" value="855000" step="5000"/></div></div>
-      <div class="field"><label>Other debts (student loans, car loans, credit cards)</label><div class="field-row"><span class="prefix">$</span><input type="number" id="otherDebt" value="0" step="5000"/></div></div>
+      <div class="field"><label>Mortgage balance outstanding</label><div class="field-row"><span class="prefix">$</span><input type="number" id="mortgage" value="280000" step="5000"/></div></div>
+      <div class="field"><label>Other debts (student loans, car loans, credit cards)</label><div class="field-row"><span class="prefix">$</span><input type="number" id="otherDebt" value="10000" step="1000"/></div></div>
       <div class="divider"></div>
       <div class="panel-title" style="font-size:16px;margin-bottom:0.5rem;">Future consumption — we calculate this for you</div>
       <div class="panel-sub">Your biggest liability is often not your mortgage — it is the present value of everything you will spend for the rest of your life.</div>
-      <div class="field"><label>Monthly household living expenses today</label><div class="field-row"><span class="prefix">$</span><input type="number" id="monthlySpend" value="6000" step="250"/></div><div class="field-hint">All-in estimate: housing costs, food, transport, childcare, lifestyle, subscriptions — everything your household spends monthly.</div></div>
+      <div class="field"><label>Monthly household living expenses today</label><div class="field-row"><span class="prefix">$</span><input type="number" id="monthlySpend" value="4000" step="250"/></div><div class="field-hint">All-in: housing, food, transport, lifestyle — everything your household spends monthly.</div></div>
       <div class="two-col">
         <div class="field"><label>Expected inflation rate</label><div class="field-row"><input type="number" id="inflation" value="2.5" step="0.5" min="0" max="8" style="max-width:90px;"/><span class="prefix">%</span></div><div class="field-hint">Long-run US average: ~2.5%</div></div>
         <div class="field"><label>Years of retirement to fund</label><div class="field-row"><input type="number" id="retYrs" value="25" step="1" min="5" max="40" style="max-width:90px;"/><span class="prefix">yrs</span></div><div class="field-hint">E.g. retire at 65, plan to age 90 = 25 years</div></div>
@@ -267,214 +222,65 @@
     </div>
     <div class="nav-row"><button class="btn" onclick="goTo(3)">← Back</button><button class="btn btn-primary" onclick="goTo(5)">See my balance sheet →</button></div>
   </div>
-
-  <!-- PAGE 5 -->
   <div class="page" id="p5">
     <div class="sum-grid" id="sumGrid"></div>
     <div class="bs-grid" id="bsGrid"></div>
-    <div class="alloc-section">
-      <div class="alloc-title">Implied financial portfolio allocation</div>
-      <div id="allocBars"></div>
-    </div>
+    <div class="alloc-section"><div class="alloc-title">Implied financial portfolio allocation</div><div id="allocBars"></div></div>
     <div class="insight" id="insight"></div>
     <div class="assume-box" id="assumeBox"></div>
     <div class="nav-row" style="margin-top:1.5rem;"><button class="btn" onclick="goTo(4)">← Edit inputs</button></div>
   </div>
-
 </div>
-
 <footer>
   <span class="footer-copy">© 2026 Antar Wealth Management. For illustrative purposes only. Not financial advice.</span>
   <span class="footer-mark">AWM</span>
 </footer>
-
 <script>
-let household='single', eduCost=120000, rate1=3.5, rate2=5.5;
-
-function setHousehold(type){
-  household=type;
-  document.getElementById('tog-single').classList.toggle('active',type==='single');
-  document.getElementById('tog-couple').classList.toggle('active',type==='couple');
-  document.getElementById('p2block').classList.toggle('hidden',type==='single');
-  document.getElementById('p1label').textContent=type==='couple'?'Your income profile':'Your income profile';
-}
-
-document.querySelectorAll('#eduOpts .edu-opt').forEach(el=>{
-  el.addEventListener('click',()=>{
-    document.querySelectorAll('#eduOpts .edu-opt').forEach(e=>e.classList.remove('selected'));
-    el.classList.add('selected');
-    eduCost=parseFloat(el.dataset.cost);
-    updateLive();
-  });
-});
-
-function setupCareer(gridId,setter){
-  document.querySelectorAll('#'+gridId+' .career-opt').forEach(el=>{
-    el.addEventListener('click',()=>{
-      document.querySelectorAll('#'+gridId+' .career-opt').forEach(e=>e.classList.remove('selected'));
-      el.classList.add('selected');
-      setter(parseFloat(el.dataset.rate));
-      updateLive();
-    });
-  });
-}
+let household='single',eduCost=120000,rate1=5.5,rate2=5.5;
+function setHousehold(t){household=t;document.getElementById('tog-single').classList.toggle('active',t==='single');document.getElementById('tog-couple').classList.toggle('active',t==='couple');document.getElementById('p2block').classList.toggle('hidden',t==='single');}
+document.querySelectorAll('#eduOpts .edu-opt').forEach(el=>{el.addEventListener('click',()=>{document.querySelectorAll('#eduOpts .edu-opt').forEach(e=>e.classList.remove('selected'));el.classList.add('selected');eduCost=parseFloat(el.dataset.cost);updateLive();});});
+function setupCareer(gid,setter){document.querySelectorAll('#'+gid+' .career-opt').forEach(el=>{el.addEventListener('click',()=>{document.querySelectorAll('#'+gid+' .career-opt').forEach(e=>e.classList.remove('selected'));el.classList.add('selected');setter(parseFloat(el.dataset.rate));updateLive();});});}
 setupCareer('career1',r=>{rate1=r;});
 setupCareer('career2',r=>{rate2=r;});
-
 function g(id){return parseFloat(document.getElementById(id).value)||0;}
-
-function calcHC(income,incGrowth,age,retAge,discRate){
-  const yrs=Math.max(0,retAge-age);
-  const gr=incGrowth/100,d=discRate/100;
-  let hc=0;
-  for(let i=1;i<=yrs;i++) hc+=(income*Math.pow(1+gr,i))/Math.pow(1+d,i);
-  return Math.round(hc);
-}
-
-function calcPVConsumption(){
-  const monthly=g('monthlySpend'),annual=monthly*12;
-  const infl=g('inflation')/100,retYrs=g('retYrs');
-  const yrsToRet=Math.max(0,g('ret1')-g('age1'));
-  const rf=0.035;
-  let pvAtRet=0;
-  for(let i=1;i<=retYrs;i++) pvAtRet+=(annual*Math.pow(1+infl,yrsToRet+i))/Math.pow(1+rf,i);
-  return Math.round(pvAtRet/Math.pow(1+rf,yrsToRet));
-}
-
-function calcPVEducation(){
-  if(eduCost===0)return 0;
-  const eduInfl=0.05,rf=0.035;
-  const kidsNow=g('kidsNow'),kidsAge=g('kidsAge');
-  const kidsPlanned=g('kidsPlanned'),kidsYrs=g('kidsYrs');
-  let total=0;
-  for(let k=0;k<kidsNow;k++){
-    const yrs=Math.max(0,18-kidsAge);
-    total+=(eduCost*Math.pow(1+eduInfl,yrs))/Math.pow(1+rf,yrs);
-  }
-  for(let k=0;k<kidsPlanned;k++){
-    const yrs=kidsYrs+18;
-    total+=(eduCost*Math.pow(1+eduInfl,yrs))/Math.pow(1+rf,yrs);
-  }
-  return Math.round(total);
-}
-
-function fmtD(n){
-  const abs=Math.abs(n),sign=n<0?'-':'';
-  if(abs>=1000000)return sign+'$'+(abs/1000000).toFixed(2)+'M';
-  if(abs>=1000)return sign+'$'+Math.round(abs/1000).toLocaleString()+'K';
-  return sign+'$'+Math.round(abs);
-}
-
+function calcHC(inc,gr,age,ret,d){const yrs=Math.max(0,ret-age),g=gr/100,disc=d/100;let hc=0;for(let i=1;i<=yrs;i++)hc+=(inc*Math.pow(1+g,i))/Math.pow(1+disc,i);return Math.round(hc);}
+function calcPVC(){const annual=g('monthlySpend')*12,infl=g('inflation')/100,retYrs=g('retYrs'),yrsToRet=Math.max(0,g('ret1')-g('age1')),rf=0.035;let pv=0;for(let i=1;i<=retYrs;i++)pv+=(annual*Math.pow(1+infl,yrsToRet+i))/Math.pow(1+rf,i);return Math.round(pv/Math.pow(1+rf,yrsToRet));}
+function calcPVE(){if(eduCost===0)return 0;const rf=0.035,ei=0.05;let t=0;for(let k=0;k<g('kidsNow');k++){const y=Math.max(0,18-g('kidsAge'));t+=(eduCost*Math.pow(1+ei,y))/Math.pow(1+rf,y);}for(let k=0;k<g('kidsPlanned');k++){const y=g('kidsYrs')+18;t+=(eduCost*Math.pow(1+ei,y))/Math.pow(1+rf,y);}return Math.round(t);}
+function fmtD(n){const abs=Math.abs(n),s=n<0?'-':'';if(abs>=1e6)return s+'$'+(abs/1e6).toFixed(2)+'M';if(abs>=1000)return s+'$'+Math.round(abs/1000).toLocaleString()+'K';return s+'$'+Math.round(abs);}
 function updateLive(){
   const hc1=calcHC(g('inc1'),g('grow1'),g('age1'),g('ret1'),rate1);
-  const yrs1=Math.max(0,g('ret1')-g('age1'));
   document.getElementById('hcVal1').textContent=fmtD(hc1);
-  document.getElementById('hcSub1').textContent=`${yrs1} working years · ${rate1}% discount rate · ${g('grow1')}% income growth`;
-  if(household==='couple'){
-    const hc2=calcHC(g('inc2'),g('grow2'),g('age2'),g('ret2'),rate2);
-    const yrs2=Math.max(0,g('ret2')-g('age2'));
-    document.getElementById('hcVal2').textContent=fmtD(hc2);
-    document.getElementById('hcSub2').textContent=`${yrs2} working years · ${rate2}% discount rate · ${g('grow2')}% income growth`;
-  }
-  const pvC=calcPVConsumption(),pvE=calcPVEducation();
-  const totalKids=g('kidsNow')+g('kidsPlanned');
-  document.getElementById('liabCalcBox').innerHTML=
-    `<strong>PV of future consumption:</strong> ${fmtD(pvC)} &nbsp;(discounted at 3.5% risk-free rate, ${g('inflation')}% inflation, over ${g('retYrs')} retirement years)<br>`+
-    (totalKids>0?`<strong>PV of education (${totalKids} child${totalKids!==1?'ren':''}):</strong> ${fmtD(pvE)} &nbsp;(education inflation 5% per year, discounted at 3.5%)`:'');
+  document.getElementById('hcSub1').textContent=`${Math.max(0,g('ret1')-g('age1'))} working years · ${rate1}% discount · ${g('grow1')}% growth`;
+  if(household==='couple'){const hc2=calcHC(g('inc2'),g('grow2'),g('age2'),g('ret2'),rate2);document.getElementById('hcVal2').textContent=fmtD(hc2);document.getElementById('hcSub2').textContent=`${Math.max(0,g('ret2')-g('age2'))} working years · ${rate2}% discount · ${g('grow2')}% growth`;}
+  const pvC=calcPVC(),pvE=calcPVE(),tk=g('kidsNow')+g('kidsPlanned');
+  document.getElementById('liabCalcBox').innerHTML=`<strong>PV of future consumption:</strong> ${fmtD(pvC)} &nbsp;(3.5% risk-free, ${g('inflation')}% inflation, ${g('retYrs')} retirement years)<br>`+(tk>0?`<strong>PV of education (${tk} child${tk!==1?'ren':''}):</strong> ${fmtD(pvE)} &nbsp;(5% education inflation, 3.5% discount rate)`:'');
 }
-
-function goTo(step){
-  updateLive();
-  [1,2,3,4,5].forEach(i=>{
-    document.getElementById('p'+i).classList.toggle('active',i===step);
-    const btn=document.getElementById('s'+i);
-    btn.classList.toggle('active',i===step);
-    btn.classList.toggle('done',i<step);
-  });
-  if(step===5)renderResults();
-}
-
+function goTo(step){updateLive();[1,2,3,4,5].forEach(i=>{document.getElementById('p'+i).classList.toggle('active',i===step);const b=document.getElementById('s'+i);b.classList.toggle('active',i===step);b.classList.toggle('done',i<step);});if(step===5)renderResults();}
 function renderResults(){
   const hc1=calcHC(g('inc1'),g('grow1'),g('age1'),g('ret1'),rate1);
   const hc2=household==='couple'?calcHC(g('inc2'),g('grow2'),g('age2'),g('ret2'),rate2):0;
-  const totalHC=hc1+hc2;
-  const fp=g('finPort'),homeVal=g('homeVal'),biz=g('bizAsset');
-  const mortgage=g('mortgage'),otherD=g('otherDebt');
-  const pvC=calcPVConsumption(),pvE=calcPVEducation();
-  const homeEquity=Math.max(0,homeVal-mortgage);
-  const totalA=totalHC+fp+homeEquity+biz;
-  const totalL=mortgage+otherD+pvC+pvE;
-  const net=totalA-totalL;
-
-  document.getElementById('sumGrid').innerHTML=`
-    <div class="sum-card"><div class="sum-lbl">Total economic assets</div><div class="sum-val" style="color:#1a3d2a">${fmtD(totalA)}</div></div>
-    <div class="sum-card"><div class="sum-lbl">Total economic liabilities</div><div class="sum-val" style="color:#E24B4A">${fmtD(totalL)}</div></div>
-    <div class="sum-card"><div class="sum-lbl">Net economic worth</div><div class="sum-val" style="color:${net>=0?'#185FA5':'#A32D2D'}">${fmtD(net)}</div></div>
-  `;
-
-  const partnerRow=household==='couple'?`<div class="bs-item"><span class="bs-lbl">Human capital (partner)</span><span class="bs-val">${fmtD(hc2)}</span></div>`:'';
+  const totalHC=hc1+hc2,fp=g('finPort'),homeVal=g('homeVal'),biz=g('bizAsset'),mort=g('mortgage'),otherD=g('otherDebt'),pvC=calcPVC(),pvE=calcPVE();
+  const homeEq=Math.max(0,homeVal-mort),totalA=totalHC+fp+homeEq+biz,totalL=mort+otherD+pvC+pvE,net=totalA-totalL;
+  document.getElementById('sumGrid').innerHTML=`<div class="sum-card"><div class="sum-lbl">Total economic assets</div><div class="sum-val" style="color:#1a3d2a">${fmtD(totalA)}</div></div><div class="sum-card"><div class="sum-lbl">Total economic liabilities</div><div class="sum-val" style="color:#E24B4A">${fmtD(totalL)}</div></div><div class="sum-card"><div class="sum-lbl">Net economic worth</div><div class="sum-val" style="color:${net>=0?'#185FA5':'#A32D2D'}">${fmtD(net)}</div></div>`;
+  const partRow=household==='couple'?`<div class="bs-item"><span class="bs-lbl">Human capital (partner)</span><span class="bs-val">${fmtD(hc2)}</span></div>`:'';
   const eduRow=pvE>0?`<div class="bs-item"><span class="bs-lbl">PV of education costs</span><span class="bs-val">${fmtD(pvE)}</span></div>`:'';
-
-  document.getElementById('bsGrid').innerHTML=`
-    <div class="bs-panel">
-      <div class="bs-head a">Economic assets</div>
-      <div class="bs-item"><span class="bs-lbl">Human capital (you)</span><span class="bs-val">${fmtD(hc1)}</span></div>
-      ${partnerRow}
-      <div class="bs-item"><span class="bs-lbl">Investment portfolio</span><span class="bs-val">${fmtD(fp)}</span></div>
-      <div class="bs-item"><span class="bs-lbl">Home equity</span><span class="bs-val">${fmtD(homeEquity)}</span></div>
-      <div class="bs-item"><span class="bs-lbl">Business / other assets</span><span class="bs-val">${fmtD(biz)}</span></div>
-      <div class="bs-item bs-total"><span class="bs-lbl" style="font-weight:500;color:var(--text);">Total</span><span class="bs-val">${fmtD(totalA)}</span></div>
-    </div>
-    <div class="bs-panel">
-      <div class="bs-head l">Economic liabilities</div>
-      <div class="bs-item"><span class="bs-lbl">Mortgage balance</span><span class="bs-val">${fmtD(mortgage)}</span></div>
-      <div class="bs-item"><span class="bs-lbl">Other debts</span><span class="bs-val">${fmtD(otherD)}</span></div>
-      <div class="bs-item"><span class="bs-lbl">PV of future consumption</span><span class="bs-val">${fmtD(pvC)}</span></div>
-      ${eduRow}
-      <div class="bs-item bs-total"><span class="bs-lbl" style="font-weight:500;color:var(--text);">Total</span><span class="bs-val">${fmtD(totalL)}</span></div>
-    </div>
-  `;
-
-  const hcRatio=totalA>0?totalHC/totalA:0;
-  const liabRatio=totalA>0?totalL/totalA:0;
-  const avgRate=household==='couple'?(rate1+rate2)/2:rate1;
-  const isStable=avgRate<=4, isVar=avgRate>=7;
-
-  let eq=Math.round(Math.min(80,Math.max(15,65*(1-liabRatio*0.5)+(isVar?-12:isStable?8:0))));
-  let fi=Math.round(Math.min(60,Math.max(10,15+liabRatio*30+(isStable?5:0))));
-  let real=Math.round(Math.max(5,homeEquity>0?5:8));
-  let cash=100-eq-fi-real;
+  document.getElementById('bsGrid').innerHTML=`<div class="bs-panel"><div class="bs-head a">Economic assets</div><div class="bs-item"><span class="bs-lbl">Human capital (you)</span><span class="bs-val">${fmtD(hc1)}</span></div>${partRow}<div class="bs-item"><span class="bs-lbl">Investment portfolio</span><span class="bs-val">${fmtD(fp)}</span></div><div class="bs-item"><span class="bs-lbl">Home equity</span><span class="bs-val">${fmtD(homeEq)}</span></div><div class="bs-item"><span class="bs-lbl">Business / other</span><span class="bs-val">${fmtD(biz)}</span></div><div class="bs-item bs-total"><span class="bs-lbl" style="font-weight:500;color:var(--text);">Total</span><span class="bs-val">${fmtD(totalA)}</span></div></div><div class="bs-panel"><div class="bs-head l">Economic liabilities</div><div class="bs-item"><span class="bs-lbl">Mortgage balance</span><span class="bs-val">${fmtD(mort)}</span></div><div class="bs-item"><span class="bs-lbl">Other debts</span><span class="bs-val">${fmtD(otherD)}</span></div><div class="bs-item"><span class="bs-lbl">PV of future consumption</span><span class="bs-val">${fmtD(pvC)}</span></div>${eduRow}<div class="bs-item bs-total"><span class="bs-lbl" style="font-weight:500;color:var(--text);">Total</span><span class="bs-val">${fmtD(totalL)}</span></div></div>`;
+  const hcR=totalA>0?totalHC/totalA:0,liabR=totalA>0?totalL/totalA:0,avgRate=household==='couple'?(rate1+rate2)/2:rate1,isS=avgRate<=4,isV=avgRate>=7;
+  let eq=Math.round(Math.min(80,Math.max(15,65*(1-liabR*0.5)+(isV?-12:isS?8:0)))),fi=Math.round(Math.min(60,Math.max(10,15+liabR*30+(isS?5:0)))),real=Math.round(Math.max(5,homeEq>0?5:8)),cash=100-eq-fi-real;
   if(cash<5){cash=5;eq=100-fi-real-cash;}
-
-  const labels=['Equities (growth assets)','Fixed income (liability hedge)','Real assets','Cash & alternatives'];
-  const colors=['#1a3d2a','#b8952a','#d85a30','#888780'];
-  const allocs=[eq,fi,real,cash];
-
-  document.getElementById('allocBars').innerHTML=labels.map((l,i)=>`
-    <div class="bar-row">
-      <div class="bar-name">${l}</div>
-      <div class="bar-track"><div class="bar-fill" style="width:${allocs[i]}%;background:${colors[i]}"></div></div>
-      <div class="bar-pct">${allocs[i]}%</div>
-    </div>
-  `).join('');
-
-  const totalKids=g('kidsNow')+g('kidsPlanned');
-  const kidsNote=totalKids>0?` Education costs for ${totalKids} child${totalKids>1?'ren':''} represent a significant liability — consider dedicated education savings vehicles such as a 529 plan alongside your investment portfolio.`:'';
+  const labels=['Equities (growth assets)','Fixed income (liability hedge)','Real assets','Cash & alternatives'],colors=['#1a3d2a','#b8952a','#d85a30','#888780'],allocs=[eq,fi,real,cash];
+  document.getElementById('allocBars').innerHTML=labels.map((l,i)=>`<div class="bar-row"><div class="bar-name">${l}</div><div class="bar-track"><div class="bar-fill" style="width:${allocs[i]}%;background:${colors[i]}"></div></div><div class="bar-pct">${allocs[i]}%</div></div>`).join('');
+  const tk=g('kidsNow')+g('kidsPlanned'),kn=tk>0?` Education costs for ${tk} child${tk>1?'ren':''} are a significant liability — consider dedicated savings vehicles such as a 529 plan.`:'';
   let msg='';
-  if(hcRatio>0.65&&isStable) msg=`Your human capital is your largest asset and it behaves like a bond — stable, predictable income discounted at a low rate. Since you already carry substantial bond-like exposure through your career, your investment portfolio can tilt more aggressively toward equities to balance your total economic risk profile.${kidsNote}`;
-  else if(hcRatio>0.65&&isVar) msg=`Your human capital is large but equity-like — variable income is inherently risky and should be treated similarly to holding a concentrated equity position. Adding more equities to your investment portfolio would compound that risk. A more conservative, fixed-income-tilted allocation is appropriate.${kidsNote}`;
-  else if(net<0) msg=`Your economic liabilities — particularly future consumption${pvE>0?' and education costs':''}  — currently exceed your total economic assets. Focus on growing your financial portfolio and reducing debt before assuming significant investment risk.${kidsNote}`;
-  else if(liabRatio>0.65) msg=`Your future consumption obligations are substantial relative to your asset base. Fixed income acts as a natural liability hedge: when interest rates decline, both your bond portfolio and the present value of your liabilities rise together, reducing funding mismatch risk.${kidsNote}`;
-  else msg=`Your household economic balance sheet is well-structured. The implied allocation balances long-term growth potential with appropriate liability hedging given your career stage${household==='couple'?' and combined household income profile':''}.${kidsNote}`;
-
+  if(hcR>0.65&&isS)msg=`Your human capital is large and bond-like. Since your future income already provides significant fixed-income-like exposure, your investment portfolio can lean more into equities to balance total economic risk.${kn}`;
+  else if(hcR>0.65&&isV)msg=`Your human capital is large but equity-like. Variable income is risky — adding more equities to your portfolio would compound that risk. A more conservative allocation is appropriate.${kn}`;
+  else if(net<0)msg=`Your liabilities exceed your total economic assets. Focus on growing your portfolio and reducing debt before taking on significant investment risk.${kn}`;
+  else if(liabR>0.65)msg=`Future consumption obligations are substantial. Fixed income acts as a natural liability hedge — when rates fall, bond values and liability present values move together.${kn}`;
+  else msg=`Your household economic balance sheet is well-structured. The implied allocation balances growth with liability hedging given your career stage.${kn}`;
   document.getElementById('insight').textContent=msg;
-  document.getElementById('assumeBox').innerHTML=`<strong>Assumptions used:</strong> Human capital discounted at ${rate1}%${household==='couple'?' (you) / '+rate2+'% (partner)':''} based on career stability. Future consumption discounted at 3.5% (risk-free rate), growing at ${g('inflation')}% inflation over ${g('retYrs')} retirement years. Education costs discounted at 3.5%, growing at 5% education inflation per year. Implied allocation is illustrative and based on economic balance sheet composition — not a personalised financial recommendation.`;
+  document.getElementById('assumeBox').innerHTML=`<strong>Assumptions:</strong> Human capital discounted at ${rate1}%${household==='couple'?' (you) / '+rate2+'% (partner)':''} based on career stability. Future consumption discounted at 3.5% risk-free, ${g('inflation')}% inflation, ${g('retYrs')} retirement years. Education costs grow at 5% per year. Implied allocation is illustrative — not a personalised financial recommendation.`;
 }
-
-['inc1','grow1','age1','ret1','inc2','grow2','age2','ret2','monthlySpend','inflation','retYrs','kidsNow','kidsPlanned','kidsAge','kidsYrs','finPort','homeVal','bizAsset','mortgage','otherDebt'].forEach(id=>{
-  const el=document.getElementById(id);
-  if(el)el.addEventListener('input',updateLive);
-});
+['inc1','grow1','age1','ret1','inc2','grow2','age2','ret2','monthlySpend','inflation','retYrs','kidsNow','kidsPlanned','kidsAge','kidsYrs','finPort','homeVal','bizAsset','mortgage','otherDebt'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('input',updateLive);});
 updateLive();
 </script>
 </body>
