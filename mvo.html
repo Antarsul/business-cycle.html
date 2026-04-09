@@ -274,7 +274,7 @@ renderFrontier(40);
 
 async function fetchStock(ticker){
   if(CACHE[ticker]) return CACHE[ticker];
-  const url=`https://financialmodelingprep.com/api/v3/historical-price-full/${ticker}?timeseries=252&apikey=${FMP_KEY}`;
+  const url=`/api/fmp?ticker=${ticker}&timeseries=252`;
   const res=await fetch(url);
   const json=await res.json();
   if(!json.historical||json.historical.length<50) throw new Error('No data');
