@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    :root{--linen:#f0ebe0;--linen-dark:#e6dfd2;--green:#1a3d2a;--green-mid:#1f4d35;--green-light:#2a6644;--gold:#b8952a;--gold-light:#d4ae4a;--cream:#faf6ee;--text:#0f2d1e;--text-mid:#3a5a47;--muted:#7a8c80;--border:rgba(184,149,42,0.2);--border-strong:rgba(184,149,42,0.4);--teal:#1D9E75;--red:#E24B4A;--blue:#185FA5;--amber:#BA7517;}
+    :root{--linen:#f0ebe0;--linen-dark:#e6dfd2;--green:#1a3d2a;--green-mid:#1f4d35;--green-light:#2a6644;--gold:#b8952a;--gold-light:#d4ae4a;--cream:#faf6ee;--text:#0f2d1e;--text-mid:#3a5a47;--muted:#7a8c80;--border:rgba(184,149,42,0.2);--border-strong:rgba(184,149,42,0.4);}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
     body{font-family:'DM Sans',sans-serif;font-weight:300;background:var(--linen);color:var(--text);min-height:100vh;}
     nav{background:rgba(240,235,224,0.97);border-bottom:1px solid var(--border);padding:0 3rem;height:68px;display:flex;align-items:center;justify-content:space-between;}
@@ -16,7 +16,7 @@
     .nav-brand-text{display:flex;flex-direction:column;line-height:1.2;}
     .nav-brand-name{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;letter-spacing:0.1em;color:var(--green);}
     .nav-brand-sub{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);}
-    .nav-back{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-mid);text-decoration:none;transition:color 0.2s;}
+    .nav-back{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-mid);text-decoration:none;}
     .nav-back:hover{color:var(--gold);}
     .page-header{background:var(--green);padding:3.5rem 3rem;}
     .page-header-inner{max-width:1000px;margin:0 auto;}
@@ -26,28 +26,18 @@
     .page-sub{font-size:14px;color:rgba(240,235,224,0.55);line-height:1.7;max-width:600px;}
     .cfa-badge{display:inline-flex;align-items:center;gap:6px;margin-top:1rem;padding:5px 12px;border:1px solid rgba(184,149,42,0.4);font-size:11px;letter-spacing:0.1em;color:var(--gold);text-transform:uppercase;}
     .tool-body{max-width:1000px;margin:0 auto;padding:2.5rem 3rem 4rem;}
-
-    /* Live data bar */
     .live-bar{display:flex;align-items:center;flex-wrap:wrap;gap:10px;background:var(--cream);border:1px solid var(--linen-dark);padding:12px 16px;margin-bottom:1.5rem;}
     .live-item{display:flex;align-items:center;gap:7px;}
     .live-dot{width:7px;height:7px;border-radius:50%;}
-    .live-label{font-size:11px;color:var(--muted);letter-spacing:0.03em;}
+    .live-label{font-size:11px;color:var(--muted);}
     .live-val{font-size:13px;font-weight:500;color:var(--text);}
     .fred-pill{font-size:10px;letter-spacing:0.1em;padding:3px 8px;background:rgba(26,61,43,0.1);color:var(--green);margin-left:auto;}
     .live-date{font-size:11px;color:var(--muted);}
     .loading-msg{font-size:12px;color:var(--muted);font-style:italic;}
-    .error-msg{font-size:12px;color:var(--red);}
-
-    /* Regime */
     .regime-wrap{margin-bottom:1.5rem;}
-    .regime-badge{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;font-size:12px;font-weight:500;}
-
-    /* Main grid */
     .main-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:1.5rem;}
     .panel{background:var(--cream);border:1px solid var(--linen-dark);padding:1.5rem;}
     .panel-title{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:1.25rem;}
-
-    /* Sliders */
     .slider-row{margin-bottom:1rem;}
     .slider-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px;}
     .slider-name{font-size:13px;color:var(--text-mid);}
@@ -59,37 +49,27 @@
     .delta-up{background:#E1F5EE;color:#085041;}
     .delta-dn{background:#FCEBEB;color:#791F1F;}
     .delta-flat{background:var(--linen-dark);color:var(--muted);}
-
-    /* Return bars */
     .ret-row{display:flex;align-items:center;gap:8px;margin-bottom:9px;}
     .ret-name{font-size:12px;color:var(--text-mid);width:170px;flex-shrink:0;}
     .ret-track{flex:1;height:16px;background:var(--linen-dark);overflow:hidden;}
     .ret-fill{height:100%;transition:width 0.4s ease;}
     .ret-pct{font-size:12px;font-weight:500;min-width:42px;text-align:right;}
-
-    /* Insight cards */
     .insight-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.5rem;}
     .ins-card{background:var(--cream);border:1px solid var(--linen-dark);border-left:2px solid var(--gold);padding:1rem 1.25rem;}
     .ins-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;}
     .ins-val{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:var(--green);}
     .ins-sub{font-size:11px;color:var(--muted);margin-top:2px;}
-
-    /* Chart */
     .chart-panel{background:var(--cream);border:1px solid var(--linen-dark);padding:1.5rem;margin-bottom:1.5rem;}
     .chart-wrap{position:relative;height:300px;}
-
-    /* Disclaimer */
     .disclaimer{padding:10px 14px;border:1px solid var(--linen-dark);font-size:11px;color:var(--muted);line-height:1.7;}
     .disclaimer strong{color:var(--text-mid);}
-
     footer{background:var(--green);border-top:1px solid var(--border);padding:1.5rem 3rem;display:flex;align-items:center;justify-content:space-between;margin-top:2rem;}
     .footer-copy{font-size:12px;color:rgba(240,235,224,0.3);}
     .footer-mark{font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:0.2em;color:var(--gold);}
-    @media(max-width:700px){.tool-body{padding:1.5rem;}.main-grid{grid-template-columns:1fr;}.insight-row{grid-template-columns:1fr;}.live-bar{gap:8px;}nav{padding:0 1.5rem;}.nav-brand-name{font-size:15px;}}
+    @media(max-width:700px){.tool-body{padding:1.5rem;}.main-grid{grid-template-columns:1fr;}.insight-row{grid-template-columns:1fr;}nav{padding:0 1.5rem;}.nav-brand-name{font-size:15px;}}
   </style>
 </head>
 <body>
-
 <nav>
   <a href="index.html" class="nav-brand">
     <img src="emblem.jpg" alt="Antar Wealth" class="nav-emblem"/>
@@ -100,7 +80,6 @@
   </a>
   <a href="index.html" class="nav-back">← Back to home</a>
 </nav>
-
 <div class="page-header">
   <div class="page-header-inner">
     <div class="page-eyebrow"><span class="eyebrow-line"></span>Capital Market Expectations</div>
@@ -109,210 +88,134 @@
     <div class="cfa-badge">CFA Level III · Capital Market Expectations Framework</div>
   </div>
 </div>
-
 <div class="tool-body">
-
-  <div class="live-bar" id="liveBar">
-    <span class="loading-msg" id="loadingMsg">Loading live data from FRED...</span>
-  </div>
-
+  <div class="live-bar" id="liveBar"><span class="loading-msg">Loading live data from FRED...</span></div>
   <div class="regime-wrap" id="regimeWrap"></div>
-
   <div class="main-grid">
     <div class="panel">
       <div class="panel-title">Your macro view — adjust from live baseline</div>
-
       <div class="slider-row">
         <div class="slider-header"><span class="slider-name">Real GDP growth</span><span class="slider-live-lbl" id="gdp-lbl">Live: —</span></div>
-        <div class="slider-ctrl"><input type="range" id="gdp" min="-3" max="7" step="0.1" value="2.3"/><span class="slider-readout"><span id="gdp-out">2.3%</span><span class="delta delta-flat" id="gdp-delta">—</span></span></div>
+        <div class="slider-ctrl"><input type="range" id="gdp" min="-3" max="7" step="0.1" value="2.5"/><span class="slider-readout"><span id="gdp-out">2.5%</span><span class="delta delta-flat" id="gdp-delta">—</span></span></div>
       </div>
-
       <div class="slider-row">
         <div class="slider-header"><span class="slider-name">CPI inflation</span><span class="slider-live-lbl" id="cpi-lbl">Live: —</span></div>
-        <div class="slider-ctrl"><input type="range" id="cpi" min="0" max="9" step="0.1" value="3.2"/><span class="slider-readout"><span id="cpi-out">3.2%</span><span class="delta delta-flat" id="cpi-delta">—</span></span></div>
+        <div class="slider-ctrl"><input type="range" id="cpi" min="0" max="9" step="0.1" value="3.0"/><span class="slider-readout"><span id="cpi-out">3.0%</span><span class="delta delta-flat" id="cpi-delta">—</span></span></div>
       </div>
-
       <div class="slider-row">
         <div class="slider-header"><span class="slider-name">Fed funds rate</span><span class="slider-live-lbl" id="fed-lbl">Live: —</span></div>
-        <div class="slider-ctrl"><input type="range" id="fed" min="0" max="9" step="0.25" value="4.33"/><span class="slider-readout"><span id="fed-out">4.33%</span><span class="delta delta-flat" id="fed-delta">—</span></span></div>
+        <div class="slider-ctrl"><input type="range" id="fed" min="0" max="9" step="0.25" value="4.5"/><span class="slider-readout"><span id="fed-out">4.5%</span><span class="delta delta-flat" id="fed-delta">—</span></span></div>
       </div>
-
       <div class="slider-row">
         <div class="slider-header"><span class="slider-name">10Y Treasury yield</span><span class="slider-live-lbl" id="t10-lbl">Live: —</span></div>
-        <div class="slider-ctrl"><input type="range" id="t10" min="0.5" max="9" step="0.1" value="4.21"/><span class="slider-readout"><span id="t10-out">4.21%</span><span class="delta delta-flat" id="t10-delta">—</span></span></div>
+        <div class="slider-ctrl"><input type="range" id="t10" min="0.5" max="9" step="0.1" value="4.25"/><span class="slider-readout"><span id="t10-out">4.25%</span><span class="delta delta-flat" id="t10-delta">—</span></span></div>
       </div>
-
       <div class="slider-row">
         <div class="slider-header"><span class="slider-name">IG credit spread</span><span class="slider-live-lbl" id="ig-lbl">Live: —</span></div>
-        <div class="slider-ctrl"><input type="range" id="ig" min="0.1" max="5" step="0.05" value="1.08"/><span class="slider-readout"><span id="ig-out">1.08%</span><span class="delta delta-flat" id="ig-delta">—</span></span></div>
+        <div class="slider-ctrl"><input type="range" id="ig" min="0.1" max="5" step="0.05" value="1.0"/><span class="slider-readout"><span id="ig-out">1.0%</span><span class="delta delta-flat" id="ig-delta">—</span></span></div>
       </div>
-
       <div class="slider-row">
         <div class="slider-header"><span class="slider-name">Unemployment rate</span><span class="slider-live-lbl" id="unemp-lbl">Live: —</span></div>
-        <div class="slider-ctrl"><input type="range" id="unemp" min="2" max="12" step="0.1" value="4.1"/><span class="slider-readout"><span id="unemp-out">4.1%</span><span class="delta delta-flat" id="unemp-delta">—</span></span></div>
+        <div class="slider-ctrl"><input type="range" id="unemp" min="2" max="12" step="0.1" value="4.0"/><span class="slider-readout"><span id="unemp-out">4.0%</span><span class="delta delta-flat" id="unemp-delta">—</span></span></div>
       </div>
     </div>
-
     <div class="panel">
       <div class="panel-title">Implied asset class return expectations</div>
       <div id="retBars"></div>
     </div>
   </div>
-
   <div class="insight-row" id="insightRow"></div>
-
   <div class="chart-panel">
     <div class="panel-title">Expected returns — all asset classes</div>
-    <div class="chart-wrap">
-      <canvas id="cmeChart" role="img" aria-label="Horizontal bar chart showing expected returns for each asset class">Expected returns by asset class based on current macro inputs.</canvas>
-    </div>
+    <div class="chart-wrap"><canvas id="cmeChart" role="img" aria-label="Horizontal bar chart of expected returns by asset class">Expected returns by asset class.</canvas></div>
   </div>
-
-  <div class="disclaimer">
-    <strong>Data source:</strong> Live macro indicators sourced from FRED (Federal Reserve Bank of St. Louis) via public API. GDP: GDPC1 (quarterly, annualized). CPI: CPIAUCSL (YoY%). Fed funds: FEDFUNDS. 10Y Treasury: GS10. Credit spread: BAMLC0A0CM. Unemployment: UNRATE. <strong>Expected returns are model-derived estimates</strong> using the CFA building-block approach — not forecasts or investment recommendations. For illustrative and educational purposes only.
-  </div>
-
+  <div class="disclaimer"><strong>Data source:</strong> Live macro indicators sourced from FRED (Federal Reserve Bank of St. Louis). GDP: GDPC1 (annualized QoQ%). CPI: CPIAUCSL (YoY%). Fed funds: FEDFUNDS. 10Y Treasury: GS10. IG spread: BAMLC0A0CM. Unemployment: UNRATE. <strong>Expected returns are model-derived estimates</strong> using the CFA building-block approach — not forecasts or investment recommendations. For illustrative and educational purposes only.</div>
 </div>
-
 <footer>
   <span class="footer-copy">© 2026 Antar Wealth Management. For illustrative purposes only. Not financial advice.</span>
   <span class="footer-mark">AWM</span>
 </footer>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
-const API_KEY = '39cdbf7654ec040f46f78d0f91a5092d';
-const BASE = 'https://api.stlouisfed.org/fred/series/observations';
-
-const SERIES = {
-  gdp:   'GDPC1',
-  cpi:   'CPIAUCSL',
-  fed:   'FEDFUNDS',
-  t10:   'GS10',
-  ig:    'BAMLC0A0CM',
-  unemp: 'UNRATE'
-};
-
-const ASSETS  = ['US equities','Intl developed equities','EM equities','Inv. grade bonds','High yield bonds','Real estate (REITs)','Commodities','Cash / T-bills'];
+const PROXY = '/api/fred';
+const ASSETS = ['US equities','Intl developed equities','EM equities','Inv. grade bonds','High yield bonds','Real estate (REITs)','Commodities','Cash / T-bills'];
 const COLORS  = ['#1a3d2a','#2a6644','#3fa494','#b8952a','#d85a30','#7f77dd','#d4537e','#888780'];
+let liveData = {}, chart = null;
 
-let liveData = {};
-let chart = null;
-
-async function fetchSeries(seriesId) {
-  const url = `${BASE}?series_id=${seriesId}&api_key=${API_KEY}&file_type=json&sort_order=desc&limit=2`;
-  try {
-    const res = await fetch(url);
-    const json = await res.json();
-    const obs = json.observations?.filter(o => o.value !== '.' && o.value !== 'ND');
-    if (!obs || obs.length === 0) return null;
-    return { value: parseFloat(obs[0].value), date: obs[0].date };
-  } catch(e) {
-    return null;
-  }
-}
-
-async function fetchCPIYoY() {
-  const url = `${BASE}?series_id=CPIAUCSL&api_key=${API_KEY}&file_type=json&sort_order=desc&limit=14`;
-  try {
-    const res = await fetch(url);
-    const json = await res.json();
-    const obs = json.observations?.filter(o => o.value !== '.' && o.value !== 'ND');
-    if (!obs || obs.length < 13) return null;
-    const latest = parseFloat(obs[0].value);
-    const yearAgo = parseFloat(obs[12].value);
-    const yoy = ((latest - yearAgo) / yearAgo) * 100;
-    return { value: +yoy.toFixed(2), date: obs[0].date };
-  } catch(e) {
-    return null;
-  }
-}
-
-async function fetchGDPGrowth() {
-  const url = `${BASE}?series_id=GDPC1&api_key=${API_KEY}&file_type=json&sort_order=desc&limit=5`;
-  try {
-    const res = await fetch(url);
-    const json = await res.json();
-    const obs = json.observations?.filter(o => o.value !== '.' && o.value !== 'ND');
-    if (!obs || obs.length < 2) return null;
-    const q1 = parseFloat(obs[0].value);
-    const q2 = parseFloat(obs[1].value);
-    const qoq = ((q1 - q2) / q2) * 400;
-    return { value: +qoq.toFixed(2), date: obs[0].date };
-  } catch(e) {
-    return null;
-  }
-}
-
-function setSlider(id, val) {
-  const el = document.getElementById(id);
-  if (el && val !== null) {
-    el.value = val;
-    liveData[id] = val;
-  }
+async function fetchProxy(seriesId, limit=14, sortOrder='desc') {
+  const res = await fetch(`${PROXY}?series_id=${seriesId}&limit=${limit}&sort_order=${sortOrder}`);
+  return await res.json();
 }
 
 function fmtDate(d) {
   if (!d) return '';
-  const dt = new Date(d);
-  return dt.toLocaleDateString('en-US', { month:'short', year:'numeric' });
+  return new Date(d).toLocaleDateString('en-US', { month:'short', year:'numeric' });
 }
 
-async function loadFREDData() {
-  document.getElementById('loadingMsg').textContent = 'Connecting to FRED...';
+async function loadData() {
+  try {
+    const [gdpJson, cpiJson, fedJson, t10Json, igJson, unempJson] = await Promise.all([
+      fetchProxy('GDPC1', 5),
+      fetchProxy('CPIAUCSL', 14),
+      fetchProxy('FEDFUNDS', 2),
+      fetchProxy('GS10', 2),
+      fetchProxy('BAMLC0A0CM', 2),
+      fetchProxy('UNRATE', 2)
+    ]);
 
-  const [gdpData, cpiData, fedData, t10Data, igData, unempData] = await Promise.all([
-    fetchGDPGrowth(),
-    fetchCPIYoY(),
-    fetchSeries(SERIES.fed),
-    fetchSeries(SERIES.t10),
-    fetchSeries(SERIES.ig),
-    fetchSeries(SERIES.unemp)
-  ]);
+    function clean(json) { return json.observations?.filter(o => o.value !== '.' && o.value !== 'ND') || []; }
 
-  const got = { gdp: gdpData, cpi: cpiData, fed: fedData, t10: t10Data, ig: igData, unemp: unempData };
-  const latestDate = [gdpData, cpiData, fedData, t10Data].map(d => d?.date).filter(Boolean).sort().pop();
+    const gdpObs   = clean(gdpJson);
+    const cpiObs   = clean(cpiJson);
+    const fedObs   = clean(fedJson);
+    const t10Obs   = clean(t10Json);
+    const igObs    = clean(igJson);
+    const unempObs = clean(unempJson);
 
-  if (gdpData)   setSlider('gdp',   gdpData.value);
-  if (cpiData)   setSlider('cpi',   cpiData.value);
-  if (fedData)   setSlider('fed',   fedData.value);
-  if (t10Data)   setSlider('t10',   t10Data.value);
-  if (igData)    setSlider('ig',    igData.value);
-  if (unempData) setSlider('unemp', unempData.value);
+    let gdpVal = null, cpiVal = null, fedVal = null, t10Val = null, igVal = null, unempVal = null, latestDate = null;
 
-  const liveBar = document.getElementById('liveBar');
-  const items = [
-    { id:'gdp',  dot:'#1D9E75', label:'GDP growth',    data:gdpData,   suffix:'%' },
-    { id:'cpi',  dot:'#E24B4A', label:'CPI (YoY)',     data:cpiData,   suffix:'%' },
-    { id:'fed',  dot:'#185FA5', label:'Fed funds',     data:fedData,   suffix:'%' },
-    { id:'t10',  dot:'#b8952a', label:'10Y Treasury',  data:t10Data,   suffix:'%' },
-    { id:'ig',   dot:'#7f77dd', label:'IG spread',     data:igData,    suffix:'%' },
-    { id:'unemp',dot:'#888780', label:'Unemployment',  data:unempData, suffix:'%' },
-  ];
-
-  const anyLoaded = items.some(i => i.data !== null);
-
-  if (!anyLoaded) {
-    liveBar.innerHTML = '<span class="error-msg">Could not load live data — using default values. FRED API may be temporarily unavailable.</span>';
-  } else {
-    liveBar.innerHTML = items.map(item => item.data ? `
-      <div class="live-item">
-        <div class="live-dot" style="background:${item.dot};"></div>
-        <span class="live-label">${item.label}</span>
-        <span class="live-val">${item.data.value.toFixed(2)}${item.suffix}</span>
-      </div>
-    ` : '').join('') +
-    `<span class="fred-pill">FRED live</span>
-     <span class="live-date">as of ${fmtDate(latestDate)}</span>`;
-  }
-
-  ['gdp','cpi','fed','t10','ig','unemp'].forEach(id => {
-    const lbl = document.getElementById(id+'-lbl');
-    if (lbl && liveData[id] !== undefined) {
-      lbl.textContent = `Live: ${liveData[id].toFixed(2)}%`;
+    if (gdpObs.length >= 2) {
+      const q1 = parseFloat(gdpObs[0].value), q2 = parseFloat(gdpObs[1].value);
+      gdpVal = +((( q1 - q2) / q2) * 400).toFixed(2);
+      latestDate = gdpObs[0].date;
     }
-  });
+    if (cpiObs.length >= 13) {
+      const latest = parseFloat(cpiObs[0].value), yearAgo = parseFloat(cpiObs[12].value);
+      cpiVal = +(((latest - yearAgo) / yearAgo) * 100).toFixed(2);
+    }
+    if (fedObs.length)   fedVal   = +parseFloat(fedObs[0].value).toFixed(2);
+    if (t10Obs.length)   t10Val   = +parseFloat(t10Obs[0].value).toFixed(2);
+    if (igObs.length)    igVal    = +parseFloat(igObs[0].value).toFixed(2);
+    if (unempObs.length) unempVal = +parseFloat(unempObs[0].value).toFixed(2);
 
+    const vals = { gdp:gdpVal, cpi:cpiVal, fed:fedVal, t10:t10Val, ig:igVal, unemp:unempVal };
+    const items = [
+      { id:'gdp',  dot:'#1D9E75', label:'GDP growth',   val:gdpVal   },
+      { id:'cpi',  dot:'#E24B4A', label:'CPI (YoY)',    val:cpiVal   },
+      { id:'fed',  dot:'#185FA5', label:'Fed funds',    val:fedVal   },
+      { id:'t10',  dot:'#b8952a', label:'10Y Treasury', val:t10Val   },
+      { id:'ig',   dot:'#7f77dd', label:'IG spread',    val:igVal    },
+      { id:'unemp',dot:'#888780', label:'Unemployment', val:unempVal },
+    ];
+
+    document.getElementById('liveBar').innerHTML = items.filter(i=>i.val!==null).map(i=>`
+      <div class="live-item">
+        <div class="live-dot" style="background:${i.dot};"></div>
+        <span class="live-label">${i.label}</span>
+        <span class="live-val">${i.val.toFixed(2)}%</span>
+      </div>
+    `).join('') + `<span class="fred-pill">FRED live</span><span class="live-date">as of ${fmtDate(latestDate)}</span>`;
+
+    items.forEach(item => {
+      if (item.val === null) return;
+      liveData[item.id] = item.val;
+      document.getElementById(item.id).value = item.val;
+      document.getElementById(item.id+'-lbl').textContent = `Live: ${item.val.toFixed(2)}%`;
+    });
+
+  } catch(e) {
+    document.getElementById('liveBar').innerHTML = '<span style="font-size:12px;color:#E24B4A;">Could not load live data — using default values.</span>';
+  }
   render();
 }
 
@@ -320,12 +223,12 @@ function g(id) { return parseFloat(document.getElementById(id).value) || 0; }
 
 function calcReturns(gdp, cpi, fed, t10, ig, unemp) {
   const real = t10 - cpi;
-  const labourSlack = Math.max(0, unemp - 4.5);
-  const eqPremium = Math.max(0, 2.5 + gdp * 0.9 - (t10 - 2) * 0.6 - labourSlack * 0.3);
+  const slack = Math.max(0, unemp - 4.5);
+  const eqP = Math.max(0, 2.5 + gdp * 0.9 - (t10 - 2) * 0.6 - slack * 0.3);
   return [
-    +(real + cpi + eqPremium).toFixed(2),
-    +(real + cpi + eqPremium - 1.0).toFixed(2),
-    +(real + cpi + eqPremium + 1.5 - ig * 0.4).toFixed(2),
+    +(real + cpi + eqP).toFixed(2),
+    +(real + cpi + eqP - 1.0).toFixed(2),
+    +(real + cpi + eqP + 1.5 - ig * 0.4).toFixed(2),
     +(t10 + ig * 0.6).toFixed(2),
     +(t10 + ig * 3.8).toFixed(2),
     +(real + cpi + gdp * 0.35 + 1.8).toFixed(2),
@@ -336,9 +239,9 @@ function calcReturns(gdp, cpi, fed, t10, ig, unemp) {
 
 function getRegime(gdp, cpi) {
   if (gdp > 2.5 && cpi <= 3)  return { label:'Goldilocks — strong growth, contained inflation', c:'#1D9E75', bg:'#E1F5EE' };
-  if (gdp > 2.5 && cpi > 3)   return { label:'Overheating — strong growth, rising inflation', c:'#BA7517', bg:'#FAEEDA' };
-  if (gdp < 0.5 && cpi > 3.5) return { label:'Stagflation — weak growth, high inflation', c:'#E24B4A', bg:'#FCEBEB' };
-  if (gdp < 0.5)               return { label:'Recession — contracting growth', c:'#791F1F', bg:'#FCEBEB' };
+  if (gdp > 2.5 && cpi > 3)   return { label:'Overheating — strong growth, rising inflation',   c:'#BA7517', bg:'#FAEEDA' };
+  if (gdp < 0.5 && cpi > 3.5) return { label:'Stagflation — weak growth, high inflation',       c:'#E24B4A', bg:'#FCEBEB' };
+  if (gdp < 0.5)               return { label:'Recession — contracting growth',                  c:'#791F1F', bg:'#FCEBEB' };
   return { label:'Moderate expansion — balanced conditions', c:'#185FA5', bg:'#E6F1FB' };
 }
 
@@ -350,76 +253,26 @@ function fmtDelta(val, live) {
 }
 
 function render() {
-  const gdp=g('gdp'), cpi=g('cpi'), fed=g('fed'), t10=g('t10'), ig=g('ig'), unemp=g('unemp');
-
-  ['gdp','cpi','fed','t10','ig','unemp'].forEach(id => {
-    const val = g(id);
-    document.getElementById(id+'-out').textContent = val.toFixed(2)+'%';
-    const d = fmtDelta(val, liveData[id]);
-    const span = document.getElementById(id+'-delta');
-    span.className = 'delta '+d.cls;
-    span.textContent = d.txt;
+  const gdp=g('gdp'),cpi=g('cpi'),fed=g('fed'),t10=g('t10'),ig=g('ig'),unemp=g('unemp');
+  ['gdp','cpi','fed','t10','ig','unemp'].forEach(id=>{
+    document.getElementById(id+'-out').textContent=g(id).toFixed(2)+'%';
+    const d=fmtDelta(g(id),liveData[id]);
+    const span=document.getElementById(id+'-delta');
+    span.className='delta '+d.cls;span.textContent=d.txt;
   });
-
-  const vals = calcReturns(gdp, cpi, fed, t10, ig, unemp);
-  const maxR = Math.max(...vals), minR = Math.min(...vals);
-  const maxScale = Math.max(15, maxR + 2);
-
-  document.getElementById('retBars').innerHTML = ASSETS.map((a,i) => `
-    <div class="ret-row">
-      <div class="ret-name">${a}</div>
-      <div class="ret-track">
-        <div class="ret-fill" style="width:${Math.max(0,(vals[i]/maxScale)*100).toFixed(1)}%;background:${COLORS[i]};"></div>
-      </div>
-      <div class="ret-pct" style="color:${vals[i]<0?'#E24B4A':'var(--text)'}">${vals[i].toFixed(1)}%</div>
-    </div>
-  `).join('');
-
-  const regime = getRegime(gdp, cpi);
-  document.getElementById('regimeWrap').innerHTML = `
-    <div style="display:inline-flex;align-items:center;gap:8px;padding:7px 14px;background:${regime.bg};">
-      <div style="width:8px;height:8px;border-radius:50%;background:${regime.c};"></div>
-      <span style="font-size:12px;font-weight:500;color:${regime.c};">Macro regime: ${regime.label}</span>
-    </div>
-  `;
-
-  const bestI = vals.indexOf(maxR), worstI = vals.indexOf(minR);
-  const avg = (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1);
-  document.getElementById('insightRow').innerHTML = `
-    <div class="ins-card"><div class="ins-label">Highest expected return</div><div class="ins-val" style="color:#1a3d2a">${maxR.toFixed(1)}%</div><div class="ins-sub">${ASSETS[bestI]}</div></div>
-    <div class="ins-card"><div class="ins-label">Equal-weighted avg</div><div class="ins-val">${avg}%</div><div class="ins-sub">across all asset classes</div></div>
-    <div class="ins-card"><div class="ins-label">Lowest expected return</div><div class="ins-val" style="color:${minR<0?'#E24B4A':'var(--muted)'}">${minR.toFixed(1)}%</div><div class="ins-sub">${ASSETS[worstI]}</div></div>
-  `;
-
-  if (chart) {
-    chart.data.datasets[0].data = vals;
-    chart.update('none');
-  } else {
-    chart = new Chart(document.getElementById('cmeChart'), {
-      type: 'bar',
-      data: {
-        labels: ASSETS,
-        datasets: [{ label: 'Expected return (%)', data: vals, backgroundColor: COLORS, borderWidth: 0, borderRadius: 2 }]
-      },
-      options: {
-        indexAxis: 'y',
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.x.toFixed(1)}%` } } },
-        scales: {
-          x: { grid: { color: 'rgba(26,61,43,0.07)' }, ticks: { color:'#7a8c80', font:{size:11}, callback: v => v+'%' }, min: -3, max: 16 },
-          y: { grid: { display: false }, ticks: { color:'#7a8c80', font:{size:11} } }
-        }
-      }
-    });
-  }
+  const vals=calcReturns(gdp,cpi,fed,t10,ig,unemp);
+  const maxScale=Math.max(15,Math.max(...vals)+2);
+  document.getElementById('retBars').innerHTML=ASSETS.map((a,i)=>`<div class="ret-row"><div class="ret-name">${a}</div><div class="ret-track"><div class="ret-fill" style="width:${Math.max(0,(vals[i]/maxScale)*100).toFixed(1)}%;background:${COLORS[i]};"></div></div><div class="ret-pct" style="color:${vals[i]<0?'#E24B4A':'var(--text)'}">${vals[i].toFixed(1)}%</div></div>`).join('');
+  const regime=getRegime(gdp,cpi);
+  document.getElementById('regimeWrap').innerHTML=`<div style="display:inline-flex;align-items:center;gap:8px;padding:7px 14px;background:${regime.bg};"><div style="width:8px;height:8px;border-radius:50%;background:${regime.c};"></div><span style="font-size:12px;font-weight:500;color:${regime.c};">Macro regime: ${regime.label}</span></div>`;
+  const bestI=vals.indexOf(Math.max(...vals)),worstI=vals.indexOf(Math.min(...vals)),avg=(vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1);
+  document.getElementById('insightRow').innerHTML=`<div class="ins-card"><div class="ins-label">Highest expected return</div><div class="ins-val" style="color:#1a3d2a">${vals[bestI].toFixed(1)}%</div><div class="ins-sub">${ASSETS[bestI]}</div></div><div class="ins-card"><div class="ins-label">Equal-weighted avg</div><div class="ins-val">${avg}%</div><div class="ins-sub">across all asset classes</div></div><div class="ins-card"><div class="ins-label">Lowest expected return</div><div class="ins-val" style="color:${vals[worstI]<0?'#E24B4A':'var(--muted)'}">${vals[worstI].toFixed(1)}%</div><div class="ins-sub">${ASSETS[worstI]}</div></div>`;
+  if(chart){chart.data.datasets[0].data=vals;chart.update('none');}
+  else{chart=new Chart(document.getElementById('cmeChart'),{type:'bar',data:{labels:ASSETS,datasets:[{label:'Expected return (%)',data:vals,backgroundColor:COLORS,borderWidth:0,borderRadius:2}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.parsed.x.toFixed(1)}%`}}},scales:{x:{grid:{color:'rgba(26,61,43,0.07)'},ticks:{color:'#7a8c80',font:{size:11},callback:v=>v+'%'},min:-3,max:16},y:{grid:{display:false},ticks:{color:'#7a8c80',font:{size:11}}}}}})}
 }
 
-['gdp','cpi','fed','t10','ig','unemp'].forEach(id => {
-  document.getElementById(id).addEventListener('input', render);
-});
-
-loadFREDData();
+['gdp','cpi','fed','t10','ig','unemp'].forEach(id=>document.getElementById(id).addEventListener('input',render));
+loadData();
 </script>
 </body>
 </html>

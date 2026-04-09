@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/fred.js": {
+      "runtime": "edge"
+    }
+  }
+}
