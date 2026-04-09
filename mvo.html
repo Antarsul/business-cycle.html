@@ -276,8 +276,10 @@ async function fetchStock(ticker){
   if(CACHE[ticker]) return CACHE[ticker];
   const url=`/api/fmp?ticker=${ticker}&timeseries=252`;
   const res=await fetch(url);
+  if(!res.ok) throw new Error(`HTTP ${res.status}`);
   const json=await res.json();
-  if(!json.historical||json.historical.length<50) throw new Error('No data');
+  if(json.error) throw new Error(json.error);
+  if(!json.historical||json.historical.length<50) throw new Error(`No historical data returned (got ${json.historical?.length||0} records)`);
   const prices=json.historical.map(d=>d.adjClose||d.close).reverse();
   const rets=[];
   for(let i=1;i<prices.length;i++) rets.push((prices[i]-prices[i-1])/prices[i-1]);
