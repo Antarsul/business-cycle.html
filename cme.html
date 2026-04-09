@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    :root{--linen:#f0ebe0;--linen-dark:#e6dfd2;--green:#1a3d2a;--green-mid:#1f4d35;--green-light:#2a6644;--gold:#b8952a;--gold-light:#d4ae4a;--cream:#faf6ee;--text:#0f2d1e;--text-mid:#3a5a47;--muted:#7a8c80;--border:rgba(184,149,42,0.2);--border-strong:rgba(184,149,42,0.4);}
+    :root{--linen:#f0ebe0;--linen-dark:#e6dfd2;--green:#1a3d2a;--green-mid:#1f4d35;--green-light:#2a6644;--gold:#b8952a;--gold-light:#d4ae4a;--cream:#faf6ee;--text:#0f2d1e;--text-mid:#3a5a47;--muted:#7a8c80;--border:rgba(184,149,42,0.2);}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
     body{font-family:'DM Sans',sans-serif;font-weight:300;background:var(--linen);color:var(--text);min-height:100vh;}
     nav{background:rgba(240,235,224,0.97);border-bottom:1px solid var(--border);padding:0 3rem;height:68px;display:flex;align-items:center;justify-content:space-between;}
@@ -49,11 +49,11 @@
     .delta-up{background:#E1F5EE;color:#085041;}
     .delta-dn{background:#FCEBEB;color:#791F1F;}
     .delta-flat{background:var(--linen-dark);color:var(--muted);}
-    .ret-row{display:flex;align-items:center;gap:8px;margin-bottom:9px;}
-    .ret-name{font-size:12px;color:var(--text-mid);width:170px;flex-shrink:0;}
-    .ret-track{flex:1;height:16px;background:var(--linen-dark);overflow:hidden;}
-    .ret-fill{height:100%;transition:width 0.4s ease;}
-    .ret-pct{font-size:12px;font-weight:500;min-width:42px;text-align:right;}
+    .alloc-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:9px;}
+    .alloc-bar-name{font-size:12px;color:var(--text-mid);width:160px;flex-shrink:0;}
+    .alloc-bar-track{flex:1;height:16px;background:var(--linen-dark);overflow:hidden;}
+    .alloc-bar-fill{height:100%;transition:width 0.4s ease;}
+    .alloc-bar-pct{font-size:12px;font-weight:500;min-width:36px;text-align:right;color:var(--text);}
     .insight-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.5rem;}
     .ins-card{background:var(--cream);border:1px solid var(--linen-dark);border-left:2px solid var(--gold);padding:1rem 1.25rem;}
     .ins-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;}
@@ -84,13 +84,14 @@
   <div class="page-header-inner">
     <div class="page-eyebrow"><span class="eyebrow-line"></span>Capital Market Expectations</div>
     <h1 class="page-title">Macro Dashboard</h1>
-    <p class="page-sub">Live economic data from the Federal Reserve, combined with your macro view, to derive forward-looking return expectations for each asset class.</p>
+    <p class="page-sub">Live economic data from the Federal Reserve, combined with your macro view, to derive forward-looking return expectations and implied asset allocation for each asset class.</p>
     <div class="cfa-badge">CFA Level III · Capital Market Expectations Framework</div>
   </div>
 </div>
 <div class="tool-body">
   <div class="live-bar" id="liveBar"><span class="loading-msg">Loading live data from FRED...</span></div>
   <div class="regime-wrap" id="regimeWrap"></div>
+
   <div class="main-grid">
     <div class="panel">
       <div class="panel-title">Your macro view — adjust from live baseline</div>
@@ -119,26 +120,35 @@
         <div class="slider-ctrl"><input type="range" id="unemp" min="2" max="12" step="0.1" value="4.0"/><span class="slider-readout"><span id="unemp-out">4.0%</span><span class="delta delta-flat" id="unemp-delta">—</span></span></div>
       </div>
     </div>
+
     <div class="panel">
-      <div class="panel-title">Implied asset class return expectations</div>
-      <div id="retBars"></div>
+      <div class="panel-title">Implied asset allocation weights</div>
+      <div id="allocBars"></div>
     </div>
   </div>
+
   <div class="insight-row" id="insightRow"></div>
+
   <div class="chart-panel">
     <div class="panel-title">Expected returns — all asset classes</div>
-    <div class="chart-wrap"><canvas id="cmeChart" role="img" aria-label="Horizontal bar chart of expected returns by asset class">Expected returns by asset class.</canvas></div>
+    <div class="chart-wrap">
+      <canvas id="cmeChart" role="img" aria-label="Horizontal bar chart of expected returns by asset class">Expected returns by asset class.</canvas>
+    </div>
   </div>
-  <div class="disclaimer"><strong>Data source:</strong> Live macro indicators sourced from FRED (Federal Reserve Bank of St. Louis). GDP: GDPC1 (annualized QoQ%). CPI: CPIAUCSL (YoY%). Fed funds: FEDFUNDS. 10Y Treasury: GS10. IG spread: BAMLC0A0CM. Unemployment: UNRATE. <strong>Expected returns are model-derived estimates</strong> using the CFA building-block approach — not forecasts or investment recommendations. For illustrative and educational purposes only.</div>
+
+  <div class="disclaimer">
+    <strong>Data source:</strong> Live macro indicators from FRED (Federal Reserve Bank of St. Louis). GDP: GDPC1 (annualized QoQ%). CPI: CPIAUCSL (YoY%). Fed funds: FEDFUNDS. 10Y Treasury: GS10. IG spread: BAMLC0A0CM. Unemployment: UNRATE. <strong>Expected returns and allocation weights are model-derived estimates</strong> using the CFA building-block approach — not forecasts or investment recommendations. For illustrative and educational purposes only.
+  </div>
 </div>
 <footer>
   <span class="footer-copy">© 2026 Antar Wealth Management. For illustrative purposes only. Not financial advice.</span>
   <span class="footer-mark">AWM</span>
 </footer>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
 const PROXY = '/api/fred';
-const ASSETS = ['US equities','Intl developed equities','EM equities','Inv. grade bonds','High yield bonds','Real estate (REITs)','Commodities','Cash / T-bills'];
+const ASSETS  = ['US equities','Intl developed equities','EM equities','Inv. grade bonds','High yield bonds','Real estate (REITs)','Commodities','Cash / T-bills'];
 const COLORS  = ['#1a3d2a','#2a6644','#3fa494','#b8952a','#d85a30','#7f77dd','#d4537e','#888780'];
 let liveData = {}, chart = null;
 
@@ -165,30 +175,29 @@ async function loadData() {
 
     function clean(json) { return json.observations?.filter(o => o.value !== '.' && o.value !== 'ND') || []; }
 
-    const gdpObs   = clean(gdpJson);
-    const cpiObs   = clean(cpiJson);
-    const fedObs   = clean(fedJson);
-    const t10Obs   = clean(t10Json);
-    const igObs    = clean(igJson);
-    const unempObs = clean(unempJson);
+    const gdpObs=clean(gdpJson), cpiObs=clean(cpiJson), fedObs=clean(fedJson);
+    const t10Obs=clean(t10Json), igObs=clean(igJson), unempObs=clean(unempJson);
 
-    let gdpVal = null, cpiVal = null, fedVal = null, t10Val = null, igVal = null, unempVal = null, latestDate = null;
+    let gdpVal=null, cpiVal=null, fedVal=null, t10Val=null, igVal=null, unempVal=null;
+    const dates = [];
 
     if (gdpObs.length >= 2) {
-      const q1 = parseFloat(gdpObs[0].value), q2 = parseFloat(gdpObs[1].value);
-      gdpVal = +((( q1 - q2) / q2) * 400).toFixed(2);
-      latestDate = gdpObs[0].date;
+      const q1=parseFloat(gdpObs[0].value), q2=parseFloat(gdpObs[1].value);
+      gdpVal = +((( q1-q2)/q2)*400).toFixed(2);
+      dates.push({ id:'gdp', date: gdpObs[0].date });
     }
     if (cpiObs.length >= 13) {
-      const latest = parseFloat(cpiObs[0].value), yearAgo = parseFloat(cpiObs[12].value);
-      cpiVal = +(((latest - yearAgo) / yearAgo) * 100).toFixed(2);
+      const latest=parseFloat(cpiObs[0].value), yearAgo=parseFloat(cpiObs[12].value);
+      cpiVal = +(((latest-yearAgo)/yearAgo)*100).toFixed(2);
+      dates.push({ id:'cpi', date: cpiObs[0].date });
     }
-    if (fedObs.length)   fedVal   = +parseFloat(fedObs[0].value).toFixed(2);
-    if (t10Obs.length)   t10Val   = +parseFloat(t10Obs[0].value).toFixed(2);
-    if (igObs.length)    igVal    = +parseFloat(igObs[0].value).toFixed(2);
-    if (unempObs.length) unempVal = +parseFloat(unempObs[0].value).toFixed(2);
+    if (fedObs.length)   { fedVal   = +parseFloat(fedObs[0].value).toFixed(2);   dates.push({ id:'fed',   date: fedObs[0].date }); }
+    if (t10Obs.length)   { t10Val   = +parseFloat(t10Obs[0].value).toFixed(2);   dates.push({ id:'t10',   date: t10Obs[0].date }); }
+    if (igObs.length)    { igVal    = +parseFloat(igObs[0].value).toFixed(2);    dates.push({ id:'ig',    date: igObs[0].date }); }
+    if (unempObs.length) { unempVal = +parseFloat(unempObs[0].value).toFixed(2); dates.push({ id:'unemp', date: unempObs[0].date }); }
 
-    const vals = { gdp:gdpVal, cpi:cpiVal, fed:fedVal, t10:t10Val, ig:igVal, unemp:unempVal };
+    const latestDate = dates.map(d=>d.date).filter(Boolean).sort().pop();
+
     const items = [
       { id:'gdp',  dot:'#1D9E75', label:'GDP growth',   val:gdpVal   },
       { id:'cpi',  dot:'#E24B4A', label:'CPI (YoY)',    val:cpiVal   },
@@ -198,13 +207,15 @@ async function loadData() {
       { id:'unemp',dot:'#888780', label:'Unemployment', val:unempVal },
     ];
 
-    document.getElementById('liveBar').innerHTML = items.filter(i=>i.val!==null).map(i=>`
-      <div class="live-item">
-        <div class="live-dot" style="background:${i.dot};"></div>
-        <span class="live-label">${i.label}</span>
-        <span class="live-val">${i.val.toFixed(2)}%</span>
-      </div>
-    `).join('') + `<span class="fred-pill">FRED live</span><span class="live-date">as of ${fmtDate(latestDate)}</span>`;
+    document.getElementById('liveBar').innerHTML =
+      items.filter(i=>i.val!==null).map(i=>`
+        <div class="live-item">
+          <div class="live-dot" style="background:${i.dot};"></div>
+          <span class="live-label">${i.label}</span>
+          <span class="live-val">${i.val.toFixed(2)}%</span>
+        </div>
+      `).join('') +
+      `<span class="fred-pill">FRED live</span><span class="live-date">latest available as of ${fmtDate(latestDate)}</span>`;
 
     items.forEach(item => {
       if (item.val === null) return;
@@ -237,6 +248,29 @@ function calcReturns(gdp, cpi, fed, t10, ig, unemp) {
   ];
 }
 
+function calcAllocation(returns, gdp, cpi) {
+  const positiveReturns = returns.map(r => Math.max(0, r));
+  const total = positiveReturns.reduce((a,b)=>a+b,0);
+  if (total === 0) return returns.map(() => Math.round(100 / returns.length));
+
+  const rawWeights = positiveReturns.map(r => r / total * 100);
+
+  const liabRatio = cpi > 3.5 ? 0.3 : 0.15;
+  const growthBoost = gdp > 2 ? 1.15 : gdp < 0.5 ? 0.7 : 1.0;
+
+  let weights = rawWeights.map((w, i) => {
+    if (i <= 2) return w * growthBoost;
+    if (i === 3 || i === 4) return w * (1 + liabRatio);
+    return w;
+  });
+
+  const wTotal = weights.reduce((a,b)=>a+b,0);
+  weights = weights.map(w => Math.round(w / wTotal * 100));
+  const diff = 100 - weights.reduce((a,b)=>a+b,0);
+  weights[0] += diff;
+  return weights;
+}
+
 function getRegime(gdp, cpi) {
   if (gdp > 2.5 && cpi <= 3)  return { label:'Goldilocks — strong growth, contained inflation', c:'#1D9E75', bg:'#E1F5EE' };
   if (gdp > 2.5 && cpi > 3)   return { label:'Overheating — strong growth, rising inflation',   c:'#BA7517', bg:'#FAEEDA' };
@@ -253,25 +287,66 @@ function fmtDelta(val, live) {
 }
 
 function render() {
-  const gdp=g('gdp'),cpi=g('cpi'),fed=g('fed'),t10=g('t10'),ig=g('ig'),unemp=g('unemp');
+  const gdp=g('gdp'), cpi=g('cpi'), fed=g('fed'), t10=g('t10'), ig=g('ig'), unemp=g('unemp');
+
   ['gdp','cpi','fed','t10','ig','unemp'].forEach(id=>{
-    document.getElementById(id+'-out').textContent=g(id).toFixed(2)+'%';
-    const d=fmtDelta(g(id),liveData[id]);
-    const span=document.getElementById(id+'-delta');
-    span.className='delta '+d.cls;span.textContent=d.txt;
+    document.getElementById(id+'-out').textContent = g(id).toFixed(2)+'%';
+    const d = fmtDelta(g(id), liveData[id]);
+    const span = document.getElementById(id+'-delta');
+    span.className='delta '+d.cls; span.textContent=d.txt;
   });
-  const vals=calcReturns(gdp,cpi,fed,t10,ig,unemp);
-  const maxScale=Math.max(15,Math.max(...vals)+2);
-  document.getElementById('retBars').innerHTML=ASSETS.map((a,i)=>`<div class="ret-row"><div class="ret-name">${a}</div><div class="ret-track"><div class="ret-fill" style="width:${Math.max(0,(vals[i]/maxScale)*100).toFixed(1)}%;background:${COLORS[i]};"></div></div><div class="ret-pct" style="color:${vals[i]<0?'#E24B4A':'var(--text)'}">${vals[i].toFixed(1)}%</div></div>`).join('');
-  const regime=getRegime(gdp,cpi);
-  document.getElementById('regimeWrap').innerHTML=`<div style="display:inline-flex;align-items:center;gap:8px;padding:7px 14px;background:${regime.bg};"><div style="width:8px;height:8px;border-radius:50%;background:${regime.c};"></div><span style="font-size:12px;font-weight:500;color:${regime.c};">Macro regime: ${regime.label}</span></div>`;
-  const bestI=vals.indexOf(Math.max(...vals)),worstI=vals.indexOf(Math.min(...vals)),avg=(vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1);
-  document.getElementById('insightRow').innerHTML=`<div class="ins-card"><div class="ins-label">Highest expected return</div><div class="ins-val" style="color:#1a3d2a">${vals[bestI].toFixed(1)}%</div><div class="ins-sub">${ASSETS[bestI]}</div></div><div class="ins-card"><div class="ins-label">Equal-weighted avg</div><div class="ins-val">${avg}%</div><div class="ins-sub">across all asset classes</div></div><div class="ins-card"><div class="ins-label">Lowest expected return</div><div class="ins-val" style="color:${vals[worstI]<0?'#E24B4A':'var(--muted)'}">${vals[worstI].toFixed(1)}%</div><div class="ins-sub">${ASSETS[worstI]}</div></div>`;
-  if(chart){chart.data.datasets[0].data=vals;chart.update('none');}
-  else{chart=new Chart(document.getElementById('cmeChart'),{type:'bar',data:{labels:ASSETS,datasets:[{label:'Expected return (%)',data:vals,backgroundColor:COLORS,borderWidth:0,borderRadius:2}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.parsed.x.toFixed(1)}%`}}},scales:{x:{grid:{color:'rgba(26,61,43,0.07)'},ticks:{color:'#7a8c80',font:{size:11},callback:v=>v+'%'},min:-3,max:16},y:{grid:{display:false},ticks:{color:'#7a8c80',font:{size:11}}}}}})}
+
+  const returns = calcReturns(gdp, cpi, fed, t10, ig, unemp);
+  const weights = calcAllocation(returns, gdp, cpi);
+
+  document.getElementById('allocBars').innerHTML = ASSETS.map((a,i) => `
+    <div class="alloc-bar-row">
+      <div class="alloc-bar-name">${a}</div>
+      <div class="alloc-bar-track">
+        <div class="alloc-bar-fill" style="width:${weights[i]}%;background:${COLORS[i]};"></div>
+      </div>
+      <div class="alloc-bar-pct">${weights[i]}%</div>
+    </div>
+  `).join('');
+
+  const regime = getRegime(gdp, cpi);
+  document.getElementById('regimeWrap').innerHTML = `
+    <div style="display:inline-flex;align-items:center;gap:8px;padding:7px 14px;background:${regime.bg};">
+      <div style="width:8px;height:8px;border-radius:50%;background:${regime.c};"></div>
+      <span style="font-size:12px;font-weight:500;color:${regime.c};">Macro regime: ${regime.label}</span>
+    </div>
+  `;
+
+  const bestI  = returns.indexOf(Math.max(...returns));
+  const worstI = returns.indexOf(Math.min(...returns));
+  const avg    = (returns.reduce((a,b)=>a+b,0)/returns.length).toFixed(1);
+
+  document.getElementById('insightRow').innerHTML = `
+    <div class="ins-card"><div class="ins-label">Highest expected return</div><div class="ins-val" style="color:#1a3d2a">${returns[bestI].toFixed(1)}%</div><div class="ins-sub">${ASSETS[bestI]}</div></div>
+    <div class="ins-card"><div class="ins-label">Equal-weighted avg</div><div class="ins-val">${avg}%</div><div class="ins-sub">across all asset classes</div></div>
+    <div class="ins-card"><div class="ins-label">Lowest expected return</div><div class="ins-val" style="color:${returns[worstI]<0?'#E24B4A':'var(--muted)'}">${returns[worstI].toFixed(1)}%</div><div class="ins-sub">${ASSETS[worstI]}</div></div>
+  `;
+
+  if (chart) {
+    chart.data.datasets[0].data = returns;
+    chart.update('none');
+  } else {
+    chart = new Chart(document.getElementById('cmeChart'), {
+      type: 'bar',
+      data: { labels: ASSETS, datasets: [{ label:'Expected return (%)', data: returns, backgroundColor: COLORS, borderWidth:0, borderRadius:2 }] },
+      options: {
+        indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+        plugins: { legend:{ display:false }, tooltip:{ callbacks:{ label: ctx => ` ${ctx.parsed.x.toFixed(1)}%` }}},
+        scales: {
+          x: { grid:{ color:'rgba(26,61,43,0.07)' }, ticks:{ color:'#7a8c80', font:{size:11}, callback: v=>v+'%' }, min:-3, max:16 },
+          y: { grid:{ display:false }, ticks:{ color:'#7a8c80', font:{size:11} } }
+        }
+      }
+    });
+  }
 }
 
-['gdp','cpi','fed','t10','ig','unemp'].forEach(id=>document.getElementById(id).addEventListener('input',render));
+['gdp','cpi','fed','t10','ig','unemp'].forEach(id => document.getElementById(id).addEventListener('input', render));
 loadData();
 </script>
 </body>
