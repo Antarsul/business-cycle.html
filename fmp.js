@@ -12,21 +12,9 @@ export default async function handler(req, res) {
     const response = await fetch(url);
     const data = await response.json();
 
-    if (data.status === 'error') {
-      return res.status(404).json({ error: data.message || `No data for ${ticker}` });
-    }
+    // Return full raw response so we can debug
+    return res.status(200).json({ debug: true, raw: data });
 
-    if (!data.values || data.values.length < 50) {
-      return res.status(404).json({ error: `Only ${data.values?.length || 0} data points for ${ticker}` });
-    }
-
-    // Twelve Data returns newest first — reverse to oldest first
-    const closes = data.values
-      .map(d => parseFloat(d.close))
-      .filter(p => !isNaN(p))
-      .reverse();
-
-    return res.status(200).json({ closes, symbol: ticker.toUpperCase(), count: closes.length });
   } catch (error) {
     return res.status(500).json({ error: 'Fetch failed', details: error.message });
   }
