@@ -444,16 +444,38 @@ function renderAll(){
     return '<div class="met"><div class="met-l">'+m.l+'</div><div class="met-v">'+m.v+'</div><div class="met-s">'+m.s+'</div></div>';
   }).join('');
 
-  var avgShift=dec.parallel/10000;
-  var dp_d=-md*avgShift*p;
-  var dp_c=0.5*cv*avgShift*avgShift*p;
-  var newP=+(p+dp_d+dp_c).toFixed(2);
-  var pctChg=((newP-p)/p*100).toFixed(3);
+  // Use curve drag shift if available, otherwise use YTM vs par as the shift signal
+  var curveShift=dec.parallel/10000;
+  var hasDrag=myRates.some(function(r,i){return Math.abs(r-liveRates[i])>0.01;});
+
+  // Always calculate: price at par (coupon=YTM) vs current price shows built-in sensitivity
+  // For impact: use curve drag shift when dragging, otherwise show current price vs par
+  var parPrice=bondPrice(face,coupon,mat,coupon); // price if YTM = coupon = par
+  var dp_d,dp_c,newP,pctChg,shiftBps;
+
+  if(hasDrag){
+    shiftBps=dec.parallel;
+    dp_d=-md*curveShift*p;
+    dp_c=0.5*cv*curveShift*curveShift*p;
+    newP=+(p+dp_d+dp_c).toFixed(2);
+    pctChg=((newP-p)/p*100).toFixed(2);
+  } else {
+    // Show duration/convexity impact of current YTM vs coupon rate
+    // i.e., how far price is from par and what drives it
+    dp_d=+(p-parPrice).toFixed(2);
+    dp_c=0; // no convexity contribution when just comparing to par static
+    newP=+p.toFixed(2);
+    pctChg=((p-face)/face*100).toFixed(2);
+    shiftBps=+((ytm-coupon)*100).toFixed(0);
+  }
+
+  var impactLabel=hasDrag?'Under '+Math.abs(dec.parallel)+'bps shift':'vs par (YTM '+ytm+'% / Coupon '+coupon+'%)';
 
   document.getElementById('priceImpact').innerHTML=[
-    {l:'Duration effect',v:dp_d,fmt:(dp_d>=0?'+':'')+fmtD(dp_d)},
-    {l:'Convexity adjustment',v:dp_c,fmt:(dp_c>=0?'+':'')+fmtD(dp_c)},
-    {l:'Estimated new price',v:dp_d+dp_c,fmt:changed?'$'+newP+' ('+pctChg+'%)':'—',big:true}
+    {l:'Spread to par',v:dp_d,fmt:(dp_d>=0?'+':'')+fmtD(dp_d)+' (YTM '+(ytm>coupon?'>':'<')+' coupon)'},
+    {l:'Price vs par',v:p-face,fmt:(p>=face?'Premium':'Discount')+' — $'+Math.abs(p-face).toFixed(2)},
+    {l:hasDrag?'Est. price under shift':'Current price (at YTM)',v:hasDrag?dp_d+dp_c:p-face,
+      fmt:'$'+newP+' ('+(pctChg>=0?'+':'')+pctChg+'%)',big:true}
   ].map(function(r){
     return '<div class="impact-row"><span class="ir-l">'+r.l+'</span>'
       +'<span class="ir-v" style="color:'+(r.v>=0?'#1D9E75':'#E24B4A')+';font-size:'+(r.big?'14px':'13px')+'">'+r.fmt+'</span></div>';
