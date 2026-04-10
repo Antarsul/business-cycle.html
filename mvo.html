@@ -274,13 +274,14 @@ renderFrontier(40);
 
 async function fetchStock(ticker){
   if(CACHE[ticker]) return CACHE[ticker];
-  const res=await fetch(`/api/fmp?ticker=${ticker}`);
+  const API_KEY='61303c074e6d4aa084d9de70e3291790';
+  const url=`https://api.twelvedata.com/time_series?symbol=${ticker}&interval=1day&outputsize=252&apikey=${API_KEY}`;
+  const res=await fetch(url);
   if(!res.ok) throw new Error(`HTTP ${res.status}`);
   const json=await res.json();
-  if(json.debug) throw new Error('RAW: '+JSON.stringify(json.raw).slice(0,300));
-  if(json.error) throw new Error(json.error);
-  const prices=(json.closes||[]).filter(p=>p!==null&&p!==undefined&&!isNaN(p));
-  if(prices.length<50) throw new Error(`Only ${prices.length} data points`);
+  if(json.status==='error') throw new Error(json.message||'API error');
+  if(!json.values||json.values.length<50) throw new Error(`Got ${json.values?.length||0} values. Code: ${json.code||'none'}. Msg: ${json.message||'none'}`);
+  const prices=json.values.map(d=>parseFloat(d.close)).filter(p=>!isNaN(p)).reverse();
   const rets=[];
   for(let i=1;i<prices.length;i++) rets.push((prices[i]-prices[i-1])/prices[i-1]);
   const mean=rets.reduce((a,b)=>a+b,0)/rets.length;
