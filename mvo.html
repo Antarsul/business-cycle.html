@@ -277,8 +277,9 @@ async function fetchStock(ticker){
   const res=await fetch(`/api/fmp?ticker=${ticker}`);
   if(!res.ok) throw new Error(`HTTP ${res.status}`);
   const json=await res.json();
+  if(json.debug) throw new Error('RAW: '+JSON.stringify(json.raw).slice(0,300));
   if(json.error) throw new Error(json.error);
-  const prices=(json.closes||[]).filter(p=>p!==null&&p!==undefined);
+  const prices=(json.closes||[]).filter(p=>p!==null&&p!==undefined&&!isNaN(p));
   if(prices.length<50) throw new Error(`Only ${prices.length} data points`);
   const rets=[];
   for(let i=1;i<prices.length;i++) rets.push((prices[i]-prices[i-1])/prices[i-1]);
