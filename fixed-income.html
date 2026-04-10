@@ -115,6 +115,7 @@
     <div class="legend-row">
       <div class="leg"><div class="leg-line" style="background:#1a3d2a;"></div>Live curve</div>
       <div class="leg"><div style="width:18px;height:0;border-top:2.5px dashed #E24B4A;"></div>Your view</div>
+      <div class="leg"><div style="width:10px;height:10px;border-radius:50%;background:#b8952a;"></div>Bond YTM</div>
     </div>
   </div>
 
@@ -137,7 +138,7 @@
       <div class="bond-fields">
         <div class="bf"><label>Face value ($)</label><input type="number" id="bFace" value="1000" step="100" onchange="renderAll()"/></div>
         <div class="bf"><label>Coupon rate (%)</label><input type="number" id="bCoupon" value="4.5" step="0.25" onchange="renderAll()"/></div>
-        <div class="bf"><label>Maturity (years)</label><input type="number" id="bMat" value="10" step="1" min="1" max="30" onchange="renderAll()"/></div>
+        <div class="bf"><label>Maturity (years)</label><input type="number" id="bMat" value="10" step="1" min="1" max="30" onchange="syncYTMFromCurve()"/></div>
         <div class="bf"><label>Yield to maturity (%)</label><input type="number" id="bYTM" value="4.5" step="0.1" onchange="renderAll()"/></div>
       </div>
       <div class="metrics-row" id="bondMet"></div>
@@ -201,6 +202,7 @@ async function loadCurve(){
       +'<span class="fred-pill">FRED live</span>';
   }
   myRates=liveRates.slice();
+  syncYTMFromCurve();
   drawCurve();
   renderAll();
 }
@@ -220,6 +222,26 @@ function rateToY(rate,bounds){
 
 function xToCanvas(i){
   return PAD.l+(i/(N-1))*(W-PAD.l-PAD.r);
+}
+
+function interpolateRate(matYears){
+  // Find the two surrounding maturity points and linearly interpolate
+  for(var i=0;i<N-1;i++){
+    var m0=MATS[i].y, m1=MATS[i+1].y;
+    if(matYears>=m0&&matYears<=m1){
+      var t=(matYears-m0)/(m1-m0);
+      return +(myRates[i]+(myRates[i+1]-myRates[i])*t).toFixed(3);
+    }
+  }
+  if(matYears<=MATS[0].y) return myRates[0];
+  return myRates[N-1];
+}
+
+function syncYTMFromCurve(){
+  var mat=parseFloat(document.getElementById('bMat').value)||10;
+  var rate=interpolateRate(mat);
+  document.getElementById('bYTM').value=rate;
+  renderAll();
 }
 
 function drawCurve(){
@@ -341,7 +363,12 @@ function onMove(e){
   var rateRange=bounds.max-bounds.min;
   var delta=-(p.y-dragStartY)/pixRange*rateRange;
   myRates[dragging]=+Math.max(0,Math.min(15,dragStartRate+delta)).toFixed(2);
-  drawCurve();renderAll();
+  drawCurve();
+  // Sync YTM to dragged curve point if it matches bond maturity
+  var mat=parseFloat(document.getElementById('bMat').value)||10;
+  var newYTM=interpolateRate(mat);
+  document.getElementById('bYTM').value=newYTM;
+  renderAll();
 }
 
 function onUp(){
