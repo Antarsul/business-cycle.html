@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Yield Curve & Duration Tool — Antar Wealth Management</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{--linen:#f0ebe0;--linen-dark:#e6dfd2;--green:#1a3d2a;--green-mid:#1f4d35;--green-light:#2a6644;--gold:#b8952a;--gold-light:#d4ae4a;--cream:#faf6ee;--text:#0f2d1e;--text-mid:#3a5a47;--muted:#7a8c80;--border:rgba(184,149,42,0.2);--border-strong:rgba(184,149,42,0.4);}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'DM Sans',sans-serif;font-weight:300;background:var(--linen);color:var(--text);min-height:100vh;}
+    nav{background:rgba(240,235,224,0.97);border-bottom:1px solid var(--border);padding:0 3rem;height:68px;display:flex;align-items:center;justify-content:space-between;}
+    .nav-brand{display:flex;align-items:center;gap:12px;text-decoration:none;}
+    .nav-emblem{height:40px;width:40px;object-fit:contain;}
+    .nav-brand-text{display:flex;flex-direction:column;line-height:1.2;}
+    .nav-brand-name{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;letter-spacing:0.1em;color:var(--green);}
+    .nav-brand-sub{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);}
+    .nav-back{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-mid);text-decoration:none;transition:color 0.2s;}
+    .nav-back:hover{color:var(--gold);}
+    .page-header{background:var(--green);padding:3.5rem 3rem;}
+    .page-header-inner{max-width:960px;margin:0 auto;}
+    .page-eyebrow{font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;display:flex;align-items:center;gap:10px;}
+    .eyebrow-line{width:24px;height:1px;background:var(--gold);}
+    .page-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4vw,48px);font-weight:300;color:var(--linen);margin-bottom:0.75rem;}
+    .page-sub{font-size:14px;color:rgba(240,235,224,0.55);line-height:1.7;max-width:600px;}
+    .cfa-badge{display:inline-flex;align-items:center;gap:6px;margin-top:1rem;padding:5px 12px;border:1px solid rgba(184,149,42,0.4);font-size:11px;letter-spacing:0.1em;color:var(--gold);text-transform:uppercase;}
+    .tool-body{max-width:960px;margin:0 auto;padding:2.5rem 3rem 4rem;}
+    .live-bar{display:flex;align-items:center;flex-wrap:wrap;gap:10px;background:var(--cream);border:1px solid var(--linen-dark);padding:11px 16px;margin-bottom:1.5rem;}
+    .lb-item{display:flex;align-items:center;gap:6px;}
+    .lb-dot{width:7px;height:7px;border-radius:50%;}
+    .lb-label{font-size:11px;color:var(--muted);}
+    .lb-val{font-size:13px;font-weight:500;color:var(--text);}
+    .fred-pill{font-size:10px;letter-spacing:0.1em;padding:3px 8px;background:rgba(26,61,43,0.1);color:var(--green);margin-left:auto;}
+    .loading-txt{font-size:12px;color:var(--muted);font-style:italic;}
+    .hint-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:0.75rem;}
+    .hint{font-size:12px;color:var(--muted);font-style:italic;}
+    .legend-row{display:flex;gap:16px;}
+    .leg{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);}
+    .leg-line{width:18px;height:3px;border-radius:1px;}
+    .chart-panel{background:var(--cream);border:1px solid var(--linen-dark);padding:1.5rem;margin-bottom:1.5rem;position:relative;}
+    .chart-panel-title{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1.1rem;}
+    .canvas-wrap{position:relative;width:100%;height:270px;cursor:crosshair;}
+    .reset-btn{position:absolute;top:0;right:0;padding:5px 14px;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;background:var(--linen);border:1px solid var(--linen-dark);cursor:pointer;color:var(--muted);font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+    .reset-btn:hover{border-color:var(--green);color:var(--green);}
+    .decomp-panel{background:var(--cream);border:1px solid var(--linen-dark);padding:1.5rem;margin-bottom:1.5rem;}
+    .panel-title{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:1.1rem;}
+    .decomp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+    .dc{background:var(--linen);border:1px solid var(--linen-dark);padding:1rem 1.1rem;}
+    .dc-label{font-size:11px;font-weight:500;color:var(--text-mid);margin-bottom:2px;}
+    .dc-sub{font-size:10px;color:var(--muted);margin-bottom:8px;line-height:1.4;}
+    .dc-val{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;}
+    .dc-unit{font-size:12px;font-weight:300;color:var(--muted);}
+    .dc-bar{height:4px;margin-top:8px;background:var(--linen-dark);overflow:hidden;}
+    .dc-bar-fill{height:100%;transition:width 0.35s ease;}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:1.5rem;}
+    .panel{background:var(--cream);border:1px solid var(--linen-dark);padding:1.5rem;}
+    .bond-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem;}
+    .bf{display:flex;flex-direction:column;gap:5px;}
+    .bf label{font-size:11px;color:var(--text-mid);letter-spacing:0.02em;}
+    .bf input{font-size:13px;padding:8px 10px;border:1px solid var(--linen-dark);background:var(--linen);color:var(--text);font-family:'DM Sans',sans-serif;}
+    .bf input:focus{outline:none;border-color:var(--green);}
+    .metrics-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:0.75rem;}
+    .met{background:var(--linen);padding:10px 12px;text-align:center;}
+    .met-l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;}
+    .met-v{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--green);}
+    .met-s{font-size:10px;color:var(--muted);margin-top:2px;}
+    .impact-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--linen-dark);font-size:13px;}
+    .impact-row:last-child{border-bottom:none;}
+    .ir-l{color:var(--muted);}
+    .ir-v{font-weight:500;}
+    .spreads-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:0.75rem;}
+    .sp{background:var(--linen);padding:10px 12px;}
+    .sp-l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;}
+    .sp-v{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;}
+    .sp-sub{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.4;}
+    .regime-badge{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;font-size:12px;font-weight:500;margin-top:0.5rem;}
+    .disclaimer{font-size:11px;color:var(--muted);padding:10px 14px;border:1px solid var(--linen-dark);line-height:1.7;}
+    .disclaimer strong{color:var(--text-mid);}
+    footer{background:var(--green);border-top:1px solid var(--border);padding:1.5rem 3rem;display:flex;align-items:center;justify-content:space-between;margin-top:2rem;}
+    .footer-copy{font-size:12px;color:rgba(240,235,224,0.3);}
+    .footer-mark{font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:0.2em;color:var(--gold);}
+    @media(max-width:700px){.tool-body{padding:1.5rem;}.two-col{grid-template-columns:1fr;}.decomp-grid{grid-template-columns:1fr;}.spreads-grid{grid-template-columns:1fr;}nav{padding:0 1.5rem;}.nav-brand-name{font-size:15px;}.bond-fields{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-brand">
+    <img src="emblem.jpg" alt="Antar Wealth" class="nav-emblem"/>
+    <div class="nav-brand-text">
+      <span class="nav-brand-name">Antar Wealth Management</span>
+      <span class="nav-brand-sub">Est. 2026</span>
+    </div>
+  </a>
+  <a href="index.html" class="nav-back">← Back to home</a>
+</nav>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="page-eyebrow"><span class="eyebrow-line"></span>Fixed Income</div>
+    <h1 class="page-title">Yield Curve & Duration Tool</h1>
+    <p class="page-sub">Live yield curve from the Federal Reserve. Drag any point to express your rate view — the tool decomposes your shift into its parallel, twist, and butterfly components and calculates the price impact on your bond.</p>
+    <div class="cfa-badge">CFA Level III · Fixed Income · Duration & Convexity</div>
+  </div>
+</div>
+
+<div class="tool-body">
+
+  <div class="live-bar" id="liveBar">
+    <span class="loading-txt">Loading live yield curve from FRED...</span>
+  </div>
+
+  <div class="hint-row">
+    <span class="hint">Drag any point on the curve up or down to express your rate view.</span>
+    <div class="legend-row">
+      <div class="leg"><div class="leg-line" style="background:#1a3d2a;"></div>Live curve</div>
+      <div class="leg"><div style="width:18px;height:0;border-top:2.5px dashed #E24B4A;"></div>Your view</div>
+    </div>
+  </div>
+
+  <div class="chart-panel">
+    <div class="chart-panel-title">US Treasury yield curve — drag to reshape</div>
+    <div class="canvas-wrap" id="canvasWrap">
+      <canvas id="ycCanvas" role="img" aria-label="Interactive US Treasury yield curve — drag points to reshape">US Treasury yield curve.</canvas>
+    </div>
+    <button class="reset-btn" onclick="resetCurve()">Reset to live</button>
+  </div>
+
+  <div class="decomp-panel">
+    <div class="panel-title">Shift decomposition — what your view implies</div>
+    <div class="decomp-grid" id="decompGrid"></div>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">Bond price sensitivity</div>
+      <div class="bond-fields">
+        <div class="bf"><label>Face value ($)</label><input type="number" id="bFace" value="1000" step="100" onchange="renderAll()"/></div>
+        <div class="bf"><label>Coupon rate (%)</label><input type="number" id="bCoupon" value="4.5" step="0.25" onchange="renderAll()"/></div>
+        <div class="bf"><label>Maturity (years)</label><input type="number" id="bMat" value="10" step="1" min="1" max="30" onchange="renderAll()"/></div>
+        <div class="bf"><label>Yield to maturity (%)</label><input type="number" id="bYTM" value="4.5" step="0.1" onchange="renderAll()"/></div>
+      </div>
+      <div class="metrics-row" id="bondMet"></div>
+      <div id="priceImpact"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Curve analytics</div>
+      <div class="spreads-grid" id="spreadsGrid"></div>
+      <div id="regimeBadge"></div>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    <strong>Data source:</strong> US Treasury yields from FRED (Federal Reserve Bank of St. Louis). Series: DGS1MO, DGS3MO, DGS6MO, DGS1, DGS2, DGS3, DGS5, DGS7, DGS10, DGS20, DGS30. <strong>Duration and convexity estimates</strong> use the standard bond mathematics formulae assuming semi-annual coupon payments. Price impact uses the first-order duration approximation plus second-order convexity adjustment. For illustrative and educational purposes only — not investment advice.
+  </div>
+
+</div>
+
+<footer>
+  <span class="footer-copy">© 2026 Antar Wealth Management. For illustrative purposes only. Not financial advice.</span>
+  <span class="footer-mark">AWM</span>
+</footer>
+
+<script>
+var MATS=[
+  {l:'1M',y:1/12,s:'DGS1MO'},{l:'3M',y:.25,s:'DGS3MO'},{l:'6M',y:.5,s:'DGS6MO'},
+  {l:'1Y',y:1,s:'DGS1'},{l:'2Y',y:2,s:'DGS2'},{l:'3Y',y:3,s:'DGS3'},
+  {l:'5Y',y:5,s:'DGS5'},{l:'7Y',y:7,s:'DGS7'},{l:'10Y',y:10,s:'DGS10'},
+  {l:'20Y',y:20,s:'DGS20'},{l:'30Y',y:30,s:'DGS30'}
+];
+var N=MATS.length;
+var liveRates=new Array(N).fill(4.0);
+var myRates=new Array(N).fill(4.0);
+var dragging=-1,dragStartY=0,dragStartRate=0;
+var dpr=1,W=0,H=0;
+var PAD={t:28,b:32,l:44,r:16};
+
+async function fetchRate(s){
+  try{
+    var r=await fetch('/api/fred?series_id='+s+'&limit=5&sort_order=desc');
+    var j=await r.json();
+    var o=(j.observations||[]).filter(function(x){return x.value!=='.'&&x.value!=='ND';});
+    return o.length?parseFloat(o[0].value):null;
+  }catch(e){return null;}
+}
+
+async function loadCurve(){
+  var rates=await Promise.all(MATS.map(function(m){return fetchRate(m.s);}));
+  var valid=rates.filter(function(r){return r!==null;});
+  if(valid.length<4){
+    liveRates=[2.8,3.2,3.8,4.2,4.5,4.6,4.5,4.4,4.3,4.2,4.1];
+    document.getElementById('liveBar').innerHTML='<span style="font-size:12px;color:var(--muted);font-style:italic;">Using illustrative data — live data loads on antarwealth.com.</span>';
+  }else{
+    liveRates=rates.map(function(r,i){return r!==null?r:valid[Math.min(i,valid.length-1)];});
+    var items=[
+      {dot:'#1D9E75',l:'1Y',v:liveRates[3]},{dot:'#b8952a',l:'2Y',v:liveRates[4]},
+      {dot:'#378ADD',l:'10Y',v:liveRates[8]},{dot:'#7f77dd',l:'30Y',v:liveRates[10]}
+    ];
+    document.getElementById('liveBar').innerHTML=
+      items.map(function(i){return '<div class="lb-item"><div class="lb-dot" style="background:'+i.dot+';"></div><span class="lb-label">'+i.l+'</span><span class="lb-val">'+i.v.toFixed(2)+'%</span></div>';}).join('')
+      +'<span class="fred-pill">FRED live</span>';
+  }
+  myRates=liveRates.slice();
+  drawCurve();
+  renderAll();
+}
+
+function resetCurve(){myRates=liveRates.slice();drawCurve();renderAll();}
+
+function getChartBounds(){
+  var all=myRates.concat(liveRates);
+  var mn=Math.min.apply(null,all)-0.4;
+  var mx=Math.max.apply(null,all)+0.4;
+  return{min:Math.floor(mn*2)/2,max:Math.ceil(mx*2)/2};
+}
+
+function rateToY(rate,bounds){
+  return PAD.t+(1-(rate-bounds.min)/(bounds.max-bounds.min))*(H-PAD.t-PAD.b);
+}
+
+function xToCanvas(i){
+  return PAD.l+(i/(N-1))*(W-PAD.l-PAD.r);
+}
+
+function drawCurve(){
+  var canvas=document.getElementById('ycCanvas');
+  var wrap=document.getElementById('canvasWrap');
+  dpr=window.devicePixelRatio||1;
+  W=wrap.clientWidth||900;
+  H=270;
+  canvas.width=W*dpr;canvas.height=H*dpr;
+  canvas.style.width=W+'px';canvas.style.height=H+'px';
+  var c=canvas.getContext('2d');
+  c.scale(dpr,dpr);
+  var bounds=getChartBounds();
+
+  // Grid
+  var steps=6;
+  for(var gi=0;gi<=steps;gi++){
+    var rate=bounds.min+gi*(bounds.max-bounds.min)/steps;
+    var gy=rateToY(rate,bounds);
+    c.beginPath();c.strokeStyle='rgba(184,149,42,0.1)';c.lineWidth=1;
+    c.moveTo(PAD.l,gy);c.lineTo(W-PAD.r,gy);c.stroke();
+    c.fillStyle='rgba(122,140,128,0.6)';c.font='10px DM Sans,sans-serif';c.textAlign='right';
+    c.fillText(rate.toFixed(1)+'%',PAD.l-5,gy+3);
+  }
+
+  // X labels
+  c.fillStyle='rgba(122,140,128,0.7)';c.font='10px DM Sans,sans-serif';c.textAlign='center';
+  MATS.forEach(function(m,i){c.fillText(m.l,xToCanvas(i),H-PAD.b+14);});
+
+  // Axis line
+  c.beginPath();c.strokeStyle='rgba(184,149,42,0.2)';c.lineWidth=1;
+  c.moveTo(PAD.l,H-PAD.b);c.lineTo(W-PAD.r,H-PAD.b);c.stroke();
+
+  // Live curve fill
+  c.beginPath();
+  liveRates.forEach(function(r,i){
+    var x=xToCanvas(i),y=rateToY(r,bounds);
+    i===0?c.moveTo(x,y):c.lineTo(x,y);
+  });
+  c.lineTo(xToCanvas(N-1),H-PAD.b);
+  c.lineTo(xToCanvas(0),H-PAD.b);
+  c.closePath();
+  c.fillStyle='rgba(26,61,43,0.05)';c.fill();
+
+  // Live curve line
+  c.beginPath();c.strokeStyle='#1a3d2a';c.lineWidth=2.5;c.lineJoin='round';c.lineCap='round';
+  liveRates.forEach(function(r,i){
+    var x=xToCanvas(i),y=rateToY(r,bounds);
+    i===0?c.moveTo(x,y):c.lineTo(x,y);
+  });c.stroke();
+
+  // My curve
+  var changed=myRates.some(function(r,i){return Math.abs(r-liveRates[i])>0.01;});
+  if(changed){
+    c.beginPath();c.strokeStyle='#E24B4A';c.lineWidth=2.5;c.lineJoin='round';c.lineCap='round';
+    c.setLineDash([6,3]);
+    myRates.forEach(function(r,i){
+      var x=xToCanvas(i),y=rateToY(r,bounds);
+      i===0?c.moveTo(x,y):c.lineTo(x,y);
+    });c.stroke();c.setLineDash([]);
+  }
+
+  // Live dots
+  liveRates.forEach(function(r,i){
+    var x=xToCanvas(i),y=rateToY(r,bounds);
+    c.beginPath();c.arc(x,y,4,0,Math.PI*2);
+    c.fillStyle='#1a3d2a';c.strokeStyle='#f0ebe0';c.lineWidth=1.5;c.fill();c.stroke();
+  });
+
+  // My dots
+  myRates.forEach(function(r,i){
+    var x=xToCanvas(i),y=rateToY(r,bounds);
+    var isDiff=Math.abs(r-liveRates[i])>0.02;
+    var isActive=i===dragging;
+    c.beginPath();c.arc(x,y,isActive?9:6,0,Math.PI*2);
+    c.fillStyle=isDiff?'#E24B4A':'rgba(26,61,43,0.0)';
+    c.strokeStyle=isDiff?'#E24B4A':'rgba(26,61,43,0.35)';
+    c.lineWidth=2;c.fill();c.stroke();
+    if(isActive){
+      c.fillStyle='rgba(26,61,43,0.85)';c.font='500 11px DM Sans,sans-serif';c.textAlign='center';
+      c.fillText(r.toFixed(2)+'%',x,y-15);
+    }
+  });
+}
+
+function getNearestPoint(mx,my){
+  var best=-1,bestDist=9999;
+  var bounds=getChartBounds();
+  myRates.forEach(function(r,i){
+    var x=xToCanvas(i),y=rateToY(r,bounds);
+    var d=Math.sqrt(Math.pow(mx-x,2)+Math.pow(my-y,2));
+    if(d<bestDist){bestDist=d;best=i;}
+  });
+  return bestDist<24?best:-1;
+}
+
+function getPos(e){
+  var rect=document.getElementById('ycCanvas').getBoundingClientRect();
+  var touch=e.touches?e.touches[0]:e;
+  return{x:touch.clientX-rect.left,y:touch.clientY-rect.top};
+}
+
+function onDown(e){
+  var p=getPos(e);
+  dragging=getNearestPoint(p.x,p.y);
+  if(dragging>=0){
+    dragStartY=p.y;dragStartRate=myRates[dragging];
+    document.getElementById('ycCanvas').style.cursor='ns-resize';
+    e.preventDefault();
+  }
+}
+
+function onMove(e){
+  if(dragging<0)return;
+  e.preventDefault();
+  var p=getPos(e);
+  var bounds=getChartBounds();
+  var pixRange=H-PAD.t-PAD.b;
+  var rateRange=bounds.max-bounds.min;
+  var delta=-(p.y-dragStartY)/pixRange*rateRange;
+  myRates[dragging]=+Math.max(0,Math.min(15,dragStartRate+delta)).toFixed(2);
+  drawCurve();renderAll();
+}
+
+function onUp(){
+  dragging=-1;
+  document.getElementById('ycCanvas').style.cursor='crosshair';
+}
+
+var cv=document.getElementById('ycCanvas');
+cv.addEventListener('mousedown',onDown);
+cv.addEventListener('mousemove',onMove);
+cv.addEventListener('mouseup',onUp);
+cv.addEventListener('mouseleave',onUp);
+cv.addEventListener('touchstart',onDown,{passive:false});
+cv.addEventListener('touchmove',onMove,{passive:false});
+cv.addEventListener('touchend',onUp);
+
+function decompose(my,live){
+  var diffs=my.map(function(r,i){return r-live[i];});
+  var parallel=diffs.reduce(function(a,b){return a+b;},0)/N;
+  var mids=MATS.map(function(m){return m.y;});
+  var midPoint=mids[Math.floor(N/2)];
+  var resid=diffs.map(function(d){return d-parallel;});
+  var tNum=0,tDen=0;
+  resid.forEach(function(r,i){var x=mids[i]-midPoint;tNum+=r*x;tDen+=x*x;});
+  var twist=tDen>0?tNum/tDen:0;
+  var bResid=resid.map(function(r,i){return r-twist*(mids[i]-midPoint);});
+  var belly=bResid[Math.floor(N/2)];
+  return{
+    parallel:+(parallel*100).toFixed(1),
+    twist:+(twist*100*10).toFixed(1),
+    butterfly:+(belly*100).toFixed(1)
+  };
+}
+
+function bondPrice(face,coupon,mat,ytm){
+  var c=face*(coupon/100)/2,y=ytm/100/2,n=mat*2;
+  if(y===0)return face+c*n;
+  return c*(1-Math.pow(1+y,-n))/y+face*Math.pow(1+y,-n);
+}
+
+function modDuration(face,coupon,mat,ytm){
+  var c=face*(coupon/100)/2,y=ytm/100/2,n=mat*2,p=bondPrice(face,coupon,mat,ytm);
+  var num=0;
+  for(var t=1;t<=n;t++)num+=(t/2)*(t<n?c:c+face)/Math.pow(1+y,t);
+  return(num/p)/(1+y);
+}
+
+function convexity(face,coupon,mat,ytm){
+  var c=face*(coupon/100)/2,y=ytm/100/2,n=mat*2,p=bondPrice(face,coupon,mat,ytm);
+  var cv=0;
+  for(var t=1;t<=n;t++)cv+=(t<n?c:c+face)*t*(t+1)/Math.pow(1+y,t+2);
+  return cv/(p*4);
+}
+
+function fmtD(n){
+  var abs=Math.abs(n),s=n<0?'-':'';
+  if(abs>=1000)return s+'$'+Math.round(abs/1000)+'K';
+  return s+'$'+abs.toFixed(2);
+}
+
+function renderAll(){
+  var dec=decompose(myRates,liveRates);
+  var changed=myRates.some(function(r,i){return Math.abs(r-liveRates[i])>0.01;});
+
+  var decompItems=[
+    {l:'Parallel shift',sub:'All maturities move equally',v:dec.parallel,unit:'bps',
+     desc:dec.parallel>10?'Rates broadly rising — bond prices fall across the curve.':dec.parallel<-10?'Rates broadly falling — bonds rally across the curve.':'No significant parallel shift.'},
+    {l:'Twist',sub:'Short end vs long end',v:dec.twist,unit:'bps/yr',
+     desc:dec.twist>5?'Steepening — long rates rising faster than short. Typical of early recovery or fiscal concern.':dec.twist<-5?'Flattening — short rates rising faster. Classic late-cycle signal as Fed tightens.':'No significant twist.'},
+    {l:'Butterfly',sub:'Belly vs wings',v:dec.butterfly,unit:'bps',
+     desc:dec.butterfly>5?'Positive butterfly — belly rising relative to wings. Mid-term uncertainty priced in.':dec.butterfly<-5?'Negative butterfly — belly falling. Strong demand for intermediate maturities.':'No significant butterfly.'}
+  ];
+
+  document.getElementById('decompGrid').innerHTML=decompItems.map(function(d){
+    var color=changed&&Math.abs(d.v)>2?(d.v>0?'#E24B4A':'#185FA5'):'var(--muted)';
+    var barPct=Math.min(100,Math.abs(d.v)/150*100);
+    var barColor=d.v>0?'#E24B4A':'#185FA5';
+    return '<div class="dc">'
+      +'<div class="dc-label">'+d.l+'</div>'
+      +'<div class="dc-sub">'+d.sub+'</div>'
+      +'<div class="dc-val" style="color:'+color+';">'+(d.v>0?'+':'')+d.v+'<span class="dc-unit"> '+d.unit+'</span></div>'
+      +'<div class="dc-bar"><div class="dc-bar-fill" style="width:'+barPct+'%;background:'+barColor+';"></div></div>'
+      +(changed&&Math.abs(d.v)>2?'<div style="font-size:11px;color:var(--muted);margin-top:6px;line-height:1.5;">'+d.desc+'</div>':'')
+      +'</div>';
+  }).join('');
+
+  var face=parseFloat(document.getElementById('bFace').value)||1000;
+  var coupon=parseFloat(document.getElementById('bCoupon').value)||4.5;
+  var mat=parseFloat(document.getElementById('bMat').value)||10;
+  var ytm=parseFloat(document.getElementById('bYTM').value)||4.5;
+  var p=bondPrice(face,coupon,mat,ytm);
+  var md=modDuration(face,coupon,mat,ytm);
+  var cv=convexity(face,coupon,mat,ytm);
+
+  document.getElementById('bondMet').innerHTML=[
+    {l:'Price',v:'$'+p.toFixed(2),s:((p/face-1)*100).toFixed(2)+'% of par'},
+    {l:'Mod. duration',v:md.toFixed(2),s:'years'},
+    {l:'Convexity',v:cv.toFixed(2),s:'second-order'}
+  ].map(function(m){
+    return '<div class="met"><div class="met-l">'+m.l+'</div><div class="met-v">'+m.v+'</div><div class="met-s">'+m.s+'</div></div>';
+  }).join('');
+
+  var avgShift=dec.parallel/10000;
+  var dp_d=-md*avgShift*p;
+  var dp_c=0.5*cv*avgShift*avgShift*p;
+  var newP=+(p+dp_d+dp_c).toFixed(2);
+  var pctChg=((newP-p)/p*100).toFixed(3);
+
+  document.getElementById('priceImpact').innerHTML=[
+    {l:'Duration effect',v:dp_d,fmt:(dp_d>=0?'+':'')+fmtD(dp_d)},
+    {l:'Convexity adjustment',v:dp_c,fmt:(dp_c>=0?'+':'')+fmtD(dp_c)},
+    {l:'Estimated new price',v:dp_d+dp_c,fmt:changed?'$'+newP+' ('+pctChg+'%)':'—',big:true}
+  ].map(function(r){
+    return '<div class="impact-row"><span class="ir-l">'+r.l+'</span>'
+      +'<span class="ir-v" style="color:'+(r.v>=0?'#1D9E75':'#E24B4A')+';font-size:'+(r.big?'14px':'13px')+'">'+r.fmt+'</span></div>';
+  }).join('');
+
+  var r2=myRates[4],r10=myRates[8],r3m=myRates[1],r30=myRates[10];
+  var s2_10=+(r10-r2).toFixed(2),s3m_10=+(r10-r3m).toFixed(2),s2_30=+(r30-r2).toFixed(2);
+  function sc(s){return s<-0.1?'#E24B4A':s<0.3?'#BA7517':'#1D9E75';}
+
+  document.getElementById('spreadsGrid').innerHTML=[
+    {l:'2Y – 10Y',v:s2_10,sub:'Primary recession signal'},
+    {l:'3M – 10Y',v:s3m_10,sub:'Fed watch indicator'},
+    {l:'2Y – 30Y',v:s2_30,sub:'Long-run growth view'}
+  ].map(function(s){
+    return '<div class="sp"><div class="sp-l">'+s.l+'</div>'
+      +'<div class="sp-v" style="color:'+sc(s.v)+'">'+(s.v>0?'+':'')+s.v+'%</div>'
+      +'<div class="sp-sub">'+s.sub+'</div></div>';
+  }).join('');
+
+  var reg='',rc='',rb='';
+  if(s2_10<-0.5){reg='Deeply inverted — strong recession signal';rc='#791F1F';rb='#FCEBEB';}
+  else if(s2_10<0){reg='Inverted — recession watch';rc='#E24B4A';rb='#FCEBEB';}
+  else if(s2_10<0.5){reg='Flat — late cycle caution';rc='#BA7517';rb='#FAEEDA';}
+  else if(s2_10<1.5){reg='Normal slope — moderate expansion';rc='#185FA5';rb='#E6F1FB';}
+  else{reg='Steep curve — early recovery or easing cycle';rc='#1D9E75';rb='#E1F5EE';}
+
+  document.getElementById('regimeBadge').innerHTML='<div class="regime-badge" style="background:'+rb+';color:'+rc+';">'
+    +'<div style="width:8px;height:8px;border-radius:50%;background:'+rc+';flex-shrink:0;"></div>'
+    +'<span>'+reg+'</span></div>';
+}
+
+window.addEventListener('resize',function(){drawCurve();});
+renderAll();
+loadCurve();
+</script>
+</body>
+</html>
