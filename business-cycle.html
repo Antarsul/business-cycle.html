@@ -1,179 +1,539 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Business Cycle Asset Allocation</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Business Cycle Allocator — Antar Wealth Management</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --color-background-primary: #ffffff;
-      --color-background-secondary: #f4f3ef;
-      --color-text-primary: #1a1a18;
-      --color-text-secondary: #5f5e5a;
-      --color-border-secondary: rgba(0,0,0,0.25);
-      --color-border-tertiary: rgba(0,0,0,0.12);
-      --border-radius-md: 8px;
-      --border-radius-lg: 12px;
-    }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --color-background-primary: #1e1e1c;
-        --color-background-secondary: #2a2a28;
-        --color-text-primary: #f0ede8;
-        --color-text-secondary: #a8a59e;
-        --color-border-secondary: rgba(255,255,255,0.25);
-        --color-border-tertiary: rgba(255,255,255,0.12);
-      }
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: var(--color-background-primary);
-      color: var(--color-text-primary);
-      padding: 2rem 1.5rem;
-      max-width: 720px;
-      margin: 0 auto;
-    }
-    h1 {
-      font-size: 18px;
-      font-weight: 500;
-      margin-bottom: 0.25rem;
-      color: var(--color-text-primary);
-    }
-    .subtitle {
-      font-size: 13px;
-      color: var(--color-text-secondary);
-      margin-bottom: 1.75rem;
-    }
-    .phase-row { display: flex; gap: 8px; margin-bottom: 1.5rem; flex-wrap: wrap; }
-    .phase-btn {
-      flex: 1; min-width: 130px; padding: 10px 8px;
-      border-radius: var(--border-radius-md);
-      border: 0.5px solid var(--color-border-secondary);
-      background: var(--color-background-secondary);
-      cursor: pointer; font-size: 13px; font-weight: 400;
-      color: var(--color-text-secondary); text-align: center;
-      transition: all 0.15s;
-    }
-    .phase-btn.active { border-width: 1.5px; font-weight: 500; }
-    .phase-btn.p0.active { background: #E1F5EE; border-color: #1D9E75; color: #085041; }
-    .phase-btn.p1.active { background: #E6F1FB; border-color: #378ADD; color: #0C447C; }
-    .phase-btn.p2.active { background: #FAEEDA; border-color: #EF9F27; color: #633806; }
-    .phase-btn.p3.active { background: #FCEBEB; border-color: #E24B4A; color: #791F1F; }
-    .phase-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
-    .p0-dot { background: #1D9E75; } .p1-dot { background: #378ADD; }
-    .p2-dot { background: #EF9F27; } .p3-dot { background: #E24B4A; }
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.5rem; }
-    .macro-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px 14px; }
-    .macro-label { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.04em; }
-    .macro-val { font-size: 16px; font-weight: 500; }
-    .up { color: #1D9E75; } .down { color: #E24B4A; } .flat { color: #888780; }
-    .section-label { font-size: 11px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px; }
-    .legend-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 1.25rem; }
-    .legend-item { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--color-text-secondary); }
-    .legend-sq { width: 10px; height: 10px; border-radius: 2px; }
-    .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-    .bar-name { font-size: 13px; color: var(--color-text-secondary); width: 150px; flex-shrink: 0; }
-    .bar-track { flex: 1; height: 20px; background: var(--color-background-secondary); border-radius: 3px; overflow: hidden; }
-    .bar-fill { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
-    .bar-pct { font-size: 12px; font-weight: 500; width: 36px; text-align: right; color: var(--color-text-primary); }
-    .thesis { font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; border-left: 2px solid var(--color-border-secondary); padding-left: 12px; margin-top: 1.5rem; }
+    :root{--linen:#f0ebe0;--linen-dark:#e6dfd2;--green:#1a3d2a;--green-mid:#1f4d35;--green-light:#2a6644;--gold:#b8952a;--gold-light:#d4ae4a;--cream:#faf6ee;--text:#0f2d1e;--text-mid:#3a5a47;--muted:#7a8c80;--border:rgba(184,149,42,0.2);--border-strong:rgba(184,149,42,0.4);}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'DM Sans',sans-serif;font-weight:300;background:var(--linen);color:var(--text);min-height:100vh;}
+    nav{background:rgba(240,235,224,0.97);border-bottom:1px solid var(--border);padding:0 3rem;height:68px;display:flex;align-items:center;justify-content:space-between;}
+    .nav-brand{display:flex;align-items:center;gap:12px;text-decoration:none;}
+    .nav-emblem{height:40px;width:40px;object-fit:contain;}
+    .nav-brand-text{display:flex;flex-direction:column;line-height:1.2;}
+    .nav-brand-name{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;letter-spacing:0.1em;color:var(--green);}
+    .nav-brand-sub{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);}
+    .nav-back{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-mid);text-decoration:none;transition:color 0.2s;}
+    .nav-back:hover{color:var(--gold);}
+    .page-header{background:var(--green);padding:3.5rem 3rem;}
+    .page-header-inner{max-width:900px;margin:0 auto;}
+    .page-eyebrow{font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;display:flex;align-items:center;gap:10px;}
+    .eyebrow-line{width:24px;height:1px;background:var(--gold);}
+    .page-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4vw,48px);font-weight:300;color:var(--linen);margin-bottom:0.75rem;}
+    .page-sub{font-size:14px;color:rgba(240,235,224,0.55);line-height:1.7;max-width:580px;}
+    .cfa-badge{display:inline-flex;align-items:center;gap:6px;margin-top:1rem;padding:5px 12px;border:1px solid rgba(184,149,42,0.4);font-size:11px;letter-spacing:0.1em;color:var(--gold);text-transform:uppercase;}
+    .tool-body{max-width:900px;margin:0 auto;padding:2.5rem 3rem 4rem;}
+    .fred-bar{display:flex;align-items:center;flex-wrap:wrap;gap:10px;background:var(--cream);border:1px solid var(--linen-dark);padding:10px 16px;margin-bottom:1.5rem;font-size:12px;}
+    .fred-item{display:flex;align-items:center;gap:6px;}
+    .fred-dot{width:7px;height:7px;border-radius:50%;}
+    .fred-label{color:var(--muted);}
+    .fred-val{font-weight:500;color:var(--text);}
+    .fred-pill{font-size:10px;letter-spacing:0.1em;padding:3px 8px;background:rgba(26,61,43,0.1);color:var(--green);margin-left:auto;}
+    .fred-date{font-size:11px;color:var(--muted);}
+    .loading-txt{font-size:12px;color:var(--muted);font-style:italic;}
+    .detected-bar{display:flex;align-items:center;gap:10px;background:var(--cream);border:1px solid var(--linen-dark);border-left:3px solid var(--green);padding:10px 14px;margin-bottom:1.5rem;font-size:12px;color:var(--text-mid);line-height:1.6;}
+    .detected-bar.hidden{display:none;}
+    .chart-panel{background:var(--cream);border:1px solid var(--linen-dark);padding:1.75rem;margin-bottom:2rem;}
+    .chart-label{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1.25rem;}
+    .canvas-wrap{width:100%;margin-bottom:1rem;}
+    .slider-row{display:flex;align-items:center;gap:12px;}
+    .slider-end{font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);white-space:nowrap;}
+    .slider-row input[type=range]{flex:1;accent-color:var(--green);}
+    .override-note{font-size:11px;color:var(--muted);margin-top:8px;font-style:italic;}
+    .phase-badge{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;font-size:12px;font-weight:500;margin-bottom:1.5rem;margin-top:1.5rem;}
+    .macro-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:1.75rem;}
+    .macro-card{background:var(--cream);border:1px solid var(--linen-dark);padding:1rem 1.1rem;}
+    .macro-label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+    .macro-val{font-size:15px;font-weight:500;}
+    .alloc-panel{background:var(--cream);border:1px solid var(--linen-dark);padding:1.5rem;margin-bottom:1.5rem;}
+    .alloc-header{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1.1rem;}
+    .legend-row{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:1.1rem;}
+    .leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);}
+    .leg-dot{width:9px;height:9px;border-radius:50%;}
+    .bar-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+    .bar-name{font-size:13px;color:var(--text-mid);width:155px;flex-shrink:0;}
+    .bar-track{flex:1;height:20px;background:var(--linen-dark);overflow:hidden;}
+    .bar-fill{height:100%;transition:width 0.45s ease;}
+    .bar-pct{font-size:13px;font-weight:500;color:var(--text);width:36px;text-align:right;}
+    .thesis-panel{padding:1.25rem 1.5rem;background:var(--cream);border-left:3px solid var(--gold);font-size:13px;color:var(--text-mid);line-height:1.85;margin-bottom:1.5rem;}
+    .thesis-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:400;color:var(--green);margin-bottom:0.5rem;}
+    .context-panel{background:var(--cream);border:1px solid var(--linen-dark);padding:1.5rem;}
+    .context-title{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:1rem;}
+    .context-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+    .ctx-item{background:var(--linen);padding:10px 12px;}
+    .ctx-label{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:4px;}
+    .ctx-val{font-size:13px;color:var(--text-mid);line-height:1.5;}
+    .hidden{display:none!important;}
+    footer{background:var(--green);border-top:1px solid var(--border);padding:1.5rem 3rem;display:flex;align-items:center;justify-content:space-between;margin-top:2rem;}
+    .footer-copy{font-size:12px;color:rgba(240,235,224,0.3);}
+    .footer-mark{font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:0.2em;color:var(--gold);}
+    @media(max-width:700px){.tool-body{padding:1.5rem;}.macro-grid{grid-template-columns:1fr 1fr;}.context-grid{grid-template-columns:1fr;}nav{padding:0 1.5rem;}.nav-brand-name{font-size:15px;}.fred-bar{gap:8px;}}
   </style>
 </head>
 <body>
+<nav>
+  <a href="index.html" class="nav-brand">
+    <img src="emblem.jpg" alt="Antar Wealth" class="nav-emblem"/>
+    <div class="nav-brand-text">
+      <span class="nav-brand-name">Antar Wealth Management</span>
+      <span class="nav-brand-sub">Est. 2026</span>
+    </div>
+  </a>
+  <a href="index.html" class="nav-back">← Back to home</a>
+</nav>
 
-  <h1>Business cycle asset allocation</h1>
-  <p class="subtitle">Illustrative allocations across the four phases of the business cycle</p>
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="page-eyebrow"><span class="eyebrow-line"></span>Asset Allocation</div>
+    <h1 class="page-title">Business Cycle Allocator</h1>
+    <p class="page-sub">The slider auto-positions based on live FRED macro data to show approximately where the economy sits today. Drag to explore any point in the cycle manually.</p>
+    <div class="cfa-badge">CFA Level III · Asset Allocation Framework</div>
+  </div>
+</div>
 
-  <div class="phase-row">
-    <button class="phase-btn p0 active" onclick="setPhase(0)"><span class="phase-dot p0-dot"></span>Early recovery</button>
-    <button class="phase-btn p1" onclick="setPhase(1)"><span class="phase-dot p1-dot"></span>Late expansion</button>
-    <button class="phase-btn p2" onclick="setPhase(2)"><span class="phase-dot p2-dot"></span>Peak / slowdown</button>
-    <button class="phase-btn p3" onclick="setPhase(3)"><span class="phase-dot p3-dot"></span>Recession</button>
+<div class="tool-body">
+
+  <div class="fred-bar" id="fredBar"><span class="loading-txt">Loading live macro data from FRED...</span></div>
+  <div class="detected-bar hidden" id="detectedBar"></div>
+
+  <div class="chart-panel">
+    <div class="chart-label">Economic activity — full business cycle</div>
+    <div class="canvas-wrap"><canvas id="cc" role="img" aria-label="Business cycle sine curve with four phases labeled">Business cycle curve.</canvas></div>
+    <div class="slider-row">
+      <span class="slider-end">Trough</span>
+      <input type="range" id="sl" min="0" max="100" value="50" step="1"/>
+      <span class="slider-end">Trough</span>
+    </div>
+    <div class="override-note" id="overrideNote"></div>
   </div>
 
-  <div class="grid" id="macroGrid"></div>
-  <div class="section-label">Suggested allocation</div>
-  <div class="legend-row" id="legendRow"></div>
-  <div id="barChart"></div>
-  <div class="thesis" id="thesis"></div>
+  <div class="phase-badge" id="phaseBadge"></div>
+  <div class="macro-grid" id="macroGrid"></div>
 
-  <script>
-    const COLORS = ['#1D9E75','#378ADD','#EF9F27','#D4537E','#7F77DD','#888780','#D85A30'];
-    const ASSETS = ['Equities (domestic)','Intl equities','Fixed income','Real estate','Commodities','Cash','Alternatives'];
-    const phases = [
-      {
-        macro: [
-          { label: 'GDP growth', val: 'Accelerating', dir: 'up' },
-          { label: 'Inflation', val: 'Low / rising', dir: 'up' },
-          { label: 'Interest rates', val: 'Low / stable', dir: 'flat' },
-          { label: 'Credit spreads', val: 'Tightening', dir: 'up' },
-        ],
-        alloc: [35, 15, 18, 10, 8, 4, 10],
-        thesis: 'Risk-on environment. Equities lead as earnings recover. Credit spreads tighten. Avoid long-duration bonds — rates will eventually rise. Real assets begin to recover.'
-      },
-      {
-        macro: [
-          { label: 'GDP growth', val: 'Peaking', dir: 'flat' },
-          { label: 'Inflation', val: 'Rising', dir: 'up' },
-          { label: 'Interest rates', val: 'Rising', dir: 'up' },
-          { label: 'Credit spreads', val: 'Tight / stable', dir: 'flat' },
-        ],
-        alloc: [28, 14, 13, 10, 15, 5, 15],
-        thesis: 'Inflation hedge becomes critical — tilt toward commodities, real assets, and TIPS. Equities still positive but late-cycle rotation begins. Reduce long-duration fixed income exposure.'
-      },
-      {
-        macro: [
-          { label: 'GDP growth', val: 'Slowing', dir: 'down' },
-          { label: 'Inflation', val: 'High / peaking', dir: 'flat' },
-          { label: 'Interest rates', val: 'High / peaking', dir: 'flat' },
-          { label: 'Credit spreads', val: 'Widening', dir: 'down' },
-        ],
-        alloc: [18, 10, 24, 10, 13, 12, 13],
-        thesis: 'Defensiveness increases. Shift toward investment-grade bonds and defensive equities. Reduce credit risk as spreads widen. Cash buffer grows. Commodities begin to fade.'
-      },
-      {
-        macro: [
-          { label: 'GDP growth', val: 'Contracting', dir: 'down' },
-          { label: 'Inflation', val: 'Falling', dir: 'down' },
-          { label: 'Interest rates', val: 'Cutting', dir: 'down' },
-          { label: 'Credit spreads', val: 'Wide', dir: 'down' },
-        ],
-        alloc: [12, 5, 35, 5, 5, 28, 10],
-        thesis: 'Capital preservation mode. Long-duration Treasuries rally as rates are cut. Cash is king. Equities and commodities fall sharply. Opportunity builds for recovery reallocation.'
-      }
+  <div class="alloc-panel">
+    <div class="alloc-header">Suggested allocation</div>
+    <div class="legend-row" id="legend"></div>
+    <div id="allocBars"></div>
+  </div>
+
+  <div class="thesis-panel" id="thesisPanel"></div>
+
+  <div class="context-panel">
+    <div class="context-title">Macro environment detail</div>
+    <div class="context-grid" id="contextGrid"></div>
+  </div>
+
+</div>
+
+<footer>
+  <span class="footer-copy">© 2026 Antar Wealth Management. For illustrative purposes only. Not financial advice.</span>
+  <span class="footer-mark">AWM</span>
+</footer>
+
+<script>
+var PHASES = [
+  {
+    id:'early', label:'Early recovery', r:[0,25], c:'#1D9E75', bg:'#E1F5EE', tc:'#085041',
+    macro:[
+      {l:'GDP growth',v:'Accelerating',c:'#1D9E75'},
+      {l:'Inflation',v:'Low / stable',c:'#1D9E75'},
+      {l:'Interest rates',v:'Low / bottoming',c:'#1D9E75'},
+      {l:'Credit spreads',v:'Tightening',c:'#1D9E75'}
+    ],
+    alloc:[
+      {n:'Equities (domestic)',p:40,c:'#1a3d2a'},{n:'Intl equities',p:15,c:'#2a6644'},
+      {n:'Fixed income',p:15,c:'#b8952a'},{n:'Real estate',p:10,c:'#d85a30'},
+      {n:'Commodities',p:10,c:'#7f77dd'},{n:'Cash',p:5,c:'#888780'},{n:'Alternatives',p:5,c:'#d4537e'}
+    ],
+    title:'Early recovery — risk assets lead',
+    body:'Rising from the trough. Equities — especially cyclicals, financials, and small caps — outperform as earnings recover. Credit spreads tighten, making high-yield bonds attractive. Real estate benefits from low rates. Commodities begin recovering with industrial demand. Minimise cash — the opportunity cost is high.',
+    context:[
+      {l:'Equity style',v:'Cyclicals, small cap, financials, consumer discretionary'},
+      {l:'Fixed income',v:'Reduce duration; high-yield and corporate bonds offer good spread'},
+      {l:'Commodities',v:'Industrial metals and energy begin recovering with demand'},
+      {l:'Key risk',v:'Recovery stalls — premature central bank tightening'}
+    ]
+  },
+  {
+    id:'late', label:'Late expansion', r:[25,52], c:'#b8952a', bg:'#FAEEDA', tc:'#633806',
+    macro:[
+      {l:'GDP growth',v:'Strong / peaking',c:'#b8952a'},
+      {l:'Inflation',v:'Rising',c:'#E24B4A'},
+      {l:'Interest rates',v:'Rising',c:'#E24B4A'},
+      {l:'Credit spreads',v:'Narrow',c:'#1D9E75'}
+    ],
+    alloc:[
+      {n:'Equities (domestic)',p:30,c:'#1a3d2a'},{n:'Intl equities',p:10,c:'#2a6644'},
+      {n:'Fixed income',p:15,c:'#b8952a'},{n:'Real estate',p:10,c:'#d85a30'},
+      {n:'Commodities',p:20,c:'#7f77dd'},{n:'Cash',p:10,c:'#888780'},{n:'Alternatives',p:5,c:'#d4537e'}
+    ],
+    title:'Late expansion — inflation is the story',
+    body:'Approaching the peak. Commodities — energy and agriculture — are the standout asset class as input cost pressures build. Equities remain positive but return compression begins as margins face headwinds. Shorten bond duration to protect against further rate rises. Start building cash to prepare for the cycle turn.',
+    context:[
+      {l:'Equity style',v:'Quality, energy, materials, healthcare — rotate from high-growth'},
+      {l:'Fixed income',v:'Shorten duration; inflation-linked bonds (TIPS) are attractive'},
+      {l:'Commodities',v:'Energy, agriculture, and gold all perform well in this environment'},
+      {l:'Key risk',v:'Inflation surprise forces more aggressive tightening than expected'}
+    ]
+  },
+  {
+    id:'peak', label:'Peak / slowdown', r:[52,75], c:'#E24B4A', bg:'#FCEBEB', tc:'#791F1F',
+    macro:[
+      {l:'GDP growth',v:'Slowing',c:'#E24B4A'},
+      {l:'Inflation',v:'High / falling',c:'#b8952a'},
+      {l:'Interest rates',v:'High / pausing',c:'#E24B4A'},
+      {l:'Credit spreads',v:'Widening',c:'#E24B4A'}
+    ],
+    alloc:[
+      {n:'Equities (domestic)',p:15,c:'#1a3d2a'},{n:'Intl equities',p:5,c:'#2a6644'},
+      {n:'Fixed income',p:35,c:'#b8952a'},{n:'Real estate',p:5,c:'#d85a30'},
+      {n:'Commodities',p:10,c:'#7f77dd'},{n:'Cash',p:20,c:'#888780'},{n:'Alternatives',p:10,c:'#d4537e'}
+    ],
+    title:'Peak / slowdown — go defensive',
+    body:'Just past the peak and turning down. Rotate heavily into defensives: utilities, consumer staples, healthcare. Long-duration Treasuries become attractive as growth slows and rate cuts approach. Credit spreads are widening — reduce corporate bond exposure. Build cash for the re-entry point.',
+    context:[
+      {l:'Equity style',v:'Defensives: utilities, staples, healthcare, low-beta quality'},
+      {l:'Fixed income',v:'Extend duration — long Treasuries rally as growth fears mount'},
+      {l:'Commodities',v:'Gold benefits from uncertainty; industrial metals weaken'},
+      {l:'Key risk',v:'Soft landing — growth stabilises and avoids full recession'}
+    ]
+  },
+  {
+    id:'recession', label:'Recession', r:[75,100], c:'#5F5E5A', bg:'#F1EFE8', tc:'#2C2C2A',
+    macro:[
+      {l:'GDP growth',v:'Contracting',c:'#E24B4A'},
+      {l:'Inflation',v:'Falling',c:'#1D9E75'},
+      {l:'Interest rates',v:'Cutting',c:'#1D9E75'},
+      {l:'Credit spreads',v:'Wide',c:'#E24B4A'}
+    ],
+    alloc:[
+      {n:'Equities (domestic)',p:12,c:'#1a3d2a'},{n:'Intl equities',p:5,c:'#2a6644'},
+      {n:'Fixed income',p:35,c:'#b8952a'},{n:'Real estate',p:5,c:'#d85a30'},
+      {n:'Commodities',p:5,c:'#7f77dd'},{n:'Cash',p:28,c:'#888780'},{n:'Alternatives',p:10,c:'#d4537e'}
+    ],
+    title:'Recession — capital preservation',
+    body:'Falling toward the trough. Long Treasuries rally strongly as rates are cut — duration is fully rewarded. Cash is king, providing both safety and firepower for recovery reallocation. Equities and commodities fall sharply. Credit spreads blow out; avoid high-yield. Patience is the key discipline — prepare the recovery allocation in advance.',
+    context:[
+      {l:'Equity style',v:'Minimal exposure; if held, focus on highest-quality large caps only'},
+      {l:'Fixed income',v:'Long Treasuries are the top-performing asset — duration is rewarded'},
+      {l:'Commodities',v:'Avoid — demand destruction drives a sharp sell-off'},
+      {l:'Key risk',v:'Missing the recovery turn — early reallocation timing is critical'}
+    ]
+  }
+];
+
+var PHASE_COLORS = ['#1D9E75','#b8952a','#E24B4A','#5F5E5A'];
+var autoPosition = null;
+var userOverride = false;
+
+function cycleY(t, H) {
+  var margin = H * 0.14;
+  var raw = -Math.cos(2 * Math.PI * t);
+  return H - margin - (raw + 1) / 2 * (H - 2 * margin);
+}
+
+function getPhase(val) {
+  for (var i = 0; i < PHASES.length; i++) {
+    if (val >= PHASES[i].r[0] && val <= PHASES[i].r[1]) return PHASES[i];
+  }
+  return PHASES[3];
+}
+
+function detectCyclePosition(gdp, cpi, fed, t10, ig) {
+  var score = 0;
+  var count = 0;
+
+  // GDP growth contribution (0=trough/recovery, 100=deep recession)
+  if (gdp !== null) {
+    var gdpScore;
+    if (gdp >= 3.0)       gdpScore = 15;   // strong growth → early/late expansion
+    else if (gdp >= 2.0)  gdpScore = 32;   // solid growth → late expansion
+    else if (gdp >= 1.0)  gdpScore = 50;   // moderate → at/past peak
+    else if (gdp >= 0.0)  gdpScore = 65;   // weak → peak/slowdown
+    else                  gdpScore = 85;   // negative → recession
+    score += gdpScore; count++;
+  }
+
+  // CPI contribution
+  if (cpi !== null) {
+    var cpiScore;
+    if (cpi < 1.5)        cpiScore = 10;   // deflation risk → early recovery
+    else if (cpi < 2.5)   cpiScore = 25;   // low → expansion
+    else if (cpi < 3.5)   cpiScore = 42;   // moderate → late expansion
+    else if (cpi < 5.0)   cpiScore = 60;   // high → peak/slowdown
+    else                  cpiScore = 72;   // very high → recession
+    score += cpiScore; count++;
+  }
+
+  // Yield curve: t10 - fed (spread)
+  if (t10 !== null && fed !== null) {
+    var spread = t10 - fed;
+    var spreadScore;
+    if (spread >= 2.0)    spreadScore = 12;  // very steep → early recovery
+    else if (spread >= 1.0) spreadScore = 28; // steep → expansion
+    else if (spread >= 0.0) spreadScore = 48; // flat → late/peak
+    else if (spread >= -0.5) spreadScore = 65; // slightly inverted → peak
+    else                  spreadScore = 80;  // deeply inverted → recession signal
+    score += spreadScore; count++;
+  }
+
+  // Fed funds level — high rates late cycle, low early
+  if (fed !== null) {
+    var fedScore;
+    if (fed < 1.0)        fedScore = 10;
+    else if (fed < 2.5)   fedScore = 25;
+    else if (fed < 4.0)   fedScore = 45;
+    else if (fed < 5.5)   fedScore = 62;
+    else                  fedScore = 75;
+    score += fedScore; count++;
+  }
+
+  // Credit spreads
+  if (ig !== null) {
+    var igScore;
+    if (ig < 0.8)         igScore = 20;   // very tight → expansion
+    else if (ig < 1.2)    igScore = 38;   // normal → late expansion
+    else if (ig < 2.0)    igScore = 58;   // widening → peak/slowdown
+    else if (ig < 3.5)    igScore = 75;   // wide → recession
+    else                  igScore = 90;   // very wide → deep recession
+    score += igScore; count++;
+  }
+
+  return count > 0 ? Math.round(score / count) : 50;
+}
+
+function describeCyclePosition(pos, gdp, cpi, fed, t10, ig) {
+  var phase = getPhase(pos);
+  var reasons = [];
+  if (gdp !== null) {
+    if (gdp < 0) reasons.push('contracting GDP (' + gdp.toFixed(1) + '%)');
+    else if (gdp < 1.5) reasons.push('weak GDP growth (' + gdp.toFixed(1) + '%)');
+    else if (gdp >= 3) reasons.push('strong GDP growth (' + gdp.toFixed(1) + '%)');
+    else reasons.push('moderate GDP growth (' + gdp.toFixed(1) + '%)');
+  }
+  if (cpi !== null) {
+    if (cpi < 2.5) reasons.push('contained inflation (' + cpi.toFixed(1) + '%)');
+    else if (cpi > 4) reasons.push('elevated inflation (' + cpi.toFixed(1) + '%)');
+    else reasons.push('moderate inflation (' + cpi.toFixed(1) + '%)');
+  }
+  if (t10 !== null && fed !== null) {
+    var sp = (t10 - fed).toFixed(2);
+    if (parseFloat(sp) < 0) reasons.push('inverted yield curve (' + sp + '%)');
+    else if (parseFloat(sp) < 0.75) reasons.push('flat yield curve (' + sp + '% spread)');
+    else reasons.push('positive yield curve (' + sp + '% spread)');
+  }
+  if (ig !== null) {
+    if (ig > 1.5) reasons.push('wide credit spreads (' + ig.toFixed(2) + '%)');
+    else reasons.push('tight credit spreads (' + ig.toFixed(2) + '%)');
+  }
+  var reasonStr = reasons.length > 0 ? reasons.join(', ') + '.' : '';
+  return 'Based on live FRED data: ' + reasonStr + ' The model places the economy in the <strong>' + phase.label + '</strong> phase. Drag the slider to explore other scenarios.';
+}
+
+async function fetchProxy(seriesId, limit, sortOrder) {
+  limit = limit || 14; sortOrder = sortOrder || 'desc';
+  try {
+    var res = await fetch('/api/fred?series_id=' + seriesId + '&limit=' + limit + '&sort_order=' + sortOrder);
+    var json = await res.json();
+    return (json.observations || []).filter(function(o) { return o.value !== '.' && o.value !== 'ND'; });
+  } catch(e) { return []; }
+}
+
+function fmtDate(d) {
+  if (!d) return '';
+  return new Date(d).toLocaleDateString('en-US', {month:'short', year:'numeric'});
+}
+
+async function loadFRED() {
+  document.getElementById('fredBar').innerHTML = '<span class="loading-txt">Loading live data from FRED...</span>';
+  try {
+    var gdpObs   = await fetchProxy('GDPC1', 5);
+    var cpiObs   = await fetchProxy('CPIAUCSL', 14);
+    var fedObs   = await fetchProxy('FEDFUNDS', 2);
+    var t10Obs   = await fetchProxy('GS10', 2);
+    var igObs    = await fetchProxy('BAMLC0A0CM', 2);
+    var unempObs = await fetchProxy('UNRATE', 2);
+
+    var gdp = null, cpi = null, fed = null, t10 = null, ig = null, latestDate = null;
+
+    if (gdpObs.length >= 2) {
+      var q1 = parseFloat(gdpObs[0].value), q2 = parseFloat(gdpObs[1].value);
+      gdp = +((( q1 - q2) / q2) * 400).toFixed(2);
+      latestDate = gdpObs[0].date;
+    }
+    if (cpiObs.length >= 13) {
+      var latest = parseFloat(cpiObs[0].value), yearAgo = parseFloat(cpiObs[12].value);
+      cpi = +(((latest - yearAgo) / yearAgo) * 100).toFixed(2);
+    }
+    if (fedObs.length)  fed  = +parseFloat(fedObs[0].value).toFixed(2);
+    if (t10Obs.length)  t10  = +parseFloat(t10Obs[0].value).toFixed(2);
+    if (igObs.length)   ig   = +parseFloat(igObs[0].value).toFixed(2);
+
+    var items = [
+      {dot:'#1D9E75', label:'GDP growth',   val:gdp,  suffix:'%'},
+      {dot:'#E24B4A', label:'CPI (YoY)',    val:cpi,  suffix:'%'},
+      {dot:'#185FA5', label:'Fed funds',    val:fed,  suffix:'%'},
+      {dot:'#b8952a', label:'10Y Treasury', val:t10,  suffix:'%'},
+      {dot:'#7f77dd', label:'IG spread',    val:ig,   suffix:'%'}
     ];
 
-    let current = 0;
+    var fredBar = document.getElementById('fredBar');
+    fredBar.innerHTML = items.filter(function(i){ return i.val !== null; }).map(function(i){
+      return '<div class="fred-item"><div class="fred-dot" style="background:'+i.dot+';"></div><span class="fred-label">'+i.label+'</span><span class="fred-val">'+i.val.toFixed(2)+i.suffix+'</span></div>';
+    }).join('') + '<span class="fred-pill">FRED live</span><span class="fred-date">latest available as of ' + fmtDate(latestDate) + '</span>';
 
-    function setPhase(i) {
-      current = i;
-      document.querySelectorAll('.phase-btn').forEach((b, j) => b.classList.toggle('active', i === j));
-      render();
+    if (gdp !== null || cpi !== null || fed !== null) {
+      var pos = detectCyclePosition(gdp, cpi, fed, t10, ig);
+      autoPosition = pos;
+      var desc = describeCyclePosition(pos, gdp, cpi, fed, t10, ig);
+      var db = document.getElementById('detectedBar');
+      db.innerHTML = desc;
+      db.classList.remove('hidden');
+      animateSlider(pos);
     }
+  } catch(e) {
+    document.getElementById('fredBar').innerHTML = '<span style="font-size:12px;color:#E24B4A;">Could not load live data — using manual mode.</span>';
+    render(50);
+  }
+}
 
-    function render() {
-      const p = phases[current];
-      document.getElementById('macroGrid').innerHTML = p.macro.map(m => `
-        <div class="macro-card">
-          <div class="macro-label">${m.label}</div>
-          <div class="macro-val ${m.dir === 'up' ? 'up' : m.dir === 'down' ? 'down' : 'flat'}">${m.val}</div>
-        </div>
-      `).join('');
-      document.getElementById('legendRow').innerHTML = ASSETS.map((a, i) => `
-        <span class="legend-item"><span class="legend-sq" style="background:${COLORS[i]}"></span>${a}</span>
-      `).join('');
-      document.getElementById('barChart').innerHTML = ASSETS.map((a, i) => `
-        <div class="bar-row">
-          <div class="bar-name">${a}</div>
-          <div class="bar-track"><div class="bar-fill" style="width:${p.alloc[i]}%; background:${COLORS[i]}"></div></div>
-          <div class="bar-pct">${p.alloc[i]}%</div>
-        </div>
-      `).join('');
-      document.getElementById('thesis').textContent = p.thesis;
+function animateSlider(target) {
+  var slider = document.getElementById('sl');
+  var current = parseInt(slider.value);
+  var step = target > current ? 1 : -1;
+  var interval = setInterval(function() {
+    current += step;
+    slider.value = current;
+    render(current);
+    if (current === target) clearInterval(interval);
+  }, 18);
+}
+
+function draw(val) {
+  var canvas = document.getElementById('cc');
+  var dpr = window.devicePixelRatio || 1;
+  var W = canvas.parentElement.clientWidth || 840;
+  var H = 200;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+  var c = canvas.getContext('2d');
+  c.scale(dpr, dpr);
+
+  PHASES.forEach(function(p, i) {
+    var x1 = p.r[0] / 100 * W, x2 = p.r[1] / 100 * W;
+    c.fillStyle = PHASE_COLORS[i]; c.globalAlpha = 0.07;
+    c.fillRect(x1, 0, x2 - x1, H); c.globalAlpha = 1;
+  });
+
+  [25, 52, 75].forEach(function(pct) {
+    var x = pct / 100 * W;
+    c.beginPath(); c.strokeStyle = 'rgba(136,135,128,0.22)'; c.lineWidth = 1;
+    c.setLineDash([4, 4]); c.moveTo(x, 0); c.lineTo(x, H); c.stroke(); c.setLineDash([]);
+  });
+
+  var labels = [
+    {text:'Early recovery', mid:12.5, c:'#1D9E75'},
+    {text:'Late expansion',  mid:38.5, c:'#b8952a'},
+    {text:'Peak / slowdown', mid:63.5, c:'#E24B4A'},
+    {text:'Recession',       mid:87.5, c:'#5F5E5A'}
+  ];
+  c.font = '500 11px DM Sans, sans-serif'; c.textAlign = 'center';
+  labels.forEach(function(lb) {
+    c.fillStyle = lb.c; c.globalAlpha = 0.75;
+    c.fillText(lb.text, lb.mid / 100 * W, 14); c.globalAlpha = 1;
+  });
+
+  var trendY = (cycleY(0, H) + cycleY(0.5, H)) / 2;
+  c.beginPath(); c.strokeStyle = 'rgba(122,140,128,0.22)'; c.lineWidth = 1;
+  c.setLineDash([5, 5]); c.moveTo(0, trendY); c.lineTo(W, trendY); c.stroke(); c.setLineDash([]);
+  c.fillStyle = 'rgba(122,140,128,0.4)'; c.font = '10px DM Sans, sans-serif'; c.textAlign = 'left';
+  c.fillText('Long-run trend', 4, trendY - 4);
+
+  var steps = 400;
+  for (var i = 0; i < steps; i++) {
+    var t0 = i / steps, t1 = (i + 1) / steps;
+    var pct = t0 * 100, pi = 3;
+    for (var j = 0; j < PHASES.length; j++) {
+      if (pct >= PHASES[j].r[0] && pct < PHASES[j].r[1]) { pi = j; break; }
     }
+    c.beginPath(); c.strokeStyle = PHASE_COLORS[pi]; c.lineWidth = 3; c.lineCap = 'round';
+    c.moveTo(t0 * W, cycleY(t0, H)); c.lineTo(t1 * W, cycleY(t1, H)); c.stroke();
+  }
 
-    render();
-  </script>
+  [[0,'left'],[100,'right']].forEach(function(pair) {
+    var pct = pair[0], align = pair[1];
+    var x = pct === 0 ? 4 : W - 4, y = cycleY(pct / 100, H);
+    c.beginPath(); c.arc(x, y, 5, 0, Math.PI * 2); c.fillStyle = '#5F5E5A'; c.fill();
+    c.fillStyle = 'rgba(95,94,90,0.5)'; c.font = '10px DM Sans, sans-serif'; c.textAlign = align;
+    c.fillText('Trough', x, y + 16);
+  });
+
+  var peakX = 0.5 * W, peakY = cycleY(0.5, H);
+  c.beginPath(); c.arc(peakX, peakY, 5, 0, Math.PI * 2); c.fillStyle = '#E24B4A'; c.fill();
+  c.fillStyle = 'rgba(226,75,74,0.55)'; c.font = '10px DM Sans, sans-serif'; c.textAlign = 'center';
+  c.fillText('Peak', peakX, peakY - 10);
+
+  var mX = val / 100 * W, mY = cycleY(val / 100, H);
+  c.beginPath(); c.strokeStyle = 'rgba(26,61,43,0.2)'; c.lineWidth = 1.5;
+  c.setLineDash([3, 3]); c.moveTo(mX, 20); c.lineTo(mX, H); c.stroke(); c.setLineDash([]);
+  c.beginPath(); c.arc(mX, mY, 11, 0, Math.PI * 2); c.fillStyle = '#1a3d2a'; c.fill();
+  c.beginPath(); c.arc(mX, mY, 5, 0, Math.PI * 2); c.fillStyle = '#b8952a'; c.fill();
+  var labelX = Math.min(Math.max(mX, 44), W - 44);
+  var labelY = mY > H * 0.55 ? mY - 18 : mY + 26;
+  c.font = '500 11px DM Sans, sans-serif'; c.textAlign = 'center'; c.fillStyle = 'rgba(26,61,43,0.7)';
+  c.fillText('You are here', labelX, labelY);
+}
+
+function render(val) {
+  draw(val);
+  var phase = getPhase(val);
+
+  var badge = document.getElementById('phaseBadge');
+  badge.style.background = phase.bg; badge.style.color = phase.tc;
+  badge.innerHTML = '<div style="width:9px;height:9px;border-radius:50%;background:'+phase.c+';flex-shrink:0;"></div><span>'+phase.label+'</span>';
+
+  document.getElementById('macroGrid').innerHTML = phase.macro.map(function(m) {
+    return '<div class="macro-card"><div class="macro-label">'+m.l+'</div><div class="macro-val" style="color:'+m.c+';">'+m.v+'</div></div>';
+  }).join('');
+
+  document.getElementById('legend').innerHTML = phase.alloc.map(function(a) {
+    return '<div class="leg-item"><div class="leg-dot" style="background:'+a.c+';"></div>'+a.n+'</div>';
+  }).join('');
+
+  document.getElementById('allocBars').innerHTML = phase.alloc.map(function(a) {
+    return '<div class="bar-row"><div class="bar-name">'+a.n+'</div><div class="bar-track"><div class="bar-fill" style="width:'+a.p+'%;background:'+a.c+';"></div></div><div class="bar-pct">'+a.p+'%</div></div>';
+  }).join('');
+
+  var tp = document.getElementById('thesisPanel');
+  tp.style.borderLeftColor = phase.c;
+  tp.innerHTML = '<div class="thesis-title">'+phase.title+'</div>'+phase.body;
+
+  document.getElementById('contextGrid').innerHTML = phase.context.map(function(ctx) {
+    return '<div class="ctx-item"><div class="ctx-label">'+ctx.l+'</div><div class="ctx-val">'+ctx.v+'</div></div>';
+  }).join('');
+
+  var note = document.getElementById('overrideNote');
+  if (autoPosition !== null && Math.abs(val - autoPosition) > 3) {
+    note.textContent = 'Showing manual view. FRED data suggests position ' + autoPosition + '/100 (' + getPhase(autoPosition).label + ').';
+  } else if (autoPosition !== null) {
+    note.textContent = 'Position estimated from live FRED data. Drag to explore manually.';
+  } else {
+    note.textContent = '';
+  }
+}
+
+document.getElementById('sl').addEventListener('input', function() {
+  userOverride = true;
+  render(+this.value);
+});
+
+window.addEventListener('resize', function() { render(+document.getElementById('sl').value); });
+
+render(50);
+loadFRED();
+</script>
 </body>
 </html>
