@@ -305,10 +305,22 @@ let currentPeriod='YTD',currentBenchmark='SPY',currentBenchmarkName='S&P 500';
 let horizon=5,nSims=500,confLevel=95;
 let holdings=[],cashFlows=[];
 let mainChart=null,cfChart=null,sharpeChart=null,mcChart=null,histChart=null;
-let priceCache={};
+let histCache={};   // ticker -> closes array (oldest to newest)
+let benchCache={};  // benchmarkTicker -> closes array
 
 function rng(seed){let s=seed;return function(){s=(s*1664525+1013904223)>>>0;return s/4294967296;};}
 function boxMuller(r){const u1=r(),u2=r();return Math.sqrt(-2*Math.log(u1+1e-10))*Math.cos(2*Math.PI*u2);}
+
+async function fetchHistory(ticker){
+  if(histCache[ticker]) return histCache[ticker];
+  try{
+    const res=await fetch('/api/fmp?ticker='+ticker);
+    const json=await res.json();
+    const closes=json.closes||[];
+    if(closes.length>10) histCache[ticker]=closes;
+    return closes;
+  }catch(e){return [];}
+}
 
 function fmtM(n){
   const abs=Math.abs(n),s=n<0?'-':'';
@@ -378,60 +390,120 @@ function renderHoldings(){
   }).join('');
 }
 
-function renderMainChart(){
+function sliceToperiod(closes){
   const n=getPeriodDays();
-  const{twr}=calcPortfolioStats();
-  const portAnnRet=twr/100>-0.5?(twr/3.5):0.08;
-  const portData=genSeries(n,portAnnRet,0.165,12345);
-  const benchRets={'SPY':0.115,'QQQ':0.18,'DIA':0.09,'IWM':0.07,'ACWI':0.10};
-  const benchData=genSeries(n,benchRets[currentBenchmark]||0.115,0.13,67890);
-  const labels=getDateLabels(n);
+  if(!closes||closes.length===0) return [];
+  // For YTD, use days since Jan 1 (approx trading days)
+  return closes.slice(-Math.min(n,closes.length));
+}
 
-  const portRet=(portData[portData.length-1]-100).toFixed(2);
-  const benchRet=(benchData[benchData.length-1]-100).toFixed(2);
-  const alpha=(portRet-benchRet).toFixed(2);
+function indexTo100(arr){
+  if(!arr||arr.length===0) return [];
+  const base=arr[0];
+  if(!base||base===0) return arr.map(()=>100);
+  return arr.map(v=>+(v/base*100).toFixed(3));
+}
 
-  const chgEl=document.getElementById('portChg');
-  if(holdings.length>0){
-    chgEl.textContent=` TWR: ${portRet>0?'+':''}${portRet}% vs ${currentBenchmarkName} ${benchRet>0?'+':''}${benchRet}% (α: ${alpha>0?'+':''}${alpha}%)`;
-    chgEl.style.color=portRet>0?'#1D9E75':'#E24B4A';
+function calcVolatility(closes){
+  if(!closes||closes.length<2) return 0;
+  const rets=[];
+  for(let i=1;i<closes.length;i++) rets.push((closes[i]-closes[i-1])/closes[i-1]);
+  const mean=rets.reduce((a,b)=>a+b,0)/rets.length;
+  const variance=rets.reduce((s,r)=>s+Math.pow(r-mean,2),0)/(rets.length-1);
+  return +(Math.sqrt(variance*252)*100).toFixed(1);
+}
+
+function calcMaxDrawdown(indexed){
+  let peak=100,maxDD=0;
+  indexed.forEach(v=>{if(v>peak)peak=v;const dd=(v-peak)/peak*100;if(dd<maxDD)maxDD=dd;});
+  return +maxDD.toFixed(2);
+}
+
+async function renderMainChart(){
+  const n=getPeriodDays();
+
+  // Build portfolio series from actual historical data
+  let portIndexed=null;
+  const holdingsWithHistory=holdings.filter(h=>h.closes&&h.closes.length>10);
+
+  if(holdingsWithHistory.length>0){
+    // Calculate portfolio value series using weighted historical prices
+    const minLen=Math.min(...holdingsWithHistory.map(h=>sliceToperiod(h.closes).length));
+    const portSeries=[];
+    for(let t=0;t<minLen;t++){
+      let val=0;
+      holdingsWithHistory.forEach(h=>{
+        const sliced=sliceToperiod(h.closes);
+        val+=h.shares*(sliced[t]||sliced[0]);
+      });
+      portSeries.push(val);
+    }
+    portIndexed=indexTo100(portSeries);
   }
 
-  const vol=16.5,sharpe=+(parseFloat(portRet)/(vol)).toFixed(2);
-  const maxDD=-8.3;
+  // Fetch real benchmark data
+  const benchCloses=await fetchBenchmark(currentBenchmark);
+  const benchSliced=sliceToperiod(benchCloses);
+  const benchIndexed=indexTo100(benchSliced);
+
+  const labels=getDateLabels(Math.max(portIndexed?portIndexed.length:0,benchIndexed.length));
+
+  const portRet=portIndexed&&portIndexed.length>0?((portIndexed[portIndexed.length-1]-100)).toFixed(2):'0.00';
+  const benchRet=benchIndexed.length>0?((benchIndexed[benchIndexed.length-1]-100)).toFixed(2):'0.00';
+  const alpha=(parseFloat(portRet)-parseFloat(benchRet)).toFixed(2);
+
+  const chgEl=document.getElementById('portChg');
+  if(holdings.length>0&&portIndexed){
+    chgEl.textContent=` TWR: ${portRet>0?'+':''}${portRet}% vs ${currentBenchmarkName} ${benchRet>0?'+':''}${benchRet}% (α: ${alpha>0?'+':''}${alpha}%)`;
+    chgEl.style.color=parseFloat(portRet)>0?'#1D9E75':'#E24B4A';
+  }
+
+  // Portfolio volatility from actual closes
+  const allPortCloses=holdingsWithHistory.length>0?
+    holdingsWithHistory[0].closes.slice(-n).map((_,t)=>holdingsWithHistory.reduce((s,h)=>s+h.shares*(sliceToperiod(h.closes)[t]||0),0))
+    :[];
+  const vol=allPortCloses.length>1?calcVolatility(allPortCloses):16.5;
+  const sharpe=vol>0?+((parseFloat(portRet)/vol)).toFixed(2):0;
+  const maxDD=portIndexed?calcMaxDrawdown(portIndexed):-8.3;
+
   document.getElementById('metricsRow').innerHTML=[
-    {l:'TWR ('+currentPeriod+')',v:(portRet>0?'+':'')+portRet+'%',s:'Time-weighted return',c:'#1D9E75'},
-    {l:'Alpha vs '+currentBenchmarkName.split(' ')[0],v:(alpha>0?'+':'')+alpha+'%',s:'Excess return',c:alpha>0?'#1D9E75':'#E24B4A'},
+    {l:'TWR ('+currentPeriod+')',v:(parseFloat(portRet)>0?'+':'')+portRet+'%',s:'Time-weighted return',c:parseFloat(portRet)>=0?'#1D9E75':'#E24B4A'},
+    {l:'Alpha vs '+currentBenchmarkName.split(' ')[0],v:(parseFloat(alpha)>0?'+':'')+alpha+'%',s:'Excess return',c:parseFloat(alpha)>=0?'#1D9E75':'#E24B4A'},
     {l:'Sharpe ratio',v:sharpe,s:'Risk-adjusted return',c:'var(--text)'},
-    {l:'Volatility',v:vol.toFixed(1)+'%',s:'Annualized std dev',c:'var(--text)'},
+    {l:'Volatility',v:vol+'%',s:'Annualized std dev',c:'var(--text)'},
     {l:'Max drawdown',v:maxDD+'%',s:'Peak to trough',c:'#E24B4A'},
   ].map(m=>`<div class="met"><div class="met-l">${m.l}</div><div class="met-v" style="color:${m.c}">${m.v}</div><div class="met-s">${m.s}</div></div>`).join('');
 
-  const cfPoints=new Array(n).fill(null);
-  cashFlows.forEach(cf=>{cfPoints[Math.floor(Math.random()*n)]=100;});
+  // Align lengths
+  const portData=portIndexed||(benchIndexed.length>0?new Array(benchIndexed.length).fill(null):[]);
+  const cfPoints=new Array(Math.max(portData.length,benchIndexed.length)).fill(null);
 
   if(mainChart)mainChart.destroy();
+  const datasets=[
+    {label:currentBenchmarkName,data:benchIndexed,borderColor:'#b8952a',backgroundColor:'transparent',borderWidth:1.5,borderDash:[5,3],fill:false,tension:0.2,pointRadius:0,pointHoverRadius:4},
+    {label:'Cash flow',data:cfPoints,type:'scatter',backgroundColor:'#7f77dd',borderColor:'#fff',borderWidth:2,pointRadius:6,showLine:false},
+  ];
+  if(portData&&portData.some(v=>v!==null)){
+    datasets.unshift({label:'Portfolio',data:portData,borderColor:'#1a3d2a',backgroundColor:'rgba(26,61,43,0.07)',borderWidth:2.5,fill:true,tension:0.2,pointRadius:0,pointHoverRadius:4});
+  }
+
   mainChart=new Chart(document.getElementById('mainChart'),{
     type:'line',
-    data:{labels,datasets:[
-      {label:'Portfolio',data:portData,borderColor:'#1a3d2a',backgroundColor:'rgba(26,61,43,0.07)',borderWidth:2.5,fill:true,tension:0.3,pointRadius:0,pointHoverRadius:4},
-      {label:currentBenchmarkName,data:benchData,borderColor:'#b8952a',backgroundColor:'transparent',borderWidth:1.5,borderDash:[5,3],fill:false,tension:0.3,pointRadius:0,pointHoverRadius:4},
-      {label:'Cash flow',data:cfPoints,type:'scatter',backgroundColor:'#7f77dd',borderColor:'#fff',borderWidth:2,pointRadius:6,showLine:false},
-    ]},
+    data:{labels,datasets},
     options:{responsive:true,maintainAspectRatio:false,
       interaction:{mode:'index',intersect:false},
       plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>{
-        if(ctx.datasetIndex===2)return' Cash flow event';
+        if(ctx.dataset.label==='Cash flow')return' Cash flow event';
         return` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)} (${(ctx.parsed.y-100).toFixed(2)}%)`;
       }}}},
       scales:{
-        x:{grid:{color:'rgba(184,149,42,0.07)'},ticks:{color:'#7a8c80',font:{size:10},maxRotation:0}},
+        x:{grid:{color:'rgba(184,149,42,0.07)'},ticks:{color:'#7a8c80',font:{size:10},maxRotation:0,maxTicksLimit:8}},
         y:{grid:{color:'rgba(184,149,42,0.07)'},ticks:{color:'#7a8c80',font:{size:10},callback:v=>v.toFixed(0)},title:{display:true,text:'Indexed to 100',color:'#7a8c80',font:{size:10}}}
       }
     }
   });
 
-  const mktRet=+benchRet,selEff=+(portRet-mktRet*0.85).toFixed(2),allocEff=+(portRet*0.15).toFixed(2);
+  const mktRet=parseFloat(benchRet),selEff=+(parseFloat(portRet)-mktRet*0.85).toFixed(2),allocEff=+(parseFloat(portRet)*0.15).toFixed(2);
   document.getElementById('attribBars').innerHTML=[
     {l:'Market beta',v:+(mktRet*0.85).toFixed(2),c:'#888780'},
     {l:'Allocation effect',v:allocEff,c:'#b8952a'},
@@ -441,10 +513,10 @@ function renderMainChart(){
     return `<div class="attrib-row"><div class="attrib-label">${a.l}</div><div class="attrib-track"><div class="attrib-fill" style="width:${pct}%;background:${a.c};"></div></div><div class="attrib-val" style="color:${a.v>=0?'#1D9E75':'#E24B4A'}">${a.v>0?'+':''}${a.v}%</div></div>`;
   }).join('');
 
-  const best=holdings.length>0?holdings.reduce((b,h)=>{const r=((h.currentPrice||h.buyPrice)-h.buyPrice)/h.buyPrice;return r>((b.r)||0)?{...h,r}:b;},{ticker:'—',r:0}):{ticker:'—',r:0};
-  document.getElementById('perfInsight').textContent=holdings.length>0
-    ?`Your portfolio has generated a time-weighted return of ${portRet>0?'+':''}${portRet}% over the ${currentPeriod} period, ${alpha>0?'outperforming':'underperforming'} ${currentBenchmarkName} by ${Math.abs(alpha)}%. ${best.ticker!=='—'?`Best performer: ${best.ticker} (+${(best.r*100).toFixed(1)}%).`:''}  A Sharpe ratio of ${sharpe} indicates ${sharpe>1?'good':'moderate'} risk-adjusted performance. TWR isolates pure investment skill by eliminating the impact of your cash flow timing.`
-    :'Add holdings to see your performance analysis.';
+  const best=holdings.length>0?holdings.reduce((b,h)=>{const r=h.currentPrice&&h.buyPrice?((h.currentPrice-h.buyPrice)/h.buyPrice):0;return r>(b.r||0)?{...h,r}:b;},{ticker:'—',r:0}):{ticker:'—',r:0};
+  document.getElementById('perfInsight').textContent=holdingsWithHistory.length>0
+    ?`Your portfolio has generated a time-weighted return of ${parseFloat(portRet)>0?'+':''}${portRet}% over the ${currentPeriod} period using real historical prices, ${parseFloat(alpha)>0?'outperforming':'underperforming'} ${currentBenchmarkName} by ${Math.abs(alpha)}%. ${best.ticker!=='—'?`Best performer: ${best.ticker} (+${(best.r*100).toFixed(1)}%).`:''}  A Sharpe ratio of ${sharpe} indicates ${sharpe>1?'good':'moderate'} risk-adjusted performance.`
+    :holdings.length>0?'Fetching historical prices — chart will update shortly.':'Add holdings to see your performance analysis.';
 }
 
 function renderCFChart(){
@@ -589,18 +661,26 @@ function runVaR(){
     `The red bars in the histogram represent the tail losses beyond the VaR threshold. CVaR captures the severity of tail losses that VaR ignores, making it the preferred risk measure in the CFA curriculum and Basel III regulatory framework.`;
 }
 
-function addHolding(){
+async function addHolding(){
   const ticker=document.getElementById('h-ticker').value.trim().toUpperCase();
   const shares=parseFloat(document.getElementById('h-shares').value)||0;
   const date=document.getElementById('h-date').value;
   const price=parseFloat(document.getElementById('h-price').value)||0;
   if(!ticker||!shares||!price)return;
-  holdings.push({ticker,shares,buyDate:date,buyPrice:price,currentPrice:price});
+  const holding={ticker,shares,buyDate:date,buyPrice:price,currentPrice:price,closes:[]};
+  holdings.push(holding);
   document.getElementById('h-ticker').value='';
   document.getElementById('h-shares').value='';
   document.getElementById('h-price').value='';
+  document.getElementById('priceBadge').textContent='Fetching data for '+ticker+'...';
+  const closes=await fetchHistory(ticker);
+  if(closes.length>0){
+    holding.closes=closes;
+    holding.currentPrice=closes[closes.length-1];
+  }
+  const now=new Date();
+  document.getElementById('priceBadge').textContent='Prices as of '+now.toLocaleTimeString()+' (15-min delay, Twelve Data)';
   renderAll();
-  refreshPrices();
 }
 
 function removeHolding(i){holdings.splice(i,1);renderAll();}
@@ -619,29 +699,29 @@ async function refreshPrices(){
   if(holdings.length===0)return;
   document.getElementById('priceBadge').textContent='Fetching current prices...';
   for(const h of holdings){
-    if(priceCache[h.ticker]&&(Date.now()-priceCache[h.ticker].ts)<900000){
-      h.currentPrice=priceCache[h.ticker].price;continue;
+    const closes=await fetchHistory(h.ticker);
+    if(closes.length>0){
+      h.currentPrice=closes[closes.length-1];
+      h.closes=closes;
     }
-    try{
-      const res=await fetch(`/api/fmp?ticker=${h.ticker}`);
-      const json=await res.json();
-      if(json.closes&&json.closes.length>0){
-        const price=json.closes[json.closes.length-1];
-        h.currentPrice=price;
-        priceCache[h.ticker]={price,ts:Date.now()};
-      }
-    }catch(e){}
   }
   const now=new Date();
-  document.getElementById('priceBadge').textContent=`Prices as of ${now.toLocaleTimeString()} (15-min delay)`;
+  document.getElementById('priceBadge').textContent='Prices as of '+now.toLocaleTimeString()+' (15-min delay, Twelve Data)';
   document.getElementById('priceTime').textContent='· '+now.toLocaleTimeString();
   renderAll();
 }
 
-function renderAll(){
+async function fetchBenchmark(ticker){
+  if(benchCache[ticker]) return benchCache[ticker];
+  const closes=await fetchHistory(ticker);
+  benchCache[ticker]=closes;
+  return closes;
+}
+
+async function renderAll(){
   renderPortfolioValue();
   renderHoldings();
-  renderMainChart();
+  await renderMainChart();
   renderCFChart();
   renderSharpeChart();
   runMonteCarlo();
@@ -658,7 +738,7 @@ function setBenchmark(ticker,name){
   currentBenchmark=ticker;currentBenchmarkName=name;
   document.querySelectorAll('.bm-btn').forEach(b=>b.classList.toggle('active',b.textContent===name));
   document.getElementById('benchLegLabel').textContent=name;
-  renderMainChart();
+  renderMainChart();  // async - ok to call without await here
 }
 
 function setHorizon(h){
@@ -716,8 +796,10 @@ async function initNav(){
 (async()=>{
   await initNav();
   await loadPortfolio();
-  renderAll();
-  if(holdings.length>0)refreshPrices();
+  // Pre-fetch benchmark and all holding histories
+  fetchBenchmark(currentBenchmark);
+  if(holdings.length>0) await refreshPrices();
+  else await renderAll();
 })();
 </script>
 </body>
