@@ -294,6 +294,7 @@
   <span class="footer-mark">AWM</span>
 </footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-zoom/2.0.1/chartjs-plugin-zoom.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 const SUPABASE_URL='https://sqbwwppfsyukemmzqyzn.supabase.co';
@@ -478,7 +479,19 @@ async function renderMainChart(){
     data:{labels,datasets},
     options:{responsive:true,maintainAspectRatio:false,
       interaction:{mode:'index',intersect:false},
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)} (${(ctx.parsed.y-100).toFixed(2)}%)`}}},
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)} (${(ctx.parsed.y-100).toFixed(2)}%)`}},
+        zoom:{
+          zoom:{
+            wheel:{enabled:true,speed:0.05},
+            pinch:{enabled:true},
+            mode:'x'
+          },
+          pan:{enabled:true,mode:'x'},
+          limits:{x:{min:'original',max:'original'}}
+        }
+      },
       scales:{
         x:{grid:{color:'rgba(184,149,42,0.07)'},ticks:{color:'#7a8c80',font:{size:10},maxRotation:0,maxTicksLimit:8}},
         y:{grid:{color:'rgba(184,149,42,0.07)'},ticks:{color:'#7a8c80',font:{size:10},callback:v=>v.toFixed(0)},title:{display:true,text:'Indexed to 100',color:'#7a8c80',font:{size:10}}}
@@ -650,23 +663,37 @@ async function addHolding(){
   const date=document.getElementById('h-date').value;
   const price=parseFloat(document.getElementById('h-price').value)||0;
   if(!ticker||!shares||!price)return;
-  holdings.push({ticker,shares,buyDate:date,buyPrice:price,currentPrice:price});
+  
+  // Add with buy price first
+  const holding={ticker,shares,buyDate:date,buyPrice:price,currentPrice:price,closes:[]};
+  holdings.push(holding);
+  
+  // Clear form
   document.getElementById('h-ticker').value='';
   document.getElementById('h-shares').value='';
   document.getElementById('h-price').value='';
+  
+  // Render with placeholder price
   renderAll();
-  // Fetch real price in background
-  fetchHistory(ticker).then(closes=>{
+  
+  // Fetch real current price
+  try{
+    const closes=await fetchHistory(ticker);
     if(closes.length>0){
-      const holding=holdings.find(h=>h.ticker===ticker);
-      if(holding){
-        holding.currentPrice=closes[closes.length-1];
-        holding.closes=closes;
-        renderPortfolioValue();
-        renderHoldings();
-      }
+      const currentPrice=closes[closes.length-1];
+      console.log(`${ticker}: buy=${price.toFixed(2)}, current=${currentPrice.toFixed(2)}`);
+      holding.currentPrice=currentPrice;
+      holding.closes=closes;
+      renderPortfolioValue();
+      renderHoldings();
+      renderAll();
+    }else{
+      console.warn(`No price data returned for ${ticker}`);
     }
-  });
+  }catch(e){
+    console.error(`Failed to fetch ${ticker} price:`,e);
+    alert(`Warning: Could not fetch current price for ${ticker}. Using buy price. Check console for details.`);
+  }
 }
 
 function removeHolding(i){holdings.splice(i,1);renderAll();}
@@ -777,6 +804,10 @@ async function initNav(){
   }else{
     navRight.innerHTML=`<a href="login.html" style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border:1px solid var(--green);color:var(--green);text-decoration:none;">Sign in</a><a href="index.html" class="nav-back">← Home</a>`;
   }
+}
+
+function resetZoom(){
+  if(mainChart) mainChart.resetZoom();
 }
 
 (async()=>{
