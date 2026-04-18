@@ -569,5 +569,97 @@ function renderLifeCycle(currentHC, currentFC, curAge, retAge, income, discRate)
 
 updateLive();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="portal.js"></script>
+<script>
+const SUPABASE_URL='https://sqbwwppfsyukemmzqyzn.supabase.co';
+const SUPABASE_KEY='sb_publishable_CtE8hmFqQ35C5Ju3LOaLLQ_sOYPcsHC';
+const _sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+function getEBSData(){
+  return{
+    age1:g('age1'),ret1:g('ret1'),inc1:g('inc1'),grow1:g('grow1'),
+    finPort:g('finPort'),homeVal:g('homeVal'),bizAsset:g('bizAsset'),
+    mortgage:g('mortgage'),otherDebt:g('otherDebt'),
+    monthlySpend:g('monthlySpend'),inflation:g('inflation'),retYrs:g('retYrs'),
+    kidsNow:g('kidsNow'),kidsPlanned:g('kidsPlanned'),
+    household:household,rate1:rate1,rate2:rate2,eduCost:eduCost
+  };
+}
+
+async function saveEBS(){
+  const{data:{session}}=await _sb.auth.getSession();
+  if(!session){window.location.href='login.html';return;}
+  const btn=document.getElementById('ebsSaveBtn');
+  btn.textContent='Saving...';btn.disabled=true;
+
+  // Also compute and save net worth for dashboard summary
+  const hc1=calcHC(g('inc1'),g('grow1'),g('age1'),g('ret1'),rate1);
+  const fp=g('finPort'),homeVal=g('homeVal'),mort=g('mortgage'),otherD=g('otherDebt');
+  const pvC=calcPVC(),pvE=calcPVE();
+  const homeEq=Math.max(0,homeVal-mort);
+  const totalA=hc1+fp+homeEq+g('bizAsset');
+  const totalL=mort+otherD+pvC+pvE;
+  const netWorth=totalA-totalL;
+
+  const saveData={...getEBSData(),netWorth};
+  const{error}=await _sb.from('user_data').upsert(
+    {user_id:session.user.id,tool:'ebs',data:saveData},
+    {onConflict:'user_id,tool'}
+  );
+  if(error){btn.textContent='Error';btn.style.color='#E24B4A';}
+  else{btn.textContent='Saved ✓';btn.style.color='#1D9E75';}
+  setTimeout(()=>{btn.textContent='Save progress';btn.style.color='';btn.disabled=false;},2500);
+}
+
+async function loadEBS(){
+  const{data:{session}}=await _sb.auth.getSession();
+  if(!session)return;
+  const{data}=await _sb.from('user_data').select('data').eq('user_id',session.user.id).eq('tool','ebs').single();
+  if(!data?.data)return;
+  const d=data.data;
+  const fields=['age1','ret1','inc1','grow1','finPort','homeVal','bizAsset','mortgage','otherDebt','monthlySpend','inflation','retYrs','kidsNow','kidsPlanned'];
+  fields.forEach(f=>{const el=document.getElementById(f);if(el&&d[f]!==undefined)el.value=d[f];});
+  if(d.household)setHousehold(d.household);
+  if(d.rate1)rate1=d.rate1;
+  if(d.rate2)rate2=d.rate2;
+  if(d.eduCost!==undefined)eduCost=d.eduCost;
+  updateLive();
+}
+
+// Add save button to nav row on results page
+function addSaveButton(){
+  const navRow=document.querySelector('#p5 .nav-row');
+  if(!navRow)return;
+  const btn=document.createElement('button');
+  btn.id='ebsSaveBtn';
+  btn.className='btn btn-primary';
+  btn.textContent='Save progress';
+  btn.onclick=saveEBS;
+  navRow.appendChild(btn);
+}
+
+// Show portal link in nav
+async function initNav(){
+  const{data:{session}}=await _sb.auth.getSession();
+  const navBack=document.querySelector('.nav-back');
+  if(!navBack)return;
+  const wrap=document.createElement('div');
+  wrap.style.cssText='display:flex;align-items:center;gap:10px;';
+  if(session){
+    const init=((session.user.user_metadata?.first_name||session.user.email||'?')[0]).toUpperCase();
+    wrap.innerHTML=`<a href="dashboard.html" style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-mid);text-decoration:none;">Portal</a><div style="width:28px;height:28px;border-radius:50%;background:rgba(184,149,42,0.15);border:1px solid rgba(184,149,42,0.3);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--gold);cursor:pointer;" onclick="location.href='dashboard.html'">${init}</div>`;
+  }else{
+    wrap.innerHTML=`<a href="login.html" style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border:1px solid var(--green);color:var(--green);text-decoration:none;">Sign in</a>`;
+  }
+  navBack.parentNode.insertBefore(wrap,navBack);
+}
+
+window.addEventListener('DOMContentLoaded',function(){
+  addSaveButton();
+  initNav();
+  loadEBS();
+});
+</script>
 </body>
 </html>
