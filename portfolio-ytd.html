@@ -335,13 +335,20 @@ function switchTab(tabName) {
 }
 
 // Starting positions
-function addStartPosition() {
+async function addStartPosition() {
   const ticker = document.getElementById('start-ticker').value.toUpperCase().trim();
   const shares = parseFloat(document.getElementById('start-shares').value);
   const cost = parseFloat(document.getElementById('start-cost').value);
   
   if (!ticker || isNaN(shares) || shares <= 0 || isNaN(cost) || cost <= 0) {
     alert('Please fill in all fields with valid values');
+    return;
+  }
+  
+  // Validate ticker
+  const prices = await fetchPrices(ticker);
+  if (!prices || Object.keys(prices).length === 0) {
+    alert(`Ticker "${ticker}" not found. Please enter a valid ticker symbol.`);
     return;
   }
   
@@ -400,7 +407,7 @@ function saveBenchmark() {
 }
 
 // Transactions
-function addTransaction() {
+async function addTransaction() {
   const date = document.getElementById('txn-date').value;
   const type = document.getElementById('txn-type').value;
   const ticker = document.getElementById('txn-ticker').value.toUpperCase().trim();
@@ -425,6 +432,14 @@ function addTransaction() {
       alert('Please fill in all fields with valid values');
       return;
     }
+    
+    // Validate ticker
+    const prices = await fetchPrices(ticker);
+    if (!prices || Object.keys(prices).length === 0) {
+      alert(`Ticker "${ticker}" not found. Please enter a valid ticker symbol.`);
+      return;
+    }
+    
     transactions.push({ date, type, ticker, shares, price });
   }
   
@@ -493,7 +508,7 @@ async function fetchPrices(ticker, fromDate = '2026-01-01') {
   if (priceCache[ticker]) return priceCache[ticker];
   
   try {
-    const res = await fetch(`https://antarwealth.com/api/fmp?ticker=${ticker}`);
+    const res = await fetch(`/api/fmp?ticker=${ticker}`);
     const json = await res.json();
     
     if (json.historical && json.historical.length > 0) {
