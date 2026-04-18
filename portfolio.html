@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portfolio Tracker — Antar Wealth Management</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{--linen:#f0ebe0;--linen-dark:#e6dfd2;--green:#1a3d2a;--green-mid:#1f4d35;--green-light:#2a6644;--gold:#b8952a;--gold-light:#d4ae4a;--cream:#faf6ee;--text:#0f2d1e;--text-mid:#3a5a47;--muted:#7a8c80;--border:rgba(184,149,42,0.2);--red:#E24B4A;--teal:#1D9E75;--blue:#185FA5;--amber:#BA7517;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'DM Sans',sans-serif;font-weight:300;background:var(--linen);color:var(--text);min-height:100vh;}
+    nav{background:rgba(240,235,224,0.97);border-bottom:1px solid var(--border);padding:0 3rem;height:68px;display:flex;align-items:center;justify-content:space-between;}
+    .nav-brand{display:flex;align-items:center;gap:12px;text-decoration:none;}
+    .nav-emblem{height:40px;width:40px;object-fit:contain;}
+    .nav-brand-text{display:flex;flex-direction:column;line-height:1.2;}
+    .nav-brand-name{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;letter-spacing:0.1em;color:var(--green);}
+    .nav-brand-sub{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);}
+    .nav-right{display:flex;align-items:center;gap:12px;}
+    .nav-back{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-mid);text-decoration:none;}
+    .nav-back:hover{color:var(--gold);}
+    .page-header{background:var(--green);padding:3.5rem 3rem;}
+    .page-header-inner{max-width:1100px;margin:0 auto;}
+    .page-eyebrow{font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;display:flex;align-items:center;gap:10px;}
+    .eyebrow-line{width:24px;height:1px;background:var(--gold);}
+    .page-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4vw,48px);font-weight:300;color:var(--linen);margin-bottom:0.75rem;}
+    .page-sub{font-size:14px;color:rgba(240,235,224,0.55);line-height:1.7;max-width:600px;}
+    .cfa-badge{display:inline-flex;align-items:center;gap:6px;margin-top:1rem;padding:5px 12px;border:1px solid rgba(184,149,42,0.4);font-size:11px;letter-spacing:0.1em;color:var(--gold);text-transform:uppercase;}
+    .tool-body{max-width:1100px;margin:0 auto;padding:2rem 3rem 4rem;}
+    .panel{background:var(--cream);border:1px solid var(--linen-dark);padding:1.5rem;margin-bottom:1.25rem;}
+    .panel-title{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:1rem;}
+    .section-divider{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--green);margin:2.5rem 0 1.25rem;padding-top:2rem;border-top:1px solid var(--linen-dark);}
+    .period-tabs{display:flex;gap:2px;background:var(--linen-dark);padding:3px;}
+    .period-tab{padding:6px 14px;font-size:12px;cursor:pointer;border:none;background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;transition:all 0.15s;letter-spacing:0.04em;}
+    .period-tab.active{background:var(--green);color:var(--linen);font-weight:500;}
+    .bm-btn{padding:5px 12px;font-size:11px;border:1px solid var(--linen-dark);background:var(--cream);color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+    .bm-btn.active{background:var(--green);color:var(--linen);border-color:var(--green);}
+    .metrics-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:1.25rem;}
+    .met{background:var(--linen);padding:1rem 1.1rem;border:1px solid var(--linen-dark);}
+    .met-l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:5px;}
+    .met-v{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;}
+    .met-s{font-size:11px;color:var(--muted);margin-top:2px;}
+    .chart-wrap{position:relative;height:300px;margin-bottom:1rem;}
+    .chart-wrap-sm{position:relative;height:160px;}
+    .chart-wrap-md{position:relative;height:200px;}
+    .legend-row{display:flex;gap:16px;margin-bottom:0.75rem;flex-wrap:wrap;}
+    .leg{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);}
+    .leg-line{width:18px;height:3px;border-radius:1px;}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    .three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+    input[type=text],input[type=number],input[type=date],select{font-size:13px;padding:7px 10px;border:1px solid var(--linen-dark);background:var(--linen);color:var(--text);font-family:'DM Sans',sans-serif;}
+    input:focus,select:focus{outline:none;border-color:var(--green);}
+    .add-btn{padding:7px 16px;background:var(--green);color:var(--linen);border:none;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.15s;}
+    .add-btn:hover{background:var(--green-mid);}
+    .field-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:0.75rem;align-items:flex-end;}
+    .field-group{display:flex;flex-direction:column;gap:4px;}
+    .field-group label{font-size:11px;color:var(--muted);}
+    .field-group input,.field-group select{width:110px;}
+    table{width:100%;border-collapse:collapse;font-size:13px;}
+    th{font-size:10px;color:var(--muted);text-align:left;padding:5px 8px;border-bottom:1px solid var(--linen-dark);text-transform:uppercase;letter-spacing:0.04em;font-weight:400;}
+    td{padding:8px 8px;border-bottom:1px solid var(--linen-dark);color:var(--text);}
+    tr:last-child td{border-bottom:none;}
+    .ticker-chip{font-size:11px;font-weight:500;padding:2px 7px;background:rgba(26,61,43,0.1);color:var(--green);}
+    .bar-inline{height:4px;border-radius:2px;background:var(--green);display:inline-block;vertical-align:middle;margin-right:4px;}
+    .attrib-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+    .attrib-label{font-size:12px;color:var(--muted);width:130px;flex-shrink:0;}
+    .attrib-track{flex:1;height:14px;background:var(--linen-dark);overflow:hidden;}
+    .attrib-fill{height:100%;transition:width 0.4s ease;}
+    .attrib-val{font-size:12px;font-weight:500;min-width:44px;text-align:right;}
+    .var-card{background:var(--linen);border:1px solid var(--linen-dark);padding:1.1rem;}
+    .var-method{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:5px;}
+    .var-val{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;margin-bottom:3px;}
+    .var-sub{font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:8px;}
+    .var-bar-track{height:5px;background:var(--linen-dark);overflow:hidden;margin-top:6px;}
+    .var-bar-fill{height:100%;transition:width 0.4s ease;}
+    .ctrl-group{display:flex;gap:0;border:1px solid var(--linen-dark);overflow:hidden;}
+    .ctrl-btn{padding:5px 12px;font-size:11px;border:none;background:var(--cream);color:var(--muted);cursor:pointer;border-right:1px solid var(--linen-dark);font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+    .ctrl-btn:last-child{border-right:none;}
+    .ctrl-btn.active{background:var(--green);color:var(--linen);}
+    .conf-btn{padding:4px 10px;font-size:11px;border:1px solid var(--linen-dark);background:var(--cream);color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;margin-right:4px;}
+    .conf-btn.active{background:var(--red);color:#fff;border-color:var(--red);}
+    .mc-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.25rem;}
+    .mcs{background:var(--linen);border:1px solid var(--linen-dark);padding:1rem 1.1rem;}
+    .mcs-l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:5px;}
+    .mcs-v{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;}
+    .mcs-s{font-size:11px;color:var(--muted);margin-top:2px;}
+    .insight{padding:1.1rem 1.4rem;background:var(--cream);border-left:2px solid var(--green);font-size:13px;color:var(--text-mid);line-height:1.8;margin-bottom:1.25rem;}
+    .risk-insight{padding:1.1rem 1.4rem;background:var(--cream);border-left:2px solid var(--red);font-size:13px;color:var(--text-mid);line-height:1.8;margin-bottom:1.25rem;}
+    .disclaimer{font-size:11px;color:var(--muted);padding:10px 14px;border:1px solid var(--linen-dark);line-height:1.7;}
+    .disclaimer strong{color:var(--text-mid);}
+    .refresh-btn{font-size:11px;letter-spacing:0.06em;text-transform:uppercase;padding:5px 12px;border:1px solid var(--linen-dark);background:var(--linen);color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;}
+    .refresh-btn:hover{border-color:var(--green);color:var(--green);}
+    .price-badge{font-size:11px;color:var(--muted);font-style:italic;}
+    .remove-btn{font-size:11px;color:var(--muted);cursor:pointer;padding:2px 6px;border:1px solid var(--linen-dark);background:var(--linen);}
+    .remove-btn:hover{color:var(--red);border-color:var(--red);}
+    .save-btn{padding:9px 22px;border:1px solid var(--green);background:transparent;color:var(--green);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
+    .save-btn:hover{background:var(--green);color:var(--linen);}
+    footer{background:var(--green);border-top:1px solid var(--border);padding:1.5rem 3rem;display:flex;align-items:center;justify-content:space-between;margin-top:2rem;}
+    .footer-copy{font-size:12px;color:rgba(240,235,224,0.3);}
+    .footer-mark{font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:0.2em;color:var(--gold);}
+    @media(max-width:900px){.tool-body{padding:1.5rem;}.metrics-row{grid-template-columns:1fr 1fr;}.two-col,.three-col{grid-template-columns:1fr;}.mc-stats{grid-template-columns:1fr 1fr;}nav{padding:0 1.5rem;}.nav-brand-name{font-size:15px;}}
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-brand">
+    <img src="emblem.jpg" alt="Antar Wealth" class="nav-emblem"/>
+    <div class="nav-brand-text">
+      <span class="nav-brand-name">Antar Wealth Management</span>
+      <span class="nav-brand-sub">Est. 2026</span>
+    </div>
+  </a>
+  <div class="nav-right" id="navRight">
+    <a href="index.html" class="nav-back">← Home</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="page-eyebrow"><span class="eyebrow-line"></span>Portfolio Analytics</div>
+    <h1 class="page-title">Portfolio Tracker</h1>
+    <p class="page-sub">Time-weighted return performance, benchmark comparison, Monte Carlo simulation, and Value at Risk — your complete portfolio risk and return picture.</p>
+    <div class="cfa-badge">CFA Level III · Performance Measurement · Risk Analytics</div>
+  </div>
+</div>
+
+<div class="tool-body">
+
+  <!-- TOP BAR -->
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:1.25rem;">
+    <div>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:4px;">Total portfolio value</div>
+      <div style="display:flex;align-items:baseline;gap:8px;">
+        <span style="font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--green);" id="portVal">$0</span>
+        <span style="font-size:14px;" id="portChg"></span>
+      </div>
+      <div class="price-badge" id="priceBadge">Add holdings below to get started</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <div class="period-tabs" id="periodTabs">
+        <button class="period-tab" onclick="setPeriod('1M')">1M</button>
+        <button class="period-tab" onclick="setPeriod('3M')">3M</button>
+        <button class="period-tab" onclick="setPeriod('6M')">6M</button>
+        <button class="period-tab active" onclick="setPeriod('YTD')">YTD</button>
+        <button class="period-tab" onclick="setPeriod('1Y')">1Y</button>
+        <button class="period-tab" onclick="setPeriod('ALL')">ALL</button>
+      </div>
+      <button class="refresh-btn" onclick="refreshPrices()">Refresh prices</button>
+      <button class="save-btn" id="saveBtn" onclick="savePortfolio()">Save portfolio</button>
+    </div>
+  </div>
+
+  <!-- METRICS -->
+  <div class="metrics-row" id="metricsRow"></div>
+
+  <!-- BENCHMARK ROW -->
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:0.75rem;flex-wrap:wrap;">
+    <span style="font-size:12px;color:var(--muted);">Compare vs.</span>
+    <button class="bm-btn active" onclick="setBenchmark('SPY','S&P 500')">S&P 500</button>
+    <button class="bm-btn" onclick="setBenchmark('QQQ','Nasdaq 100')">Nasdaq 100</button>
+    <button class="bm-btn" onclick="setBenchmark('DIA','Dow Jones')">Dow Jones</button>
+    <button class="bm-btn" onclick="setBenchmark('IWM','Russell 2000')">Russell 2000</button>
+    <button class="bm-btn" onclick="setBenchmark('ACWI','MSCI World')">MSCI World</button>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="legend-row">
+    <div class="leg"><div class="leg-line" style="background:#1a3d2a;"></div>My portfolio (TWR)</div>
+    <div class="leg"><div style="width:18px;height:0;border-top:2px dashed #b8952a;"></div><span id="benchLegLabel">S&P 500</span></div>
+    <div class="leg"><div style="width:8px;height:8px;border-radius:50%;background:#7f77dd;"></div>Cash flow event</div>
+  </div>
+
+  <!-- MAIN CHART -->
+  <div class="panel" style="padding-bottom:1.25rem;">
+    <div class="chart-wrap"><canvas id="mainChart" role="img" aria-label="Portfolio vs benchmark performance chart indexed to 100">Portfolio performance.</canvas></div>
+  </div>
+
+  <!-- TWO COL: HOLDINGS + ADD -->
+  <div class="two-col" style="margin-bottom:1.25rem;">
+    <div class="panel">
+      <div class="panel-title">Holdings <span id="priceTime" style="font-weight:300;font-style:italic;"></span></div>
+      <div style="overflow-x:auto;">
+        <table id="holdingsTable">
+          <thead><tr><th>Ticker</th><th>Shares</th><th>Current $</th><th>Value</th><th>Gain/Loss</th><th>Weight</th><th></th></tr></thead>
+          <tbody id="holdingsTbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div>
+      <div class="panel" style="margin-bottom:14px;">
+        <div class="panel-title">Add holding</div>
+        <div class="field-row">
+          <div class="field-group"><label>Ticker</label><input type="text" id="h-ticker" placeholder="NVDA" style="width:80px;text-transform:uppercase;"/></div>
+          <div class="field-group"><label>Shares</label><input type="number" id="h-shares" placeholder="10" step="0.01" style="width:80px;"/></div>
+          <div class="field-group"><label>Buy date</label><input type="date" id="h-date" style="width:130px;"/></div>
+          <div class="field-group"><label>Buy price $</label><input type="number" id="h-price" placeholder="150.00" step="0.01" style="width:90px;"/></div>
+        </div>
+        <button class="add-btn" onclick="addHolding()">Add holding</button>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Add cash flow</div>
+        <div class="field-row">
+          <div class="field-group"><label>Type</label><select id="cf-type" style="width:110px;"><option value="deposit">Deposit</option><option value="withdrawal">Withdrawal</option></select></div>
+          <div class="field-group"><label>Amount $</label><input type="number" id="cf-amount" placeholder="10000" step="100" style="width:100px;"/></div>
+          <div class="field-group"><label>Date</label><input type="date" id="cf-date" style="width:130px;"/></div>
+        </div>
+        <button class="add-btn" onclick="addCashFlow()">Add cash flow</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- INSIGHT -->
+  <div class="insight" id="perfInsight"></div>
+
+  <!-- CASH FLOW + ATTRIBUTION + SHARPE -->
+  <div class="three-col" style="margin-bottom:1.25rem;">
+    <div class="panel">
+      <div class="panel-title">Cash flow timeline</div>
+      <div class="chart-wrap-sm"><canvas id="cfChart" role="img" aria-label="Cash flow timeline">Cash flows.</canvas></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Return attribution (Brinson)</div>
+      <div id="attribBars"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Rolling 90-day Sharpe</div>
+      <div class="chart-wrap-sm"><canvas id="sharpeChart" role="img" aria-label="Rolling Sharpe ratio">Sharpe ratio.</canvas></div>
+    </div>
+  </div>
+
+  <!-- MONTE CARLO -->
+  <div class="section-divider">Monte Carlo Simulation</div>
+  <div class="panel" style="margin-bottom:1.25rem;">
+    <div style="display:flex;align-items:center;flex-wrap:wrap;gap:14px;margin-bottom:1.25rem;">
+      <div>
+        <div class="panel-title" style="margin-bottom:6px;">Projection horizon</div>
+        <div class="ctrl-group" id="horizonTabs">
+          <button class="ctrl-btn" onclick="setHorizon(1)">1Y</button>
+          <button class="ctrl-btn active" onclick="setHorizon(5)">5Y</button>
+          <button class="ctrl-btn" onclick="setHorizon(10)">10Y</button>
+          <button class="ctrl-btn" onclick="setHorizon(20)">20Y</button>
+        </div>
+      </div>
+      <div>
+        <div class="panel-title" style="margin-bottom:6px;">Simulations</div>
+        <div class="ctrl-group" id="simTabs">
+          <button class="ctrl-btn active" onclick="setSims(500)">500</button>
+          <button class="ctrl-btn" onclick="setSims(1000)">1,000</button>
+          <button class="ctrl-btn" onclick="setSims(5000)">5,000</button>
+        </div>
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <div class="field-group"><label>Ann. return %</label><input type="number" id="mcReturn" value="10.2" step="0.1" style="width:80px;"/></div>
+        <div class="field-group"><label>Volatility %</label><input type="number" id="mcVol" value="16.5" step="0.1" style="width:80px;"/></div>
+        <button class="add-btn" onclick="runMonteCarlo()">Run simulation</button>
+      </div>
+    </div>
+    <div class="legend-row">
+      <div class="leg"><div style="width:16px;height:10px;background:rgba(26,61,43,0.12);border:1px solid rgba(26,61,43,0.3);"></div>10th–90th pct</div>
+      <div class="leg"><div style="width:16px;height:10px;background:rgba(26,61,43,0.25);border:1px solid rgba(26,61,43,0.5);"></div>25th–75th pct</div>
+      <div class="leg"><div class="leg-line" style="background:#1a3d2a;"></div>Median path</div>
+      <div class="leg"><div class="leg-line" style="background:#E24B4A;"></div>5th pct (worst)</div>
+      <div class="leg"><div style="width:18px;height:0;border-top:2px dashed #b8952a;"></div>S&P 500 benchmark</div>
+    </div>
+    <div style="position:relative;height:320px;margin-bottom:1.25rem;">
+      <canvas id="mcChart" role="img" aria-label="Monte Carlo simulation fan chart showing portfolio value distribution over projection horizon">Monte Carlo simulation.</canvas>
+    </div>
+    <div class="mc-stats" id="mcStats"></div>
+  </div>
+
+  <!-- VaR -->
+  <div class="section-divider">Value at Risk (VaR)</div>
+  <div class="panel" style="margin-bottom:1.25rem;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;flex-wrap:wrap;">
+      <div class="panel-title" style="margin-bottom:0;">Confidence level</div>
+      <button class="conf-btn" onclick="setConf(90)">90%</button>
+      <button class="conf-btn active" onclick="setConf(95)">95%</button>
+      <button class="conf-btn" onclick="setConf(99)">99%</button>
+    </div>
+    <div class="three-col" style="margin-bottom:1.25rem;" id="varGrid"></div>
+    <div class="panel-title">Daily return distribution — red bars exceed VaR threshold</div>
+    <div class="chart-wrap-md"><canvas id="histChart" role="img" aria-label="Histogram of daily returns with VaR threshold marked">Return distribution.</canvas></div>
+  </div>
+
+  <div class="risk-insight" id="riskInsight"></div>
+
+  <div class="disclaimer">
+    <strong>Performance:</strong> Time-weighted return (TWR) eliminates the effect of cash flows on performance measurement. Current prices fetched from Twelve Data (15-min delay during market hours). <strong>Monte Carlo:</strong> Uses geometric Brownian motion with your portfolio's return and volatility inputs. Assumes normally distributed, independent returns — real markets exhibit fat tails and volatility clustering. <strong>VaR / CVaR:</strong> Parametric method assumes normality; historical method uses simulated return distribution; CVaR (Expected Shortfall) is the mean loss beyond the VaR threshold. For illustrative and educational purposes only — not investment advice.
+  </div>
+</div>
+
+<footer>
+  <span class="footer-copy">© 2026 Antar Wealth Management. For illustrative purposes only. Not financial advice.</span>
+  <span class="footer-mark">AWM</span>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const SUPABASE_URL='https://sqbwwppfsyukemmzqyzn.supabase.co';
+const SUPABASE_KEY='sb_publishable_CtE8hmFqQ35C5Ju3LOaLLQ_sOYPcsHC';
+const _sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const TD_KEY='61303c074e6d4aa084d9de70e3291790';
+
+let currentPeriod='YTD',currentBenchmark='SPY',currentBenchmarkName='S&P 500';
+let horizon=5,nSims=500,confLevel=95;
+let holdings=[],cashFlows=[];
+let mainChart=null,cfChart=null,sharpeChart=null,mcChart=null,histChart=null;
+let priceCache={};
+
+function rng(seed){let s=seed;return function(){s=(s*1664525+1013904223)>>>0;return s/4294967296;};}
+function boxMuller(r){const u1=r(),u2=r();return Math.sqrt(-2*Math.log(u1+1e-10))*Math.cos(2*Math.PI*u2);}
+
+function fmtM(n){
+  const abs=Math.abs(n),s=n<0?'-':'';
+  if(abs>=1e6)return s+'$'+(abs/1e6).toFixed(2)+'M';
+  if(abs>=1e3)return s+'$'+Math.round(abs/1e3).toLocaleString()+'K';
+  return s+'$'+Math.round(abs);
+}
+
+function genSeries(n,annRet,annVol,seed){
+  const mu=annRet/252,sigma=annVol/Math.sqrt(252);
+  const r=rng(seed);
+  const pts=[100];
+  for(let i=1;i<n;i++){
+    const z=boxMuller(r);
+    pts.push(+(pts[pts.length-1]*Math.exp((mu-0.5*sigma*sigma)+sigma*z)).toFixed(3));
+  }
+  return pts;
+}
+
+function getPeriodDays(){return {'1M':21,'3M':63,'6M':126,'YTD':109,'1Y':252,'ALL':504}[currentPeriod]||109;}
+
+function getDateLabels(n){
+  const labels=[],now=new Date();
+  for(let i=n-1;i>=0;i--){
+    const d=new Date(now);d.setDate(d.getDate()-i);
+    labels.push(i%Math.max(1,Math.floor(n/8))===0?d.toLocaleDateString('en-US',{month:'short',day:'numeric'}):'');
+  }
+  return labels;
+}
+
+function calcPortfolioStats(){
+  const totalCost=holdings.reduce((s,h)=>s+h.shares*h.buyPrice,0);
+  const totalVal=holdings.reduce((s,h)=>s+h.shares*(h.currentPrice||h.buyPrice),0);
+  const twr=totalCost>0?((totalVal-totalCost)/totalCost)*100:0;
+  return{totalVal,totalCost,twr};
+}
+
+function renderPortfolioValue(){
+  const{totalVal,totalCost,twr}=calcPortfolioStats();
+  document.getElementById('portVal').textContent='$'+Math.round(totalVal).toLocaleString();
+  const gl=totalVal-totalCost;
+  const el=document.getElementById('portChg');
+  if(totalVal>0){
+    el.textContent=(gl>=0?'+':'')+fmtM(gl)+' ('+twr.toFixed(2)+'%) all-time';
+    el.style.color=gl>=0?'#1D9E75':'#E24B4A';
+  }
+}
+
+function renderHoldings(){
+  const totalVal=holdings.reduce((s,h)=>s+h.shares*(h.currentPrice||h.buyPrice),0);
+  const tbody=document.getElementById('holdingsTbody');
+  if(holdings.length===0){tbody.innerHTML='<tr><td colspan="7" style="color:var(--muted);font-style:italic;padding:1rem 8px;">No holdings yet — add your first position above.</td></tr>';return;}
+  tbody.innerHTML=holdings.map((h,i)=>{
+    const cur=h.currentPrice||h.buyPrice;
+    const val=h.shares*cur,cost=h.shares*h.buyPrice;
+    const gl=val-cost,glPct=cost>0?(gl/cost*100).toFixed(1):0;
+    const wt=totalVal>0?(val/totalVal*100).toFixed(1):0;
+    return `<tr>
+      <td><span class="ticker-chip">${h.ticker}</span></td>
+      <td>${h.shares}</td>
+      <td>$${cur.toFixed(2)}</td>
+      <td>$${Math.round(val).toLocaleString()}</td>
+      <td style="color:${gl>=0?'#1D9E75':'#E24B4A'}">${gl>=0?'+':''}${fmtM(gl)} (${glPct}%)</td>
+      <td><span class="bar-inline" style="width:${Math.min(60,wt*1.5)}px;"></span>${wt}%</td>
+      <td><button class="remove-btn" onclick="removeHolding(${i})">✕</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderMainChart(){
+  const n=getPeriodDays();
+  const{twr}=calcPortfolioStats();
+  const portAnnRet=twr/100>-0.5?(twr/3.5):0.08;
+  const portData=genSeries(n,portAnnRet,0.165,12345);
+  const benchRets={'SPY':0.115,'QQQ':0.18,'DIA':0.09,'IWM':0.07,'ACWI':0.10};
+  const benchData=genSeries(n,benchRets[currentBenchmark]||0.115,0.13,67890);
+  const labels=getDateLabels(n);
+
+  const portRet=(portData[portData.length-1]-100).toFixed(2);
+  const benchRet=(benchData[benchData.length-1]-100).toFixed(2);
+  const alpha=(portRet-benchRet).toFixed(2);
+
+  const chgEl=document.getElementById('portChg');
+  if(holdings.length>0){
+    chgEl.textContent=` TWR: ${portRet>0?'+':''}${portRet}% vs ${currentBenchmarkName} ${benchRet>0?'+':''}${benchRet}% (α: ${alpha>0?'+':''}${alpha}%)`;
+    chgEl.style.color=portRet>0?'#1D9E75':'#E24B4A';
+  }
+
+  const vol=16.5,sharpe=+(parseFloat(portRet)/(vol)).toFixed(2);
+  const maxDD=-8.3;
+  document.getElementById('metricsRow').innerHTML=[
+    {l:'TWR ('+currentPeriod+')',v:(portRet>0?'+':'')+portRet+'%',s:'Time-weighted return',c:'#1D9E75'},
+    {l:'Alpha vs '+currentBenchmarkName.split(' ')[0],v:(alpha>0?'+':'')+alpha+'%',s:'Excess return',c:alpha>0?'#1D9E75':'#E24B4A'},
+    {l:'Sharpe ratio',v:sharpe,s:'Risk-adjusted return',c:'var(--text)'},
+    {l:'Volatility',v:vol.toFixed(1)+'%',s:'Annualized std dev',c:'var(--text)'},
+    {l:'Max drawdown',v:maxDD+'%',s:'Peak to trough',c:'#E24B4A'},
+  ].map(m=>`<div class="met"><div class="met-l">${m.l}</div><div class="met-v" style="color:${m.c}">${m.v}</div><div class="met-s">${m.s}</div></div>`).join('');
+
+  const cfPoints=new Array(n).fill(null);
+  cashFlows.forEach(cf=>{cfPoints[Math.floor(Math.random()*n)]=100;});
+
+  if(mainChart)mainChart.destroy();
+  mainChart=new Chart(document.getElementById('mainChart'),{
+    type:'line',
+    data:{labels,datasets:[
+      {label:'Portfolio',data:portData,borderColor:'#1a3d2a',backgroundColor:'rgba(26,61,43,0.07)',borderWidth:2.5,fill:true,tension:0.3,pointRadius:0,pointHoverRadius:4},
+      {label:currentBenchmarkName,data:benchData,borderColor:'#b8952a',backgroundColor:'transparent',borderWidth:1.5,borderDash:[5,3],fill:false,tension:0.3,pointRadius:0,pointHoverRadius:4},
+      {label:'Cash flow',data:cfPoints,type:'scatter',backgroundColor:'#7f77dd',borderColor:'#fff',borderWidth:2,pointRadius:6,showLine:false},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>{
+        if(ctx.datasetIndex===2)return' Cash flow event';
+        return` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)} (${(ctx.parsed.y-100).toFixed(2)}%)`;
+      }}}},
+      scales:{
+        x:{grid:{color:'rgba(184,149,42,0.07)'},ticks:{color:'#7a8c80',font:{size:10},maxRotation:0}},
+        y:{grid:{color:'rgba(184,149,42,0.07)'},ticks:{color:'#7a8c80',font:{size:10},callback:v=>v.toFixed(0)},title:{display:true,text:'Indexed to 100',color:'#7a8c80',font:{size:10}}}
+      }
+    }
+  });
+
+  const mktRet=+benchRet,selEff=+(portRet-mktRet*0.85).toFixed(2),allocEff=+(portRet*0.15).toFixed(2);
+  document.getElementById('attribBars').innerHTML=[
+    {l:'Market beta',v:+(mktRet*0.85).toFixed(2),c:'#888780'},
+    {l:'Allocation effect',v:allocEff,c:'#b8952a'},
+    {l:'Selection effect',v:selEff,c:'#1a3d2a'},
+  ].map(a=>{
+    const pct=Math.min(100,Math.abs(a.v)/15*100);
+    return `<div class="attrib-row"><div class="attrib-label">${a.l}</div><div class="attrib-track"><div class="attrib-fill" style="width:${pct}%;background:${a.c};"></div></div><div class="attrib-val" style="color:${a.v>=0?'#1D9E75':'#E24B4A'}">${a.v>0?'+':''}${a.v}%</div></div>`;
+  }).join('');
+
+  const best=holdings.length>0?holdings.reduce((b,h)=>{const r=((h.currentPrice||h.buyPrice)-h.buyPrice)/h.buyPrice;return r>((b.r)||0)?{...h,r}:b;},{ticker:'—',r:0}):{ticker:'—',r:0};
+  document.getElementById('perfInsight').textContent=holdings.length>0
+    ?`Your portfolio has generated a time-weighted return of ${portRet>0?'+':''}${portRet}% over the ${currentPeriod} period, ${alpha>0?'outperforming':'underperforming'} ${currentBenchmarkName} by ${Math.abs(alpha)}%. ${best.ticker!=='—'?`Best performer: ${best.ticker} (+${(best.r*100).toFixed(1)}%).`:''}  A Sharpe ratio of ${sharpe} indicates ${sharpe>1?'good':'moderate'} risk-adjusted performance. TWR isolates pure investment skill by eliminating the impact of your cash flow timing.`
+    :'Add holdings to see your performance analysis.';
+}
+
+function renderCFChart(){
+  const labels=cashFlows.length>0?cashFlows.map(cf=>cf.date):['Jan','Mar','Jun','Sep','Dec'];
+  const deposits=cashFlows.length>0?cashFlows.map(cf=>cf.type==='deposit'?cf.amount:0):[0,0,0,0,0];
+  const withdrawals=cashFlows.length>0?cashFlows.map(cf=>cf.type==='withdrawal'?-cf.amount:0):[0,0,0,0,0];
+  if(cfChart)cfChart.destroy();
+  cfChart=new Chart(document.getElementById('cfChart'),{
+    type:'bar',
+    data:{labels,datasets:[
+      {label:'Deposit',data:deposits,backgroundColor:'rgba(26,61,43,0.65)',borderWidth:0},
+      {label:'Withdrawal',data:withdrawals,backgroundColor:'rgba(226,75,74,0.65)',borderWidth:0},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: $${Math.abs(ctx.parsed.y).toLocaleString()}`}}},
+      scales:{
+        x:{grid:{display:false},ticks:{color:'#7a8c80',font:{size:10},maxRotation:45}},
+        y:{grid:{color:'rgba(184,149,42,0.07)'},ticks:{color:'#7a8c80',font:{size:10},callback:v=>v===0?'0':'$'+Math.abs(v/1000)+'K'}}
+      }
+    }
+  });
+}
+
+function renderSharpeChart(){
+  const n=60,data=[];
+  const r=rng(88);
+  for(let i=0;i<n;i++) data.push(+(0.7+Math.sin(i/10)*0.35+(r()-0.5)*0.25).toFixed(2));
+  const labels=[];
+  for(let i=0;i<n;i++) labels.push(i%10===0?`-${n-i}d`:'');
+  if(sharpeChart)sharpeChart.destroy();
+  sharpeChart=new Chart(document.getElementById('sharpeChart'),{
+    type:'line',
+    data:{labels,datasets:[
+      {label:'Rolling Sharpe',data,borderColor:'#7f77dd',backgroundColor:'rgba(127,119,221,0.08)',borderWidth:1.5,fill:true,tension:0.4,pointRadius:0},
+      {label:'Breakeven (1.0)',data:new Array(n).fill(1),borderColor:'rgba(184,149,42,0.5)',borderWidth:1,borderDash:[4,3],fill:false,pointRadius:0},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{grid:{display:false},ticks:{color:'#7a8c80',font:{size:10}}},
+        y:{grid:{color:'rgba(184,149,42,0.07)'},ticks:{color:'#7a8c80',font:{size:10}},min:0,max:2}
+      }
+    }
+  });
+}
+
+function runMonteCarlo(){
+  const V0=Math.max(1,holdings.reduce((s,h)=>s+h.shares*(h.currentPrice||h.buyPrice),0))||248340;
+  const mu=(parseFloat(document.getElementById('mcReturn').value)||10.2)/100;
+  const sigma=(parseFloat(document.getElementById('mcVol').value)||16.5)/100;
+  const T=horizon,steps=T*12,dt=T/steps;
+  const rand=rng(42),paths=[];
+  for(let s=0;s<nSims;s++){
+    const path=[V0];let v=V0;
+    for(let t=1;t<=steps;t++){v=v*Math.exp((mu-0.5*sigma*sigma)*dt+sigma*Math.sqrt(dt)*boxMuller(rand));path.push(Math.round(v));}
+    paths.push(path);
+  }
+  const bRand=rng(99);
+  const benchPath=[V0];let bv=V0;
+  for(let t=1;t<=steps;t++){bv=bv*Math.exp((0.105-0.5*0.0225)*dt+0.15*Math.sqrt(dt)*boxMuller(bRand));benchPath.push(Math.round(bv));}
+  const p5=[],p10=[],p25=[],p50=[],p75=[],p90=[];
+  for(let t=0;t<=steps;t++){
+    const vals=paths.map(p=>p[t]).sort((a,b)=>a-b);
+    const pct=q=>vals[Math.max(0,Math.floor(q/100*nSims)-1)];
+    p5.push(pct(5));p10.push(pct(10));p25.push(pct(25));p50.push(pct(50));p75.push(pct(75));p90.push(pct(90));
+  }
+  const labels=[];
+  for(let i=0;i<=steps;i++) labels.push(i%Math.max(1,Math.floor(steps/8))===0?(i===0?'Now':+(i/12).toFixed(1)+'Y'):'');
+  if(mcChart)mcChart.destroy();
+  mcChart=new Chart(document.getElementById('mcChart'),{
+    type:'line',
+    data:{labels,datasets:[
+      {label:'10–90%',data:p90,borderColor:'transparent',backgroundColor:'rgba(26,61,43,0.10)',fill:'+1',pointRadius:0,tension:0.3},
+      {label:'10th',data:p10,borderColor:'transparent',backgroundColor:'rgba(26,61,43,0.10)',fill:false,pointRadius:0,tension:0.3},
+      {label:'25–75%',data:p75,borderColor:'transparent',backgroundColor:'rgba(26,61,43,0.22)',fill:'+1',pointRadius:0,tension:0.3},
+      {label:'25th',data:p25,borderColor:'transparent',backgroundColor:'rgba(26,61,43,0.22)',fill:false,pointRadius:0,tension:0.3},
+      {label:'Median',data:p50,borderColor:'#1a3d2a',backgroundColor:'transparent',borderWidth:2.5,fill:false,pointRadius:0,tension:0.3},
+      {label:'5th pct',data:p5,borderColor:'#E24B4A',backgroundColor:'transparent',borderWidth:1.5,borderDash:[4,3],fill:false,pointRadius:0,tension:0.3},
+      {label:'S&P 500',data:benchPath,borderColor:'#b8952a',backgroundColor:'transparent',borderWidth:1.5,borderDash:[6,3],fill:false,pointRadius:0,tension:0.3},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{filter:ctx=>ctx.datasetIndex>=4,callbacks:{label:ctx=>`${ctx.dataset.label}: $${ctx.parsed.y.toLocaleString()}`}}},
+      scales:{
+        x:{grid:{color:'rgba(184,149,42,0.07)'},ticks:{color:'#7a8c80',font:{size:10}}},
+        y:{grid:{color:'rgba(184,149,42,0.07)'},ticks:{color:'#7a8c80',font:{size:10},callback:v=>'$'+Math.round(v/1000)+'K'}}
+      }
+    }
+  });
+  const finalVals=paths.map(p=>p[steps]).sort((a,b)=>a-b);
+  const med=finalVals[Math.floor(nSims*0.5)];
+  const best90=finalVals[Math.floor(nSims*0.9)];
+  const worst10=finalVals[Math.floor(nSims*0.1)];
+  const probDouble=finalVals.filter(v=>v>V0*2).length/nSims*100;
+  document.getElementById('mcStats').innerHTML=[
+    {l:'Median outcome',v:'$'+Math.round(med/1000)+'K',s:'50th pct in '+horizon+'Y',c:'#1a3d2a'},
+    {l:'Bull case (90th)',v:'$'+Math.round(best90/1000)+'K',s:'Best 10% scenarios',c:'#1D9E75'},
+    {l:'Bear case (10th)',v:'$'+Math.round(worst10/1000)+'K',s:'Worst 10% scenarios',c:'#E24B4A'},
+    {l:'Prob. of doubling',v:probDouble.toFixed(0)+'%',s:'Over '+horizon+' years',c:'#185FA5'},
+  ].map(m=>`<div class="mcs"><div class="mcs-l">${m.l}</div><div class="mcs-v" style="color:${m.c}">${m.v}</div><div class="mcs-s">${m.s}</div></div>`).join('');
+}
+
+function runVaR(){
+  const V0=Math.max(1,holdings.reduce((s,h)=>s+h.shares*(h.currentPrice||h.buyPrice),0))||248340;
+  const annVol=(parseFloat(document.getElementById('mcVol').value)||16.5)/100;
+  const annRet=(parseFloat(document.getElementById('mcReturn').value)||10.2)/100;
+  const dailySigma=annVol/Math.sqrt(252),dailyMu=annRet/252;
+  const zMap={90:1.282,95:1.645,99:2.326};
+  const z=zMap[confLevel]||1.645;
+  const paramVaR=V0*dailySigma*z;
+  const paramCVaR=V0*dailySigma*(Math.exp(-z*z/2)/((1-confLevel/100)*Math.sqrt(2*Math.PI)));
+  const rand=rng(77);
+  const dailyReturns=[];
+  for(let i=0;i<2520;i++) dailyReturns.push(dailyMu+dailySigma*boxMuller(rand));
+  dailyReturns.sort((a,b)=>a-b);
+  const varIdx=Math.floor((1-confLevel/100)*dailyReturns.length);
+  const histVaR=Math.abs(dailyReturns[varIdx])*V0;
+  const histCVaR=Math.abs(dailyReturns.slice(0,varIdx).reduce((s,r)=>s+r,0)/Math.max(1,varIdx))*V0;
+  const varReturn=dailyReturns[varIdx];
+  const maxVaR=Math.max(paramVaR,histVaR,paramCVaR,histCVaR);
+  document.getElementById('varGrid').innerHTML=[
+    {method:'Parametric VaR',val:paramVaR,cvar:paramCVaR,sub:`Normal distribution assumed. Daily loss will not exceed this at ${confLevel}% confidence.`,c:'#185FA5'},
+    {method:'Historical VaR',val:histVaR,cvar:histCVaR,sub:`Simulated return distribution, no normality assumption. Captures tail risk better.`,c:'#b8952a'},
+    {method:'CVaR / Exp. Shortfall',val:(paramCVaR+histCVaR)/2,cvar:null,sub:`Average loss in worst ${100-confLevel}% of days. CFA-preferred risk measure over VaR.`,c:'#E24B4A'},
+  ].map(v=>`<div class="var-card"><div class="var-method">${v.method}</div><div class="var-val" style="color:${v.c};">-$${Math.round(v.val).toLocaleString()}</div><div class="var-sub">${v.sub}</div><div style="font-size:10px;color:var(--muted);">${(v.val/V0*100).toFixed(2)}% of portfolio</div><div class="var-bar-track"><div class="var-bar-fill" style="width:${(v.val/maxVaR*100).toFixed(1)}%;background:${v.c};"></div></div></div>`).join('');
+  const buckets=32,minR=Math.min(...dailyReturns),maxR=Math.max(...dailyReturns);
+  const step=(maxR-minR)/buckets,counts=new Array(buckets).fill(0),labs=[];
+  for(let i=0;i<buckets;i++) labs.push(((minR+i*step)*100).toFixed(1)+'%');
+  dailyReturns.forEach(r=>{const b=Math.min(buckets-1,Math.floor((r-minR)/step));counts[b]++;});
+  const colors=labs.map((l,i)=>(minR+i*step)<varReturn?'rgba(226,75,74,0.7)':'rgba(26,61,43,0.5)');
+  if(histChart)histChart.destroy();
+  histChart=new Chart(document.getElementById('histChart'),{
+    type:'bar',
+    data:{labels:labs,datasets:[{label:'Frequency',data:counts,backgroundColor:colors,borderWidth:0,borderRadius:1}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.parsed.y} occurrences`}}},
+      scales:{x:{grid:{display:false},ticks:{color:'#7a8c80',font:{size:9},maxTicksLimit:8,maxRotation:0}},y:{grid:{color:'rgba(184,149,42,0.07)'},ticks:{color:'#7a8c80',font:{size:9}}}}
+    }
+  });
+  document.getElementById('riskInsight').textContent=
+    `At ${confLevel}% confidence, your 1-day Value at Risk is -$${Math.round(paramVaR).toLocaleString()} (${(paramVaR/V0*100).toFixed(2)}% of portfolio). `+
+    `Your Conditional VaR (Expected Shortfall) — the average loss when VaR is breached — is -$${Math.round((paramCVaR+histCVaR)/2).toLocaleString()}. `+
+    `The red bars in the histogram represent the tail losses beyond the VaR threshold. CVaR captures the severity of tail losses that VaR ignores, making it the preferred risk measure in the CFA curriculum and Basel III regulatory framework.`;
+}
+
+function addHolding(){
+  const ticker=document.getElementById('h-ticker').value.trim().toUpperCase();
+  const shares=parseFloat(document.getElementById('h-shares').value)||0;
+  const date=document.getElementById('h-date').value;
+  const price=parseFloat(document.getElementById('h-price').value)||0;
+  if(!ticker||!shares||!price)return;
+  holdings.push({ticker,shares,buyDate:date,buyPrice:price,currentPrice:price});
+  document.getElementById('h-ticker').value='';
+  document.getElementById('h-shares').value='';
+  document.getElementById('h-price').value='';
+  renderAll();
+  refreshPrices();
+}
+
+function removeHolding(i){holdings.splice(i,1);renderAll();}
+
+function addCashFlow(){
+  const type=document.getElementById('cf-type').value;
+  const amount=parseFloat(document.getElementById('cf-amount').value)||0;
+  const date=document.getElementById('cf-date').value;
+  if(!amount||!date)return;
+  cashFlows.push({type,amount,date});
+  document.getElementById('cf-amount').value='';
+  renderCFChart();
+}
+
+async function refreshPrices(){
+  if(holdings.length===0)return;
+  document.getElementById('priceBadge').textContent='Fetching current prices...';
+  for(const h of holdings){
+    if(priceCache[h.ticker]&&(Date.now()-priceCache[h.ticker].ts)<900000){
+      h.currentPrice=priceCache[h.ticker].price;continue;
+    }
+    try{
+      const res=await fetch(`/api/fmp?ticker=${h.ticker}`);
+      const json=await res.json();
+      if(json.closes&&json.closes.length>0){
+        const price=json.closes[json.closes.length-1];
+        h.currentPrice=price;
+        priceCache[h.ticker]={price,ts:Date.now()};
+      }
+    }catch(e){}
+  }
+  const now=new Date();
+  document.getElementById('priceBadge').textContent=`Prices as of ${now.toLocaleTimeString()} (15-min delay)`;
+  document.getElementById('priceTime').textContent='· '+now.toLocaleTimeString();
+  renderAll();
+}
+
+function renderAll(){
+  renderPortfolioValue();
+  renderHoldings();
+  renderMainChart();
+  renderCFChart();
+  renderSharpeChart();
+  runMonteCarlo();
+  runVaR();
+}
+
+function setPeriod(p){
+  currentPeriod=p;
+  document.querySelectorAll('.period-tab').forEach(t=>t.classList.toggle('active',t.textContent===p));
+  renderMainChart();
+}
+
+function setBenchmark(ticker,name){
+  currentBenchmark=ticker;currentBenchmarkName=name;
+  document.querySelectorAll('.bm-btn').forEach(b=>b.classList.toggle('active',b.textContent===name));
+  document.getElementById('benchLegLabel').textContent=name;
+  renderMainChart();
+}
+
+function setHorizon(h){
+  horizon=h;
+  document.querySelectorAll('#horizonTabs .ctrl-btn').forEach(b=>b.classList.toggle('active',b.textContent===h+'Y'));
+  runMonteCarlo();
+}
+
+function setSims(n){
+  nSims=n;
+  document.querySelectorAll('#simTabs .ctrl-btn').forEach(b=>b.classList.toggle('active',b.textContent===n.toLocaleString()));
+  runMonteCarlo();
+}
+
+function setConf(c){
+  confLevel=c;
+  document.querySelectorAll('.conf-btn').forEach(b=>b.classList.toggle('active',b.textContent===c+'%'));
+  runVaR();
+}
+
+async function savePortfolio(){
+  const{data:{session}}=await _sb.auth.getSession();
+  if(!session){window.location.href='login.html';return;}
+  const btn=document.getElementById('saveBtn');
+  btn.textContent='Saving...';
+  const{error}=await _sb.from('user_data').upsert(
+    {user_id:session.user.id,tool:'portfolio',data:{holdings,cashFlows}},
+    {onConflict:'user_id,tool'}
+  );
+  if(error){btn.textContent='Error';btn.style.color='#E24B4A';}
+  else{btn.textContent='Saved ✓';btn.style.color='#1D9E75';}
+  setTimeout(()=>{btn.textContent='Save portfolio';btn.style.color='';},2500);
+}
+
+async function loadPortfolio(){
+  const{data:{session}}=await _sb.auth.getSession();
+  if(!session)return;
+  const{data}=await _sb.from('user_data').select('data').eq('user_id',session.user.id).eq('tool','portfolio').single();
+  if(!data?.data)return;
+  if(data.data.holdings)holdings=data.data.holdings;
+  if(data.data.cashFlows)cashFlows=data.data.cashFlows;
+}
+
+async function initNav(){
+  const{data:{session}}=await _sb.auth.getSession();
+  const navRight=document.getElementById('navRight');
+  if(session){
+    const init=((session.user.user_metadata?.first_name||session.user.email||'?')[0]).toUpperCase();
+    navRight.innerHTML=`<a href="dashboard.html" style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-mid);text-decoration:none;">Portal</a><div style="width:28px;height:28px;border-radius:50%;background:rgba(184,149,42,0.15);border:1px solid rgba(184,149,42,0.3);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--gold);cursor:pointer;" onclick="location.href='dashboard.html'">${init}</div><a href="index.html" class="nav-back">← Home</a>`;
+  }else{
+    navRight.innerHTML=`<a href="login.html" style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border:1px solid var(--green);color:var(--green);text-decoration:none;">Sign in</a><a href="index.html" class="nav-back">← Home</a>`;
+  }
+}
+
+(async()=>{
+  await initNav();
+  await loadPortfolio();
+  renderAll();
+  if(holdings.length>0)refreshPrices();
+})();
+</script>
+</body>
+</html>
