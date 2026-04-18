@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portfolio Tracker YTD — Antar Wealth Management</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
+  <style>
+    :root{--linen:#f0ebe0;--linen-dark:#e6dfd2;--green:#1a3d2a;--green-mid:#1f4d35;--green-light:#2a6644;--gold:#b8952a;--gold-light:#d4ae4a;--cream:#faf6ee;--text:#0f2d1e;--text-mid:#3a5a47;--muted:#7a8c80;--border:rgba(184,149,42,0.2);--red:#E24B4A;--teal:#1D9E75;--blue:#185FA5;--amber:#BA7517;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'DM Sans',sans-serif;font-weight:300;background:var(--linen);color:var(--text);min-height:100vh;}
+    nav{background:rgba(240,235,224,0.97);border-bottom:1px solid var(--border);padding:0 3rem;height:68px;display:flex;align-items:center;justify-content:space-between;}
+    .nav-brand{display:flex;align-items:center;gap:12px;text-decoration:none;}
+    .nav-emblem{height:40px;width:40px;object-fit:contain;}
+    .nav-brand-text{display:flex;flex-direction:column;line-height:1.2;}
+    .nav-brand-name{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;letter-spacing:0.1em;color:var(--green);}
+    .nav-brand-sub{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);}
+    .page-header{background:var(--green);padding:3.5rem 3rem;}
+    .page-header-inner{max-width:1200px;margin:0 auto;}
+    .page-eyebrow{font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;}
+    .page-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4vw,48px);font-weight:300;color:var(--linen);margin-bottom:0.75rem;}
+    .page-sub{font-size:14px;color:rgba(240,235,224,0.55);line-height:1.7;max-width:700px;}
+    .tool-body{max-width:1200px;margin:0 auto;padding:2rem 3rem 4rem;}
+    .panel{background:var(--cream);border:1px solid var(--linen-dark);padding:1.75rem;margin-bottom:1.5rem;}
+    .panel-title{font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:var(--green);margin-bottom:1.25rem;padding-bottom:0.75rem;border-bottom:1px solid var(--linen-dark);}
+    .section-header{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--green);margin:2.5rem 0 1.25rem;}
+    .metrics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:1.5rem;}
+    .metric{background:var(--linen);padding:1.25rem;border:1px solid var(--linen-dark);}
+    .metric-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;}
+    .metric-value{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--text);}
+    .metric-sub{font-size:12px;color:var(--muted);margin-top:4px;}
+    .chart-container{position:relative;height:400px;margin-bottom:1.5rem;}
+    .chart-controls{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap;}
+    .chart-btn{padding:6px 14px;font-size:11px;border:1px solid var(--linen-dark);background:var(--linen);color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+    .chart-btn.active{background:var(--green);color:var(--linen);border-color:var(--green);}
+    .chart-btn:hover:not(.active){border-color:var(--green);color:var(--green);}
+    .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:1rem;}
+    .form-group{display:flex;flex-direction:column;gap:5px;}
+    .form-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;}
+    input[type=text],input[type=number],input[type=date],select{font-size:13px;padding:8px 11px;border:1px solid var(--linen-dark);background:var(--linen);color:var(--text);font-family:'DM Sans',sans-serif;}
+    input:focus,select:focus{outline:none;border-color:var(--green);}
+    .add-btn{padding:8px 18px;background:var(--green);color:var(--linen);border:none;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.15s;}
+    .add-btn:hover{background:var(--green-mid);}
+    table{width:100%;border-collapse:collapse;font-size:13px;margin-top:1rem;}
+    th{font-size:10px;color:var(--muted);text-align:left;padding:8px 10px;border-bottom:1px solid var(--linen-dark);text-transform:uppercase;letter-spacing:0.04em;font-weight:500;}
+    td{padding:10px 10px;border-bottom:1px solid rgba(230,223,210,0.5);color:var(--text);}
+    tr:last-child td{border-bottom:none;}
+    .remove-btn{font-size:11px;color:var(--red);cursor:pointer;text-decoration:underline;}
+    .remove-btn:hover{color:var(--text);}
+    .ticker-badge{font-size:11px;font-weight:500;padding:3px 8px;background:rgba(26,61,43,0.08);color:var(--green);border-radius:2px;}
+    .positive{color:var(--teal);}
+    .negative{color:var(--red);}
+    .tab-container{display:flex;gap:2px;background:var(--linen-dark);padding:3px;margin-bottom:1.5rem;}
+    .tab{flex:1;padding:9px 16px;font-size:12px;text-align:center;cursor:pointer;border:none;background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;transition:all 0.15s;letter-spacing:0.04em;}
+    .tab.active{background:var(--green);color:var(--linen);font-weight:500;}
+    .tab-content{display:none;}
+    .tab-content.active{display:block;}
+    footer{background:var(--green);padding:1.5rem 3rem;margin-top:3rem;}
+    .footer-text{font-size:12px;color:rgba(240,235,224,0.3);text-align:center;}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">
+    <img src="emblem.jpg" alt="Emblem" class="nav-emblem">
+    <div class="nav-brand-text">
+      <div class="nav-brand-name">ANTAR</div>
+      <div class="nav-brand-sub">Wealth Management</div>
+    </div>
+  </a>
+</nav>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="page-eyebrow">YTD PERFORMANCE TRACKING</div>
+    <h1 class="page-title">Portfolio Tracker</h1>
+    <p class="page-sub">Transaction-based portfolio tracking with time-weighted returns, benchmark comparison, and dual-axis performance visualization</p>
+  </div>
+</div>
+
+<div class="tool-body">
+  
+  <!-- Tab Navigation -->
+  <div class="tab-container">
+    <button class="tab active" onclick="switchTab('setup')">Setup</button>
+    <button class="tab" onclick="switchTab('transactions')">Transactions</button>
+    <button class="tab" onclick="switchTab('performance')">Performance</button>
+  </div>
+
+  <!-- SETUP TAB -->
+  <div id="setup-tab" class="tab-content active">
+    <div class="panel">
+      <div class="panel-title">Starting Positions (January 1, 2026)</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:1.5rem;">Enter what you owned on Jan 1, 2026. This is your baseline for YTD tracking.</p>
+      
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Ticker</label>
+          <input type="text" id="start-ticker" placeholder="AAPL">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Shares</label>
+          <input type="number" id="start-shares" step="0.01" placeholder="100">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Cost Basis</label>
+          <input type="number" id="start-cost" step="0.01" placeholder="150.00">
+        </div>
+        <div class="form-group" style="align-self:flex-end;">
+          <button class="add-btn" onclick="addStartPosition()">Add Position</button>
+        </div>
+      </div>
+
+      <table id="start-table" style="display:none;">
+        <thead>
+          <tr>
+            <th>Ticker</th>
+            <th>Shares</th>
+            <th>Cost Basis</th>
+            <th>Total Cost</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="start-body"></tbody>
+      </table>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Starting Cash Balance</div>
+      <div class="form-grid" style="grid-template-columns:1fr auto;">
+        <div class="form-group">
+          <label class="form-label">Cash on Jan 1, 2026</label>
+          <input type="number" id="start-cash" step="0.01" placeholder="25000.00">
+        </div>
+        <div class="form-group" style="align-self:flex-end;">
+          <button class="add-btn" onclick="saveStartCash()">Save Cash</button>
+        </div>
+      </div>
+      <p id="cash-display" style="font-size:14px;color:var(--text);margin-top:1rem;"></p>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Benchmark Selection</div>
+      <div class="form-grid" style="grid-template-columns:1fr;">
+        <div class="form-group">
+          <label class="form-label">Benchmark Index</label>
+          <select id="benchmark" onchange="saveBenchmark()">
+            <option value="^GSPC">S&P 500 (^GSPC)</option>
+            <option value="^IXIC">NASDAQ (^IXIC)</option>
+            <option value="^DJI">Dow Jones (^DJI)</option>
+            <option value="^RUT">Russell 2000 (^RUT)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRANSACTIONS TAB -->
+  <div id="transactions-tab" class="tab-content">
+    <div class="panel">
+      <div class="panel-title">Add Transaction</div>
+      
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Date</label>
+          <input type="date" id="txn-date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Type</label>
+          <select id="txn-type">
+            <option value="buy">Buy</option>
+            <option value="sell">Sell</option>
+            <option value="deposit">Cash Deposit</option>
+            <option value="withdrawal">Cash Withdrawal</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Ticker</label>
+          <input type="text" id="txn-ticker" placeholder="AAPL">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Shares</label>
+          <input type="number" id="txn-shares" step="0.01" placeholder="10">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Price</label>
+          <input type="number" id="txn-price" step="0.01" placeholder="178.50">
+        </div>
+        <div class="form-group" style="align-self:flex-end;">
+          <button class="add-btn" onclick="addTransaction()">Add Transaction</button>
+        </div>
+      </div>
+
+      <table id="txn-table" style="display:none;">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Ticker</th>
+            <th>Shares</th>
+            <th>Price</th>
+            <th>Amount</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="txn-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PERFORMANCE TAB -->
+  <div id="performance-tab" class="tab-content">
+    
+    <div class="metrics-grid">
+      <div class="metric">
+        <div class="metric-label">Portfolio Value</div>
+        <div class="metric-value" id="current-value">$0</div>
+        <div class="metric-sub" id="current-date">As of today</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">YTD Return ($)</div>
+        <div class="metric-value" id="ytd-dollar">$0</div>
+        <div class="metric-sub" id="ytd-percent">0.00%</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Benchmark Return</div>
+        <div class="metric-value" id="benchmark-return">0.00%</div>
+        <div class="metric-sub" id="benchmark-name">S&P 500</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Alpha</div>
+        <div class="metric-value" id="alpha-value">0.00%</div>
+        <div class="metric-sub">vs Benchmark</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Performance Chart</div>
+      
+      <div class="chart-controls">
+        <button class="chart-btn active" onclick="setChartPeriod('ytd')">YTD</button>
+        <button class="chart-btn" onclick="setChartPeriod('1m')">1M</button>
+        <button class="chart-btn" onclick="setChartPeriod('3m')">3M</button>
+        <button class="chart-btn" onclick="setChartPeriod('max')">All</button>
+        <button class="chart-btn" onclick="resetZoom()">⟲ Reset Zoom</button>
+      </div>
+
+      <div class="chart-container">
+        <canvas id="performance-chart"></canvas>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Current Holdings</div>
+      <table id="holdings-table">
+        <thead>
+          <tr>
+            <th>Ticker</th>
+            <th>Shares</th>
+            <th>Cost Basis</th>
+            <th>Current Price</th>
+            <th>Market Value</th>
+            <th>Gain/Loss</th>
+            <th>Return %</th>
+          </tr>
+        </thead>
+        <tbody id="holdings-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-text">© 2026 Antar Wealth Management • Portfolio Tracker YTD</div>
+</footer>
+
+<script>
+// Data storage
+let startPositions = [];
+let transactions = [];
+let startCash = 0;
+let benchmark = '^GSPC';
+let priceCache = {};
+let chartInstance = null;
+let chartPeriod = 'ytd';
+
+// Load saved data
+function loadData() {
+  const saved = localStorage.getItem('portfolio-ytd-data');
+  if (saved) {
+    const data = JSON.parse(saved);
+    startPositions = data.startPositions || [];
+    transactions = data.transactions || [];
+    startCash = data.startCash || 0;
+    benchmark = data.benchmark || '^GSPC';
+    
+    renderStartPositions();
+    renderTransactions();
+    document.getElementById('start-cash').value = startCash;
+    document.getElementById('benchmark').value = benchmark;
+    
+    if (startCash > 0) {
+      document.getElementById('cash-display').textContent = `Starting Cash: $${startCash.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    }
+  }
+}
+
+// Save data
+function saveData() {
+  const data = {
+    startPositions,
+    transactions,
+    startCash,
+    benchmark
+  };
+  localStorage.setItem('portfolio-ytd-data', JSON.stringify(data));
+}
+
+// Tab switching
+function switchTab(tabName) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+  
+  event.target.classList.add('active');
+  document.getElementById(tabName + '-tab').classList.add('active');
+  
+  if (tabName === 'performance') {
+    calculatePerformance();
+  }
+}
+
+// Starting positions
+function addStartPosition() {
+  const ticker = document.getElementById('start-ticker').value.toUpperCase().trim();
+  const shares = parseFloat(document.getElementById('start-shares').value);
+  const cost = parseFloat(document.getElementById('start-cost').value);
+  
+  if (!ticker || isNaN(shares) || shares <= 0 || isNaN(cost) || cost <= 0) {
+    alert('Please fill in all fields with valid values');
+    return;
+  }
+  
+  startPositions.push({ ticker, shares, cost });
+  saveData();
+  renderStartPositions();
+  
+  document.getElementById('start-ticker').value = '';
+  document.getElementById('start-shares').value = '';
+  document.getElementById('start-cost').value = '';
+}
+
+function renderStartPositions() {
+  const tbody = document.getElementById('start-body');
+  const table = document.getElementById('start-table');
+  
+  if (startPositions.length === 0) {
+    table.style.display = 'none';
+    return;
+  }
+  
+  table.style.display = 'table';
+  tbody.innerHTML = startPositions.map((pos, idx) => `
+    <tr>
+      <td><span class="ticker-badge">${pos.ticker}</span></td>
+      <td>${pos.shares.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+      <td>$${pos.cost.toFixed(2)}</td>
+      <td>$${(pos.shares * pos.cost).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+      <td><span class="remove-btn" onclick="removeStartPosition(${idx})">Remove</span></td>
+    </tr>
+  `).join('');
+}
+
+function removeStartPosition(idx) {
+  if (confirm('Remove this position?')) {
+    startPositions.splice(idx, 1);
+    saveData();
+    renderStartPositions();
+  }
+}
+
+function saveStartCash() {
+  const cash = parseFloat(document.getElementById('start-cash').value);
+  if (isNaN(cash) || cash < 0) {
+    alert('Please enter a valid cash amount');
+    return;
+  }
+  startCash = cash;
+  saveData();
+  document.getElementById('cash-display').textContent = `Starting Cash: $${cash.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+}
+
+function saveBenchmark() {
+  benchmark = document.getElementById('benchmark').value;
+  saveData();
+}
+
+// Transactions
+function addTransaction() {
+  const date = document.getElementById('txn-date').value;
+  const type = document.getElementById('txn-type').value;
+  const ticker = document.getElementById('txn-ticker').value.toUpperCase().trim();
+  const shares = parseFloat(document.getElementById('txn-shares').value);
+  const price = parseFloat(document.getElementById('txn-price').value);
+  
+  if (!date) {
+    alert('Please select a date');
+    return;
+  }
+  
+  if (type === 'deposit' || type === 'withdrawal') {
+    // Cash flow - price field represents amount
+    if (isNaN(price) || price <= 0) {
+      alert('Please enter a valid amount');
+      return;
+    }
+    transactions.push({ date, type, amount: price });
+  } else {
+    // Stock transaction
+    if (!ticker || isNaN(shares) || shares <= 0 || isNaN(price) || price <= 0) {
+      alert('Please fill in all fields with valid values');
+      return;
+    }
+    transactions.push({ date, type, ticker, shares, price });
+  }
+  
+  // Sort by date
+  transactions.sort((a, b) => new Date(a.date) - new Date(b.date));
+  
+  saveData();
+  renderTransactions();
+  
+  document.getElementById('txn-date').value = '';
+  document.getElementById('txn-ticker').value = '';
+  document.getElementById('txn-shares').value = '';
+  document.getElementById('txn-price').value = '';
+}
+
+function renderTransactions() {
+  const tbody = document.getElementById('txn-body');
+  const table = document.getElementById('txn-table');
+  
+  if (transactions.length === 0) {
+    table.style.display = 'none';
+    return;
+  }
+  
+  table.style.display = 'table';
+  tbody.innerHTML = transactions.map((txn, idx) => {
+    if (txn.type === 'deposit' || txn.type === 'withdrawal') {
+      return `
+        <tr>
+          <td>${txn.date}</td>
+          <td>${txn.type === 'deposit' ? 'Cash Deposit' : 'Cash Withdrawal'}</td>
+          <td>—</td>
+          <td>—</td>
+          <td>—</td>
+          <td class="${txn.type === 'deposit' ? 'positive' : 'negative'}">$${txn.amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+          <td><span class="remove-btn" onclick="removeTransaction(${idx})">Remove</span></td>
+        </tr>
+      `;
+    } else {
+      const amount = txn.shares * txn.price;
+      return `
+        <tr>
+          <td>${txn.date}</td>
+          <td style="text-transform:capitalize;">${txn.type}</td>
+          <td><span class="ticker-badge">${txn.ticker}</span></td>
+          <td>${txn.shares.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+          <td>$${txn.price.toFixed(2)}</td>
+          <td class="${txn.type === 'buy' ? 'negative' : 'positive'}">${txn.type === 'buy' ? '-' : '+'}$${amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+          <td><span class="remove-btn" onclick="removeTransaction(${idx})">Remove</span></td>
+        </tr>
+      `;
+    }
+  }).join('');
+}
+
+function removeTransaction(idx) {
+  if (confirm('Remove this transaction?')) {
+    transactions.splice(idx, 1);
+    saveData();
+    renderTransactions();
+  }
+}
+
+// Price fetching
+async function fetchPrices(ticker, fromDate = '2026-01-01') {
+  if (priceCache[ticker]) return priceCache[ticker];
+  
+  try {
+    const res = await fetch(`https://antarwealth.com/api/fmp?ticker=${ticker}`);
+    const json = await res.json();
+    
+    if (json.historical && json.historical.length > 0) {
+      // Convert to map: date -> price
+      const priceMap = {};
+      json.historical.forEach(d => {
+        priceMap[d.date] = d.adjClose || d.close;
+      });
+      priceCache[ticker] = priceMap;
+      return priceMap;
+    }
+    return {};
+  } catch (e) {
+    console.error('Error fetching prices for', ticker, e);
+    return {};
+  }
+}
+
+// Calculate performance
+async function calculatePerformance() {
+  if (startPositions.length === 0) {
+    alert('Please add starting positions in the Setup tab first');
+    return;
+  }
+  
+  // Show loading
+  document.getElementById('current-value').textContent = 'Loading...';
+  
+  // Get all unique tickers
+  const tickers = new Set([...startPositions.map(p => p.ticker), ...transactions.filter(t => t.ticker).map(t => t.ticker), benchmark]);
+  
+  // Fetch all price data
+  await Promise.all([...tickers].map(t => fetchPrices(t)));
+  
+  // Get date range
+  const startDate = new Date('2026-01-01');
+  const today = new Date();
+  const dates = [];
+  for (let d = new Date(startDate); d <= today; d.setDate(d.getDate() + 1)) {
+    dates.push(d.toISOString().split('T')[0]);
+  }
+  
+  // Calculate daily portfolio values
+  const portfolioValues = [];
+  const benchmarkValues = [];
+  
+  for (const date of dates) {
+    const value = calculatePortfolioValue(date);
+    portfolioValues.push(value);
+    
+    const bmPrice = priceCache[benchmark]?.[date];
+    if (bmPrice) {
+      benchmarkValues.push(bmPrice);
+    }
+  }
+  
+  // Calculate metrics
+  const currentValue = portfolioValues[portfolioValues.length - 1];
+  const startValue = portfolioValues[0];
+  const ytdDollar = currentValue - startValue;
+  const ytdPercent = ((currentValue - startValue) / startValue) * 100;
+  
+  const bmStart = benchmarkValues[0];
+  const bmEnd = benchmarkValues[benchmarkValues.length - 1];
+  const bmReturn = ((bmEnd - bmStart) / bmStart) * 100;
+  
+  const alpha = ytdPercent - bmReturn;
+  
+  // Update metrics
+  document.getElementById('current-value').textContent = '$' + currentValue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  document.getElementById('current-date').textContent = 'As of ' + dates[dates.length - 1];
+  document.getElementById('ytd-dollar').textContent = (ytdDollar >= 0 ? '+' : '') + '$' + ytdDollar.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  document.getElementById('ytd-dollar').className = 'metric-value ' + (ytdDollar >= 0 ? 'positive' : 'negative');
+  document.getElementById('ytd-percent').textContent = (ytdPercent >= 0 ? '+' : '') + ytdPercent.toFixed(2) + '%';
+  document.getElementById('benchmark-return').textContent = (bmReturn >= 0 ? '+' : '') + bmReturn.toFixed(2) + '%';
+  document.getElementById('benchmark-return').className = 'metric-value ' + (bmReturn >= 0 ? 'positive' : 'negative');
+  document.getElementById('benchmark-name').textContent = benchmark;
+  document.getElementById('alpha-value').textContent = (alpha >= 0 ? '+' : '') + alpha.toFixed(2) + '%';
+  document.getElementById('alpha-value').className = 'metric-value ' + (alpha >= 0 ? 'positive' : 'negative');
+  
+  // Draw chart
+  drawChart(dates, portfolioValues, benchmarkValues);
+  
+  // Update holdings table
+  updateHoldingsTable();
+}
+
+function calculatePortfolioValue(date) {
+  // Start with initial positions and cash
+  const holdings = {};
+  let cash = startCash;
+  
+  startPositions.forEach(pos => {
+    holdings[pos.ticker] = { shares: pos.shares, cost: pos.cost };
+  });
+  
+  // Apply all transactions up to this date
+  transactions.forEach(txn => {
+    if (txn.date <= date) {
+      if (txn.type === 'deposit') {
+        cash += txn.amount;
+      } else if (txn.type === 'withdrawal') {
+        cash -= txn.amount;
+      } else if (txn.type === 'buy') {
+        if (!holdings[txn.ticker]) {
+          holdings[txn.ticker] = { shares: 0, cost: 0 };
+        }
+        const newShares = holdings[txn.ticker].shares + txn.shares;
+        const totalCost = holdings[txn.ticker].shares * holdings[txn.ticker].cost + txn.shares * txn.price;
+        holdings[txn.ticker].shares = newShares;
+        holdings[txn.ticker].cost = totalCost / newShares;
+        cash -= txn.shares * txn.price;
+      } else if (txn.type === 'sell') {
+        if (holdings[txn.ticker]) {
+          holdings[txn.ticker].shares -= txn.shares;
+          if (holdings[txn.ticker].shares <= 0) {
+            delete holdings[txn.ticker];
+          }
+        }
+        cash += txn.shares * txn.price;
+      }
+    }
+  });
+  
+  // Calculate total value
+  let totalValue = cash;
+  for (const ticker in holdings) {
+    const price = priceCache[ticker]?.[date];
+    if (price) {
+      totalValue += holdings[ticker].shares * price;
+    }
+  }
+  
+  return totalValue;
+}
+
+function updateHoldingsTable() {
+  const tbody = document.getElementById('holdings-body');
+  
+  // Get current holdings
+  const holdings = {};
+  let cash = startCash;
+  
+  startPositions.forEach(pos => {
+    holdings[pos.ticker] = { shares: pos.shares, cost: pos.cost };
+  });
+  
+  transactions.forEach(txn => {
+    if (txn.type === 'deposit') {
+      cash += txn.amount;
+    } else if (txn.type === 'withdrawal') {
+      cash -= txn.amount;
+    } else if (txn.type === 'buy') {
+      if (!holdings[txn.ticker]) {
+        holdings[txn.ticker] = { shares: 0, cost: 0 };
+      }
+      const newShares = holdings[txn.ticker].shares + txn.shares;
+      const totalCost = holdings[txn.ticker].shares * holdings[txn.ticker].cost + txn.shares * txn.price;
+      holdings[txn.ticker].shares = newShares;
+      holdings[txn.ticker].cost = totalCost / newShares;
+      cash -= txn.shares * txn.price;
+    } else if (txn.type === 'sell') {
+      if (holdings[txn.ticker]) {
+        holdings[txn.ticker].shares -= txn.shares;
+        if (holdings[txn.ticker].shares <= 0) {
+          delete holdings[txn.ticker];
+        }
+      }
+      cash += txn.shares * txn.price;
+    }
+  });
+  
+  const today = new Date().toISOString().split('T')[0];
+  const rows = [];
+  
+  for (const ticker in holdings) {
+    const h = holdings[ticker];
+    const currentPrice = priceCache[ticker]?.[today] || h.cost;
+    const marketValue = h.shares * currentPrice;
+    const totalCost = h.shares * h.cost;
+    const gainLoss = marketValue - totalCost;
+    const returnPct = (gainLoss / totalCost) * 100;
+    
+    rows.push(`
+      <tr>
+        <td><span class="ticker-badge">${ticker}</span></td>
+        <td>${h.shares.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+        <td>$${h.cost.toFixed(2)}</td>
+        <td>$${currentPrice.toFixed(2)}</td>
+        <td>$${marketValue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+        <td class="${gainLoss >= 0 ? 'positive' : 'negative'}">${gainLoss >= 0 ? '+' : ''}$${gainLoss.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+        <td class="${returnPct >= 0 ? 'positive' : 'negative'}">${returnPct >= 0 ? '+' : ''}${returnPct.toFixed(2)}%</td>
+      </tr>
+    `);
+  }
+  
+  // Add cash row
+  rows.push(`
+    <tr>
+      <td><span class="ticker-badge">CASH</span></td>
+      <td>—</td>
+      <td>—</td>
+      <td>—</td>
+      <td>$${cash.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+      <td>—</td>
+      <td>—</td>
+    </tr>
+  `);
+  
+  tbody.innerHTML = rows.join('');
+}
+
+// Chart
+function drawChart(dates, portfolioValues, benchmarkValues) {
+  const ctx = document.getElementById('performance-chart');
+  
+  if (chartInstance) {
+    chartInstance.destroy();
+  }
+  
+  // Filter by period
+  let filteredDates = dates;
+  let filteredPortfolio = portfolioValues;
+  let filteredBenchmark = benchmarkValues;
+  
+  if (chartPeriod === '1m') {
+    const cutoff = new Date();
+    cutoff.setMonth(cutoff.getMonth() - 1);
+    const cutoffStr = cutoff.toISOString().split('T')[0];
+    const idx = dates.findIndex(d => d >= cutoffStr);
+    if (idx > 0) {
+      filteredDates = dates.slice(idx);
+      filteredPortfolio = portfolioValues.slice(idx);
+      filteredBenchmark = benchmarkValues.slice(idx);
+    }
+  } else if (chartPeriod === '3m') {
+    const cutoff = new Date();
+    cutoff.setMonth(cutoff.getMonth() - 3);
+    const cutoffStr = cutoff.toISOString().split('T')[0];
+    const idx = dates.findIndex(d => d >= cutoffStr);
+    if (idx > 0) {
+      filteredDates = dates.slice(idx);
+      filteredPortfolio = portfolioValues.slice(idx);
+      filteredBenchmark = benchmarkValues.slice(idx);
+    }
+  }
+  
+  // Convert to percentage returns
+  const portfolioReturns = filteredPortfolio.map(v => ((v - filteredPortfolio[0]) / filteredPortfolio[0]) * 100);
+  const benchmarkReturns = filteredBenchmark.map((v, i) => ((v - filteredBenchmark[0]) / filteredBenchmark[0]) * 100);
+  
+  chartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: filteredDates,
+      datasets: [
+        {
+          label: 'Portfolio',
+          data: filteredPortfolio,
+          borderColor: '#1a3d2a',
+          backgroundColor: 'rgba(26, 61, 42, 0.05)',
+          borderWidth: 2.5,
+          tension: 0.1,
+          pointRadius: 0,
+          pointHoverRadius: 4,
+          yAxisID: 'y'
+        },
+        {
+          label: 'Benchmark (%)',
+          data: benchmarkReturns,
+          borderColor: '#b8952a',
+          backgroundColor: 'transparent',
+          borderWidth: 2,
+          borderDash: [5, 5],
+          tension: 0.1,
+          pointRadius: 0,
+          pointHoverRadius: 4,
+          yAxisID: 'y1'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: {
+        mode: 'index',
+        intersect: false
+      },
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+          labels: {
+            usePointStyle: true,
+            padding: 15,
+            font: { size: 11, family: 'DM Sans' }
+          }
+        },
+        tooltip: {
+          backgroundColor: 'rgba(15, 45, 30, 0.95)',
+          titleFont: { size: 11, family: 'DM Sans' },
+          bodyFont: { size: 12, family: 'DM Sans' },
+          padding: 12,
+          callbacks: {
+            label: function(context) {
+              if (context.datasetIndex === 0) {
+                return 'Portfolio: $' + context.parsed.y.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+              } else {
+                return 'Benchmark: ' + (context.parsed.y >= 0 ? '+' : '') + context.parsed.y.toFixed(2) + '%';
+              }
+            }
+          }
+        },
+        zoom: {
+          pan: {
+            enabled: true,
+            mode: 'x'
+          },
+          zoom: {
+            wheel: { enabled: true },
+            pinch: { enabled: true },
+            mode: 'x'
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: {
+            font: { size: 10, family: 'DM Sans' },
+            color: '#7a8c80',
+            maxTicksLimit: 8
+          }
+        },
+        y: {
+          position: 'left',
+          title: {
+            display: true,
+            text: 'Portfolio Value ($)',
+            font: { size: 11, family: 'DM Sans' },
+            color: '#1a3d2a'
+          },
+          grid: { color: 'rgba(230, 223, 210, 0.5)' },
+          ticks: {
+            font: { size: 10, family: 'DM Sans' },
+            color: '#1a3d2a',
+            callback: function(value) {
+              return '$' + (value / 1000).toFixed(0) + 'K';
+            }
+          }
+        },
+        y1: {
+          position: 'right',
+          title: {
+            display: true,
+            text: 'Return (%)',
+            font: { size: 11, family: 'DM Sans' },
+            color: '#b8952a'
+          },
+          grid: { display: false },
+          ticks: {
+            font: { size: 10, family: 'DM Sans' },
+            color: '#b8952a',
+            callback: function(value) {
+              return (value >= 0 ? '+' : '') + value.toFixed(1) + '%';
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+function setChartPeriod(period) {
+  chartPeriod = period;
+  document.querySelectorAll('.chart-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+  calculatePerformance();
+}
+
+function resetZoom() {
+  if (chartInstance) {
+    chartInstance.resetZoom();
+  }
+}
+
+// Initialize
+loadData();
+
+// Set default transaction date to today
+document.getElementById('txn-date').valueAsDate = new Date();
+</script>
+
+</body>
+</html>
