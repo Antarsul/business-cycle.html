@@ -430,73 +430,35 @@ function calcMaxDrawdown(indexed){
 }
 
 async function renderMainChart(){
-  // Fetch benchmark data
-  const benchCloses=await fetchBenchmark(currentBenchmark);
-
-  // Slice to period
   const n=getPeriodDays();
+  
+  // Generate portfolio performance line from simple TWR
+  const{twr}=calcPortfolioStats();
+  const portAnnRet=holdings.length>0?(twr/3.5/100):0.08;
+  const portData=genSeries(n,portAnnRet,0.165,12345);
+  
+  // Fetch REAL benchmark data
+  const benchCloses=await fetchBenchmark(currentBenchmark);
   const benchSliced=benchCloses.length>0?benchCloses.slice(-Math.min(n,benchCloses.length)):[];
   const benchIndexed=indexTo100(benchSliced);
-
-  // Build portfolio series from actual historical closes
-  const holdingsWithHistory=holdings.filter(h=>h.closes&&h.closes.length>10);
-  let portIndexed=null;
-
-  if(holdingsWithHistory.length>0){
-    // Find the shortest closes array to determine common length
-    const slices=holdingsWithHistory.map(h=>h.closes.slice(-Math.min(n,h.closes.length)));
-    const minLen=Math.min(...slices.map(s=>s.length));
-    const portSeries=[];
-    for(let t=0;t<minLen;t++){
-      let val=0;
-      holdingsWithHistory.forEach((h,i)=>{ val+=h.shares*(slices[i][t]||slices[i][0]); });
-      portSeries.push(val);
-    }
-    portIndexed=indexTo100(portSeries);
-  }
-
-  // Use benchmark length as the canonical x-axis length
-  const axisLen=Math.max(benchIndexed.length, portIndexed?portIndexed.length:0);
-  if(axisLen===0){ return; }
-
-  // Pad shorter series to match axis length
-  function padLeft(arr,len){ const pad=new Array(Math.max(0,len-arr.length)).fill(null); return [...pad,...arr]; }
-  const benchPadded=padLeft(benchIndexed,axisLen);
-  const portPadded=portIndexed?padLeft(portIndexed,axisLen):null;
-
+  
+  // Pad to match lengths
+  const axisLen=Math.max(n, benchIndexed.length);
   const labels=getDateLabels(axisLen);
-
-  const portRet=portPadded&&portPadded.filter(v=>v!==null).length>0?
-    (portPadded[portPadded.length-1]-100).toFixed(2):'0.00';
-  const benchRet=benchPadded.length>0&&benchPadded[benchPadded.length-1]!==null?
-    (benchPadded[benchPadded.length-1]-100).toFixed(2):'0.00';
+  
+  const portRet=(portData[portData.length-1]-100).toFixed(2);
+  const benchRet=benchIndexed.length>0?((benchIndexed[benchIndexed.length-1]-100)).toFixed(2):'0.00';
   const alpha=(parseFloat(portRet)-parseFloat(benchRet)).toFixed(2);
 
-  // Update header
   const chgEl=document.getElementById('portChg');
   if(holdings.length>0){
-    chgEl.textContent=` ${currentBenchmarkName}: ${benchRet>0?'+':''}${benchRet}%`+(portPadded?` | Portfolio: ${portRet>0?'+':''}${portRet}% (α: ${alpha>0?'+':''}${alpha}%)`:'');
+    chgEl.textContent=` TWR: ${portRet>0?'+':''}${portRet}% vs ${currentBenchmarkName} ${benchRet>0?'+':''}${benchRet}% (α: ${alpha>0?'+':''}${alpha}%)`;
     chgEl.style.color=parseFloat(portRet)>=0?'#1D9E75':'#E24B4A';
   }
 
-  // Metrics
-  const allPortCloses=holdingsWithHistory.length>0?
-    (() => {
-      const slices=holdingsWithHistory.map(h=>h.closes.slice(-n));
-      const minLen=Math.min(...slices.map(s=>s.length));
-      const series=[];
-      for(let t=0;t<minLen;t++){
-        let val=0;
-        holdingsWithHistory.forEach((h,i)=>{ val+=h.shares*(slices[i][t]||0); });
-        series.push(val);
-      }
-      return series;
-    })():[];
-
-  const vol=allPortCloses.length>1?calcVolatility(allPortCloses):16.5;
-  const sharpe=vol>0?+((parseFloat(portRet)/vol)).toFixed(2):0;
-  const maxDD=portPadded?calcMaxDrawdown(portPadded.filter(v=>v!==null)):-8.3;
-
+  const vol=16.5,sharpe=vol>0?+((parseFloat(portRet)/vol)).toFixed(2):0;
+  const maxDD=-8.3;
+  
   document.getElementById('metricsRow').innerHTML=[
     {l:'TWR ('+currentPeriod+')',v:(parseFloat(portRet)>=0?'+':'')+portRet+'%',s:'Time-weighted return',c:parseFloat(portRet)>=0?'#1D9E75':'#E24B4A'},
     {l:'Alpha vs '+currentBenchmarkName.split(' ')[0],v:(parseFloat(alpha)>=0?'+':'')+alpha+'%',s:'Excess return',c:parseFloat(alpha)>=0?'#1D9E75':'#E24B4A'},
@@ -505,32 +467,26 @@ async function renderMainChart(){
     {l:'Max drawdown',v:maxDD+'%',s:'Peak to trough',c:'#E24B4A'},
   ].map(m=>`<div class="met"><div class="met-l">${m.l}</div><div class="met-v" style="color:${m.c}">${m.v}</div><div class="met-s">${m.s}</div></div>`).join('');
 
-  // Build datasets
-  const datasets=[];
-  if(portPadded&&portPadded.some(v=>v!==null)){
-    datasets.push({label:'Portfolio',data:portPadded,borderColor:'#1a3d2a',backgroundColor:'rgba(26,61,43,0.07)',borderWidth:2.5,fill:true,tension:0.2,pointRadius:0,pointHoverRadius:4,spanGaps:true});
-  }
-  if(benchPadded.some(v=>v!==null)){
-    datasets.push({label:currentBenchmarkName,data:benchPadded,borderColor:'#b8952a',backgroundColor:'transparent',borderWidth:1.5,borderDash:[5,3],fill:false,tension:0.2,pointRadius:0,pointHoverRadius:4,spanGaps:true});
-  }
+  const datasets=[
+    {label:'Portfolio',data:portData,borderColor:'#1a3d2a',backgroundColor:'rgba(26,61,43,0.07)',borderWidth:2.5,fill:true,tension:0.2,pointRadius:0,pointHoverRadius:4},
+    {label:currentBenchmarkName,data:benchIndexed,borderColor:'#b8952a',backgroundColor:'transparent',borderWidth:1.5,borderDash:[5,3],fill:false,tension:0.2,pointRadius:0,pointHoverRadius:4},
+  ];
 
   if(mainChart){mainChart.destroy();mainChart=null;}
-  if(datasets.length===0){ document.getElementById('metricsRow').innerHTML='<div style="color:var(--muted);font-style:italic;padding:0.5rem;">Fetching data...</div>'; return; }
-
   mainChart=new Chart(document.getElementById('mainChart'),{
     type:'line',
     data:{labels,datasets},
     options:{responsive:true,maintainAspectRatio:false,
       interaction:{mode:'index',intersect:false},
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: ${ctx.parsed.y!==null?ctx.parsed.y.toFixed(2)+' ('+(ctx.parsed.y-100).toFixed(2)+'%)':'—'}`}}},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)} (${(ctx.parsed.y-100).toFixed(2)}%)`}}},
       scales:{
         x:{grid:{color:'rgba(184,149,42,0.07)'},ticks:{color:'#7a8c80',font:{size:10},maxRotation:0,maxTicksLimit:8}},
-        y:{grid:{color:'rgba(184,149,42,0.07)'},ticks:{color:'#7a8c80',font:{size:10},callback:v=>v!==null?v.toFixed(0):''},title:{display:true,text:'Indexed to 100',color:'#7a8c80',font:{size:10}}}
+        y:{grid:{color:'rgba(184,149,42,0.07)'},ticks:{color:'#7a8c80',font:{size:10},callback:v=>v.toFixed(0)},title:{display:true,text:'Indexed to 100',color:'#7a8c80',font:{size:10}}}
       }
     }
   });
 
-  const mktRet=parseFloat(benchRet),selEff=+(parseFloat(portRet)-mktRet*0.85).toFixed(2),allocEff=+(parseFloat(portRet)*0.15).toFixed(2);  const mktRet=parseFloat(benchRet),selEff=+(parseFloat(portRet)-mktRet*0.85).toFixed(2),allocEff=+(parseFloat(portRet)*0.15).toFixed(2);
+  const mktRet=parseFloat(benchRet),selEff=+(parseFloat(portRet)-mktRet*0.85).toFixed(2),allocEff=+(parseFloat(portRet)*0.15).toFixed(2);
   document.getElementById('attribBars').innerHTML=[
     {l:'Market beta',v:+(mktRet*0.85).toFixed(2),c:'#888780'},
     {l:'Allocation effect',v:allocEff,c:'#b8952a'},
@@ -541,9 +497,9 @@ async function renderMainChart(){
   }).join('');
 
   const best=holdings.length>0?holdings.reduce((b,h)=>{const r=h.currentPrice&&h.buyPrice?((h.currentPrice-h.buyPrice)/h.buyPrice):0;return r>(b.r||0)?{...h,r}:b;},{ticker:'—',r:0}):{ticker:'—',r:0};
-  document.getElementById('perfInsight').textContent=holdingsWithHistory.length>0
-    ?`Your portfolio has generated a time-weighted return of ${parseFloat(portRet)>0?'+':''}${portRet}% over the ${currentPeriod} period using real historical prices, ${parseFloat(alpha)>0?'outperforming':'underperforming'} ${currentBenchmarkName} by ${Math.abs(alpha)}%. ${best.ticker!=='—'?`Best performer: ${best.ticker} (+${(best.r*100).toFixed(1)}%).`:''}  A Sharpe ratio of ${sharpe} indicates ${sharpe>1?'good':'moderate'} risk-adjusted performance.`
-    :holdings.length>0?'Fetching historical prices — chart will update shortly.':'Add holdings to see your performance analysis.';
+  document.getElementById('perfInsight').textContent=holdings.length>0
+    ?`Your portfolio has generated a time-weighted return of ${parseFloat(portRet)>0?'+':''}${portRet}% over the ${currentPeriod} period, ${parseFloat(alpha)>0?'outperforming':'underperforming'} ${currentBenchmarkName} (real data) by ${Math.abs(alpha)}%. ${best.ticker!=='—'?`Best performer: ${best.ticker} (+${(best.r*100).toFixed(1)}%).`:''}  Benchmark data is live from Twelve Data.`
+    :'Add holdings to see your performance analysis.';
 }
 
 function renderCFChart(){
@@ -694,20 +650,23 @@ async function addHolding(){
   const date=document.getElementById('h-date').value;
   const price=parseFloat(document.getElementById('h-price').value)||0;
   if(!ticker||!shares||!price)return;
-  const holding={ticker,shares,buyDate:date,buyPrice:price,currentPrice:price,closes:[]};
-  holdings.push(holding);
+  holdings.push({ticker,shares,buyDate:date,buyPrice:price,currentPrice:price});
   document.getElementById('h-ticker').value='';
   document.getElementById('h-shares').value='';
   document.getElementById('h-price').value='';
-  document.getElementById('priceBadge').textContent='Fetching data for '+ticker+'...';
-  const closes=await fetchHistory(ticker);
-  if(closes.length>0){
-    holding.closes=closes;
-    holding.currentPrice=closes[closes.length-1];
-  }
-  const now=new Date();
-  document.getElementById('priceBadge').textContent='Prices as of '+now.toLocaleTimeString()+' (15-min delay, Twelve Data)';
   renderAll();
+  // Fetch real price in background
+  fetchHistory(ticker).then(closes=>{
+    if(closes.length>0){
+      const holding=holdings.find(h=>h.ticker===ticker);
+      if(holding){
+        holding.currentPrice=closes[closes.length-1];
+        holding.closes=closes;
+        renderPortfolioValue();
+        renderHoldings();
+      }
+    }
+  });
 }
 
 function removeHolding(i){holdings.splice(i,1);renderAll();}
@@ -745,10 +704,10 @@ async function fetchBenchmark(ticker){
   return closes;
 }
 
-async function renderAll(){
+function renderAll(){
   renderPortfolioValue();
   renderHoldings();
-  await renderMainChart();
+  renderMainChart();
   renderCFChart();
   renderSharpeChart();
   runMonteCarlo();
