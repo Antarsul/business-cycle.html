@@ -316,10 +316,20 @@ async function fetchHistory(ticker){
   try{
     const res=await fetch('/api/fmp?ticker='+ticker);
     const json=await res.json();
-    const closes=json.closes||[];
+    // FMP returns { historical: [{adjClose, close, date}, ...] } newest-first
+    // Twelve Data returns { closes: [...] } oldest-first
+    // Handle both formats
+    let closes=[];
+    if(json.historical&&json.historical.length>0){
+      // FMP format - reverse to get oldest-first
+      closes=json.historical.map(d=>d.adjClose||d.close).reverse();
+    } else if(json.closes&&json.closes.length>0){
+      // Twelve Data format - already oldest-first
+      closes=json.closes;
+    }
     if(closes.length>10) histCache[ticker]=closes;
     return closes;
-  }catch(e){return [];}
+  }catch(e){console.error('fetchHistory error for '+ticker,e);return [];}
 }
 
 function fmtM(n){
@@ -420,90 +430,107 @@ function calcMaxDrawdown(indexed){
 }
 
 async function renderMainChart(){
-  const n=getPeriodDays();
+  // Fetch benchmark data
+  const benchCloses=await fetchBenchmark(currentBenchmark);
 
-  // Build portfolio series from actual historical data
-  let portIndexed=null;
+  // Slice to period
+  const n=getPeriodDays();
+  const benchSliced=benchCloses.length>0?benchCloses.slice(-Math.min(n,benchCloses.length)):[];
+  const benchIndexed=indexTo100(benchSliced);
+
+  // Build portfolio series from actual historical closes
   const holdingsWithHistory=holdings.filter(h=>h.closes&&h.closes.length>10);
+  let portIndexed=null;
 
   if(holdingsWithHistory.length>0){
-    // Calculate portfolio value series using weighted historical prices
-    const minLen=Math.min(...holdingsWithHistory.map(h=>sliceToperiod(h.closes).length));
+    // Find the shortest closes array to determine common length
+    const slices=holdingsWithHistory.map(h=>h.closes.slice(-Math.min(n,h.closes.length)));
+    const minLen=Math.min(...slices.map(s=>s.length));
     const portSeries=[];
     for(let t=0;t<minLen;t++){
       let val=0;
-      holdingsWithHistory.forEach(h=>{
-        const sliced=sliceToperiod(h.closes);
-        val+=h.shares*(sliced[t]||sliced[0]);
-      });
+      holdingsWithHistory.forEach((h,i)=>{ val+=h.shares*(slices[i][t]||slices[i][0]); });
       portSeries.push(val);
     }
     portIndexed=indexTo100(portSeries);
   }
 
-  // Fetch real benchmark data
-  const benchCloses=await fetchBenchmark(currentBenchmark);
-  const benchSliced=sliceToperiod(benchCloses);
-  const benchIndexed=indexTo100(benchSliced);
+  // Use benchmark length as the canonical x-axis length
+  const axisLen=Math.max(benchIndexed.length, portIndexed?portIndexed.length:0);
+  if(axisLen===0){ return; }
 
-  const labels=getDateLabels(Math.max(portIndexed?portIndexed.length:0,benchIndexed.length));
+  // Pad shorter series to match axis length
+  function padLeft(arr,len){ const pad=new Array(Math.max(0,len-arr.length)).fill(null); return [...pad,...arr]; }
+  const benchPadded=padLeft(benchIndexed,axisLen);
+  const portPadded=portIndexed?padLeft(portIndexed,axisLen):null;
 
-  const portRet=portIndexed&&portIndexed.length>0?((portIndexed[portIndexed.length-1]-100)).toFixed(2):'0.00';
-  const benchRet=benchIndexed.length>0?((benchIndexed[benchIndexed.length-1]-100)).toFixed(2):'0.00';
+  const labels=getDateLabels(axisLen);
+
+  const portRet=portPadded&&portPadded.filter(v=>v!==null).length>0?
+    (portPadded[portPadded.length-1]-100).toFixed(2):'0.00';
+  const benchRet=benchPadded.length>0&&benchPadded[benchPadded.length-1]!==null?
+    (benchPadded[benchPadded.length-1]-100).toFixed(2):'0.00';
   const alpha=(parseFloat(portRet)-parseFloat(benchRet)).toFixed(2);
 
+  // Update header
   const chgEl=document.getElementById('portChg');
-  if(holdings.length>0&&portIndexed){
-    chgEl.textContent=` TWR: ${portRet>0?'+':''}${portRet}% vs ${currentBenchmarkName} ${benchRet>0?'+':''}${benchRet}% (α: ${alpha>0?'+':''}${alpha}%)`;
-    chgEl.style.color=parseFloat(portRet)>0?'#1D9E75':'#E24B4A';
+  if(holdings.length>0){
+    chgEl.textContent=` ${currentBenchmarkName}: ${benchRet>0?'+':''}${benchRet}%`+(portPadded?` | Portfolio: ${portRet>0?'+':''}${portRet}% (α: ${alpha>0?'+':''}${alpha}%)`:'');
+    chgEl.style.color=parseFloat(portRet)>=0?'#1D9E75':'#E24B4A';
   }
 
-  // Portfolio volatility from actual closes
+  // Metrics
   const allPortCloses=holdingsWithHistory.length>0?
-    holdingsWithHistory[0].closes.slice(-n).map((_,t)=>holdingsWithHistory.reduce((s,h)=>s+h.shares*(sliceToperiod(h.closes)[t]||0),0))
-    :[];
+    (() => {
+      const slices=holdingsWithHistory.map(h=>h.closes.slice(-n));
+      const minLen=Math.min(...slices.map(s=>s.length));
+      const series=[];
+      for(let t=0;t<minLen;t++){
+        let val=0;
+        holdingsWithHistory.forEach((h,i)=>{ val+=h.shares*(slices[i][t]||0); });
+        series.push(val);
+      }
+      return series;
+    })():[];
+
   const vol=allPortCloses.length>1?calcVolatility(allPortCloses):16.5;
   const sharpe=vol>0?+((parseFloat(portRet)/vol)).toFixed(2):0;
-  const maxDD=portIndexed?calcMaxDrawdown(portIndexed):-8.3;
+  const maxDD=portPadded?calcMaxDrawdown(portPadded.filter(v=>v!==null)):-8.3;
 
   document.getElementById('metricsRow').innerHTML=[
-    {l:'TWR ('+currentPeriod+')',v:(parseFloat(portRet)>0?'+':'')+portRet+'%',s:'Time-weighted return',c:parseFloat(portRet)>=0?'#1D9E75':'#E24B4A'},
-    {l:'Alpha vs '+currentBenchmarkName.split(' ')[0],v:(parseFloat(alpha)>0?'+':'')+alpha+'%',s:'Excess return',c:parseFloat(alpha)>=0?'#1D9E75':'#E24B4A'},
+    {l:'TWR ('+currentPeriod+')',v:(parseFloat(portRet)>=0?'+':'')+portRet+'%',s:'Time-weighted return',c:parseFloat(portRet)>=0?'#1D9E75':'#E24B4A'},
+    {l:'Alpha vs '+currentBenchmarkName.split(' ')[0],v:(parseFloat(alpha)>=0?'+':'')+alpha+'%',s:'Excess return',c:parseFloat(alpha)>=0?'#1D9E75':'#E24B4A'},
     {l:'Sharpe ratio',v:sharpe,s:'Risk-adjusted return',c:'var(--text)'},
     {l:'Volatility',v:vol+'%',s:'Annualized std dev',c:'var(--text)'},
     {l:'Max drawdown',v:maxDD+'%',s:'Peak to trough',c:'#E24B4A'},
   ].map(m=>`<div class="met"><div class="met-l">${m.l}</div><div class="met-v" style="color:${m.c}">${m.v}</div><div class="met-s">${m.s}</div></div>`).join('');
 
-  // Align lengths
-  const portData=portIndexed||(benchIndexed.length>0?new Array(benchIndexed.length).fill(null):[]);
-  const cfPoints=new Array(Math.max(portData.length,benchIndexed.length)).fill(null);
-
-  if(mainChart)mainChart.destroy();
-  const datasets=[
-    {label:currentBenchmarkName,data:benchIndexed,borderColor:'#b8952a',backgroundColor:'transparent',borderWidth:1.5,borderDash:[5,3],fill:false,tension:0.2,pointRadius:0,pointHoverRadius:4},
-    {label:'Cash flow',data:cfPoints,type:'scatter',backgroundColor:'#7f77dd',borderColor:'#fff',borderWidth:2,pointRadius:6,showLine:false},
-  ];
-  if(portData&&portData.some(v=>v!==null)){
-    datasets.unshift({label:'Portfolio',data:portData,borderColor:'#1a3d2a',backgroundColor:'rgba(26,61,43,0.07)',borderWidth:2.5,fill:true,tension:0.2,pointRadius:0,pointHoverRadius:4});
+  // Build datasets
+  const datasets=[];
+  if(portPadded&&portPadded.some(v=>v!==null)){
+    datasets.push({label:'Portfolio',data:portPadded,borderColor:'#1a3d2a',backgroundColor:'rgba(26,61,43,0.07)',borderWidth:2.5,fill:true,tension:0.2,pointRadius:0,pointHoverRadius:4,spanGaps:true});
   }
+  if(benchPadded.some(v=>v!==null)){
+    datasets.push({label:currentBenchmarkName,data:benchPadded,borderColor:'#b8952a',backgroundColor:'transparent',borderWidth:1.5,borderDash:[5,3],fill:false,tension:0.2,pointRadius:0,pointHoverRadius:4,spanGaps:true});
+  }
+
+  if(mainChart){mainChart.destroy();mainChart=null;}
+  if(datasets.length===0){ document.getElementById('metricsRow').innerHTML='<div style="color:var(--muted);font-style:italic;padding:0.5rem;">Fetching data...</div>'; return; }
 
   mainChart=new Chart(document.getElementById('mainChart'),{
     type:'line',
     data:{labels,datasets},
     options:{responsive:true,maintainAspectRatio:false,
       interaction:{mode:'index',intersect:false},
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>{
-        if(ctx.dataset.label==='Cash flow')return' Cash flow event';
-        return` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)} (${(ctx.parsed.y-100).toFixed(2)}%)`;
-      }}}},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: ${ctx.parsed.y!==null?ctx.parsed.y.toFixed(2)+' ('+(ctx.parsed.y-100).toFixed(2)+'%)':'—'}`}}},
       scales:{
         x:{grid:{color:'rgba(184,149,42,0.07)'},ticks:{color:'#7a8c80',font:{size:10},maxRotation:0,maxTicksLimit:8}},
-        y:{grid:{color:'rgba(184,149,42,0.07)'},ticks:{color:'#7a8c80',font:{size:10},callback:v=>v.toFixed(0)},title:{display:true,text:'Indexed to 100',color:'#7a8c80',font:{size:10}}}
+        y:{grid:{color:'rgba(184,149,42,0.07)'},ticks:{color:'#7a8c80',font:{size:10},callback:v=>v!==null?v.toFixed(0):''},title:{display:true,text:'Indexed to 100',color:'#7a8c80',font:{size:10}}}
       }
     }
   });
 
-  const mktRet=parseFloat(benchRet),selEff=+(parseFloat(portRet)-mktRet*0.85).toFixed(2),allocEff=+(parseFloat(portRet)*0.15).toFixed(2);
+  const mktRet=parseFloat(benchRet),selEff=+(parseFloat(portRet)-mktRet*0.85).toFixed(2),allocEff=+(parseFloat(portRet)*0.15).toFixed(2);  const mktRet=parseFloat(benchRet),selEff=+(parseFloat(portRet)-mktRet*0.85).toFixed(2),allocEff=+(parseFloat(portRet)*0.15).toFixed(2);
   document.getElementById('attribBars').innerHTML=[
     {l:'Market beta',v:+(mktRet*0.85).toFixed(2),c:'#888780'},
     {l:'Allocation effect',v:allocEff,c:'#b8952a'},
@@ -797,7 +824,7 @@ async function initNav(){
   await initNav();
   await loadPortfolio();
   // Pre-fetch benchmark and all holding histories
-  fetchBenchmark(currentBenchmark);
+  await fetchBenchmark(currentBenchmark);
   if(holdings.length>0) await refreshPrices();
   else await renderAll();
 })();
