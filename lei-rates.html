@@ -138,11 +138,11 @@ async function fetchData() {
   
   try {
     // Fetch 10-year yields from FRED
-    const yieldRes = await fetch('https://api.stlouisfed.org/fred/series/observations?series_id=DGS10&api_key=abcdefghijklmnopqrstuvwxyz123456&file_type=json&observation_start=2000-01-01');
+    const yieldRes = await fetch('https://api.stlouisfed.org/fred/series/observations?series_id=DGS10&api_key=e9220c32c6bc075476b12cc19ed66696&file_type=json&observation_start=2000-01-01');
     const yieldData = await yieldRes.json();
     
     // Fetch S&P 500 from FRED
-    const spRes = await fetch('https://api.stlouisfed.org/fred/series/observations?series_id=SP500&api_key=abcdefghijklmnopqrstuvwxyz123456&file_type=json&observation_start=2000-01-01');
+    const spRes = await fetch('https://api.stlouisfed.org/fred/series/observations?series_id=SP500&api_key=e9220c32c6bc075476b12cc19ed66696&file_type=json&observation_start=2000-01-01');
     const spData = await spRes.json();
     
     // Process yields
