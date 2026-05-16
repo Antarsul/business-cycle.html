@@ -176,16 +176,18 @@ async function fetchData() {
 function updateMetrics() {
   if (rawData.yields.length === 0 || rawData.sp500.length === 0) return;
   
-  // Current yield
-  const currentYield = rawData.yields[rawData.yields.length - 1].value;
+  // Current yield - get the MOST RECENT value
+  const latestYield = rawData.yields[rawData.yields.length - 1];
+  const currentYield = latestYield.value;
   document.getElementById('current-yield').textContent = currentYield.toFixed(2) + '%';
   
-  // 2-year change
-  const date24MonthsAgo = new Date();
+  // 2-year change - find yield from 24 months ago
+  const currentDate = new Date(latestYield.date);
+  const date24MonthsAgo = new Date(currentDate);
   date24MonthsAgo.setMonth(date24MonthsAgo.getMonth() - 24);
-  const dateStr = date24MonthsAgo.toISOString().split('T')[0];
+  const dateStr24m = date24MonthsAgo.toISOString().split('T')[0];
   
-  const yield24m = rawData.yields.find(y => y.date >= dateStr);
+  const yield24m = rawData.yields.find(y => y.date >= dateStr24m);
   if (yield24m) {
     const change = currentYield - yield24m.value; // In percentage points
     const changeEl = document.getElementById('yield-change');
@@ -193,13 +195,16 @@ function updateMetrics() {
     changeEl.style.color = change >= 0 ? '#E24B4A' : '#1D9E75';
   }
   
-  // S&P Y/Y return
-  const date12MonthsAgo = new Date();
+  // S&P Y/Y return - get most recent S&P value and compare to 12 months ago
+  const latestSp = rawData.sp500[rawData.sp500.length - 1];
+  const spCurrent = latestSp.value;
+  
+  const spDate = new Date(latestSp.date);
+  const date12MonthsAgo = new Date(spDate);
   date12MonthsAgo.setMonth(date12MonthsAgo.getMonth() - 12);
   const dateStr12m = date12MonthsAgo.toISOString().split('T')[0];
   
   const sp12m = rawData.sp500.find(s => s.date >= dateStr12m);
-  const spCurrent = rawData.sp500[rawData.sp500.length - 1].value;
   
   if (sp12m) {
     const returnPct = ((spCurrent - sp12m.value) / sp12m.value) * 100;
@@ -379,8 +384,6 @@ function drawChart(dates, yieldData, spData) {
         y: {
           position: 'left',
           reverse: true, // INVERTED
-          min: -1.5,
-          max: 1.5,
           title: {
             display: true,
             text: '10-Yr Yield 2-Year Change (%, Inverted)',
@@ -391,16 +394,13 @@ function drawChart(dates, yieldData, spData) {
           ticks: {
             font: { size: 10, family: 'DM Sans' },
             color: '#1a3d5f',
-            stepSize: 0.5,
             callback: function(value) {
-              return (value >= 0 ? '+' : '') + value.toFixed(2) + '%';
+              return (value >= 0 ? '+' : '') + value.toFixed(1) + '%';
             }
           }
         },
         y1: {
           position: 'right',
-          min: -10,
-          max: 30,
           title: {
             display: true,
             text: 'S&P 500 Y/Y Return (%)',
@@ -411,7 +411,6 @@ function drawChart(dates, yieldData, spData) {
           ticks: {
             font: { size: 10, family: 'DM Sans' },
             color: '#E24B4A',
-            stepSize: 10,
             callback: function(value) {
               return (value >= 0 ? '+' : '') + value.toFixed(0) + '%';
             }
