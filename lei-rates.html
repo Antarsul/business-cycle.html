@@ -187,7 +187,7 @@ function updateMetrics() {
   
   const yield24m = rawData.yields.find(y => y.date >= dateStr);
   if (yield24m) {
-    const change = currentYield - yield24m.value;
+    const change = currentYield - yield24m.value; // In percentage points
     const changeEl = document.getElementById('yield-change');
     changeEl.textContent = (change >= 0 ? '+' : '') + change.toFixed(2) + '%';
     changeEl.style.color = change >= 0 ? '#E24B4A' : '#1D9E75';
@@ -212,7 +212,7 @@ function updateMetrics() {
 function updateChart() {
   advanceMonths = parseInt(document.getElementById('advance-months').value);
   
-  // Calculate 2-year rolling change in yields (in basis points)
+  // Calculate 2-year rolling change in yields (in percentage points, not bps)
   const yieldChanges = [];
   for (let i = 0; i < rawData.yields.length; i++) {
     const currentDate = new Date(rawData.yields[i].date);
@@ -222,7 +222,7 @@ function updateChart() {
     
     const pastYield = rawData.yields.find(y => y.date >= dateStr);
     if (pastYield) {
-      const change = (rawData.yields[i].value - pastYield.value) * 100; // Convert to basis points
+      const change = rawData.yields[i].value - pastYield.value; // In percentage points (e.g., 4.5% - 3.5% = 1.0%)
       
       // Advance the date forward
       const advancedDate = new Date(currentDate);
@@ -348,7 +348,7 @@ function drawChart(dates, yieldData, spData) {
           callbacks: {
             label: function(context) {
               if (context.datasetIndex === 0) {
-                return '10-Yr Change: ' + (context.parsed.y !== null ? context.parsed.y.toFixed(0) + ' bps' : 'N/A');
+                return '10-Yr Change: ' + (context.parsed.y !== null ? (context.parsed.y >= 0 ? '+' : '') + context.parsed.y.toFixed(2) + '%' : 'N/A');
               } else {
                 return 'S&P 500 Y/Y: ' + (context.parsed.y !== null ? (context.parsed.y >= 0 ? '+' : '') + context.parsed.y.toFixed(2) + '%' : 'N/A');
               }
@@ -379,9 +379,11 @@ function drawChart(dates, yieldData, spData) {
         y: {
           position: 'left',
           reverse: true, // INVERTED
+          min: -1.5,
+          max: 1.5,
           title: {
             display: true,
-            text: '10-Yr Yield 2-Year Change (bps, Inverted)',
+            text: '10-Yr Yield 2-Year Change (%, Inverted)',
             font: { size: 11, family: 'DM Sans', weight: '500' },
             color: '#1a3d5f'
           },
@@ -389,13 +391,16 @@ function drawChart(dates, yieldData, spData) {
           ticks: {
             font: { size: 10, family: 'DM Sans' },
             color: '#1a3d5f',
+            stepSize: 0.5,
             callback: function(value) {
-              return value.toFixed(0);
+              return (value >= 0 ? '+' : '') + value.toFixed(2) + '%';
             }
           }
         },
         y1: {
           position: 'right',
+          min: -10,
+          max: 30,
           title: {
             display: true,
             text: 'S&P 500 Y/Y Return (%)',
@@ -406,6 +411,7 @@ function drawChart(dates, yieldData, spData) {
           ticks: {
             font: { size: 10, family: 'DM Sans' },
             color: '#E24B4A',
+            stepSize: 10,
             callback: function(value) {
               return (value >= 0 ? '+' : '') + value.toFixed(0) + '%';
             }
