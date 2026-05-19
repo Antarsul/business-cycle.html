@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ISM Leading Indicators — Antar Wealth Management</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
+  <style>
+    :root{--linen:#f0ebe0;--linen-dark:#e6dfd2;--green:#1a3d2a;--green-mid:#1f4d35;--green-light:#2a6644;--gold:#b8952a;--gold-light:#d4ae4a;--cream:#faf6ee;--text:#0f2d1e;--text-mid:#3a5a47;--muted:#7a8c80;--border:rgba(184,149,42,0.2);--red:#E24B4A;--teal:#1D9E75;--blue:#185FA5;--amber:#BA7517;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'DM Sans',sans-serif;font-weight:300;background:var(--linen);color:var(--text);min-height:100vh;}
+    nav{background:rgba(240,235,224,0.97);border-bottom:1px solid var(--border);padding:0 3rem;height:68px;display:flex;align-items:center;justify-content:space-between;}
+    .nav-brand{display:flex;align-items:center;gap:12px;text-decoration:none;}
+    .nav-emblem{height:40px;width:40px;object-fit:contain;}
+    .nav-brand-text{display:flex;flex-direction:column;line-height:1.2;}
+    .nav-brand-name{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;letter-spacing:0.1em;color:var(--green);}
+    .nav-brand-sub{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);}
+    .page-header{background:var(--green);padding:3.5rem 3rem;}
+    .page-header-inner{max-width:1400px;margin:0 auto;}
+    .page-eyebrow{font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;}
+    .page-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4vw,48px);font-weight:300;color:var(--linen);margin-bottom:0.75rem;}
+    .page-sub{font-size:14px;color:rgba(240,235,224,0.55);line-height:1.7;max-width:900px;}
+    .tool-body{max-width:1400px;margin:0 auto;padding:2rem 3rem 4rem;}
+    .panel{background:var(--cream);border:1px solid var(--linen-dark);padding:1.75rem;margin-bottom:1.5rem;}
+    .panel-title{font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:var(--green);margin-bottom:1.25rem;padding-bottom:0.75rem;border-bottom:1px solid var(--linen-dark);}
+    .chart-container{position:relative;height:400px;margin-bottom:1.5rem;}
+    .chart-controls{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap;}
+    .chart-btn{padding:6px 14px;font-size:11px;border:1px solid var(--linen-dark);background:var(--linen);color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+    .chart-btn.active{background:var(--green);color:var(--linen);border-color:var(--green);}
+    .chart-btn:hover:not(.active){border-color:var(--green);color:var(--green);}
+    .metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:1.5rem;}
+    .metric{background:var(--linen);padding:1.25rem;border:1px solid var(--linen-dark);position:relative;}
+    .metric.expansion{border-left:3px solid var(--teal);}
+    .metric.contraction{border-left:3px solid var(--red);}
+    .metric-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;}
+    .metric-value{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--text);}
+    .metric-sub{font-size:11px;color:var(--muted);margin-top:4px;}
+    .metric-status{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;font-weight:500;margin-top:6px;}
+    .metric-status.expansion{color:var(--teal);}
+    .metric-status.contraction{color:var(--red);}
+    .info-box{background:rgba(26,61,42,0.03);border-left:3px solid var(--green);padding:1rem 1.25rem;margin-bottom:1.5rem;}
+    .info-box p{font-size:13px;line-height:1.6;color:var(--text-mid);}
+    .info-box strong{color:var(--green);font-weight:500;}
+    .loading{text-align:center;padding:3rem;color:var(--muted);font-size:14px;}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+    footer{background:var(--green);padding:1.5rem 3rem;margin-top:3rem;}
+    .footer-text{font-size:12px;color:rgba(240,235,224,0.3);text-align:center;}
+    @media(max-width:900px){.two-col{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">
+    <img src="emblem.jpg" alt="Emblem" class="nav-emblem">
+    <div class="nav-brand-text">
+      <div class="nav-brand-name">ANTAR</div>
+      <div class="nav-brand-sub">Wealth Management</div>
+    </div>
+  </a>
+</nav>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="page-eyebrow">ECONOMIC INDICATORS</div>
+    <h1 class="page-title">ISM Leading Indicators</h1>
+    <p class="page-sub">Real-time tracking of Institute for Supply Management (ISM) Purchasing Managers' Index data. PMI readings above 50 indicate expansion, below 50 indicate contraction. These leading indicators provide early signals of economic activity in manufacturing and services sectors.</p>
+  </div>
+</div>
+
+<div class="tool-body">
+  
+  <div class="info-box">
+    <p><strong>Reading the Data:</strong> The ISM Manufacturing and Services PMI are diffusion indexes based on monthly surveys. A reading above 50 indicates the sector is generally expanding, below 50 indicates contraction. Component indicators (New Orders, Production, Employment) provide deeper insight into sector momentum and future trends.</p>
+  </div>
+
+  <div class="metrics-grid" id="headline-metrics">
+    <div class="metric">
+      <div class="metric-label">ISM Manufacturing PMI</div>
+      <div class="metric-value" id="mfg-pmi">—</div>
+      <div class="metric-sub" id="mfg-date">Loading...</div>
+      <div class="metric-status" id="mfg-status"></div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">ISM Services PMI</div>
+      <div class="metric-value" id="svc-pmi">—</div>
+      <div class="metric-sub" id="svc-date">Loading...</div>
+      <div class="metric-status" id="svc-status"></div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">New Orders (Mfg)</div>
+      <div class="metric-value" id="new-orders">—</div>
+      <div class="metric-sub" id="orders-date">Latest reading</div>
+      <div class="metric-status" id="orders-status"></div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Employment (Mfg)</div>
+      <div class="metric-value" id="employment">—</div>
+      <div class="metric-sub" id="emp-date">Latest reading</div>
+      <div class="metric-status" id="emp-status"></div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">Manufacturing PMI</div>
+      
+      <div class="chart-controls">
+        <button class="chart-btn active" onclick="setPeriod('mfg', '2y')">2Y</button>
+        <button class="chart-btn" onclick="setPeriod('mfg', '5y')">5Y</button>
+        <button class="chart-btn" onclick="setPeriod('mfg', '10y')">10Y</button>
+        <button class="chart-btn" onclick="setPeriod('mfg', 'all')">All</button>
+      </div>
+
+      <div class="chart-container">
+        <canvas id="mfg-chart"></canvas>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Services PMI</div>
+      
+      <div class="chart-controls">
+        <button class="chart-btn active" onclick="setPeriod('svc', '2y')">2Y</button>
+        <button class="chart-btn" onclick="setPeriod('svc', '5y')">5Y</button>
+        <button class="chart-btn" onclick="setPeriod('svc', '10y')">10Y</button>
+        <button class="chart-btn" onclick="setPeriod('svc', 'all')">All</button>
+      </div>
+
+      <div class="chart-container">
+        <canvas id="svc-chart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Manufacturing Components</div>
+    
+    <div class="chart-controls">
+      <button class="chart-btn active" onclick="setPeriod('comp', '2y')">2Y</button>
+      <button class="chart-btn" onclick="setPeriod('comp', '5y')">5Y</button>
+      <button class="chart-btn" onclick="setPeriod('comp', '10y')">10Y</button>
+      <button class="chart-btn" onclick="setPeriod('comp', 'all')">All</button>
+    </div>
+
+    <div class="chart-container">
+      <canvas id="comp-chart"></canvas>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-text">© 2026 Antar Wealth Management • ISM Leading Indicators</div>
+</footer>
+
+<script>
+let charts = {
+  mfg: null,
+  svc: null,
+  comp: null
+};
+
+let periods = {
+  mfg: '2y',
+  svc: '2y',
+  comp: '2y'
+};
+
+let rawData = {
+  mfgPmi: [],
+  svcPmi: [],
+  newOrders: [],
+  employment: [],
+  production: []
+};
+
+// Fetch all ISM data
+async function fetchData() {
+  const indicators = [
+    { key: 'mfgPmi', series: 'NAPM' },
+    { key: 'svcPmi', series: 'NAPMEI' },
+    { key: 'newOrders', series: 'NAPMNOI' },
+    { key: 'employment', series: 'MANEMP' },
+    { key: 'production', series: 'NAPMPI' }
+  ];
+
+  try {
+    const promises = indicators.map(ind => 
+      fetch(`/api/fred?series_id=${ind.series}&observation_start=2000-01-01&limit=10000`)
+        .then(r => r.json())
+    );
+
+    const results = await Promise.all(promises);
+
+    results.forEach((data, i) => {
+      if (data.observations) {
+        rawData[indicators[i].key] = data.observations
+          .filter(obs => obs.value !== '.')
+          .map(obs => ({
+            date: obs.date,
+            value: parseFloat(obs.value)
+          }));
+      }
+    });
+
+    updateMetrics();
+    drawCharts();
+
+  } catch (e) {
+    console.error('Error fetching ISM data:', e);
+    alert('Error loading data. Please refresh the page.');
+  }
+}
+
+function updateMetrics() {
+  // Manufacturing PMI
+  if (rawData.mfgPmi.length > 0) {
+    const latest = rawData.mfgPmi[rawData.mfgPmi.length - 1];
+    document.getElementById('mfg-pmi').textContent = latest.value.toFixed(1);
+    document.getElementById('mfg-date').textContent = formatDate(latest.date);
+    
+    const mfgMetric = document.querySelector('#headline-metrics .metric:nth-child(1)');
+    const mfgStatus = document.getElementById('mfg-status');
+    if (latest.value > 50) {
+      mfgMetric.classList.add('expansion');
+      mfgStatus.textContent = 'Expansion';
+      mfgStatus.className = 'metric-status expansion';
+    } else {
+      mfgMetric.classList.add('contraction');
+      mfgStatus.textContent = 'Contraction';
+      mfgStatus.className = 'metric-status contraction';
+    }
+  }
+
+  // Services PMI
+  if (rawData.svcPmi.length > 0) {
+    const latest = rawData.svcPmi[rawData.svcPmi.length - 1];
+    document.getElementById('svc-pmi').textContent = latest.value.toFixed(1);
+    document.getElementById('svc-date').textContent = formatDate(latest.date);
+    
+    const svcMetric = document.querySelector('#headline-metrics .metric:nth-child(2)');
+    const svcStatus = document.getElementById('svc-status');
+    if (latest.value > 50) {
+      svcMetric.classList.add('expansion');
+      svcStatus.textContent = 'Expansion';
+      svcStatus.className = 'metric-status expansion';
+    } else {
+      svcMetric.classList.add('contraction');
+      svcStatus.textContent = 'Contraction';
+      svcStatus.className = 'metric-status contraction';
+    }
+  }
+
+  // New Orders
+  if (rawData.newOrders.length > 0) {
+    const latest = rawData.newOrders[rawData.newOrders.length - 1];
+    document.getElementById('new-orders').textContent = latest.value.toFixed(1);
+    
+    const ordersMetric = document.querySelector('#headline-metrics .metric:nth-child(3)');
+    const ordersStatus = document.getElementById('orders-status');
+    if (latest.value > 50) {
+      ordersMetric.classList.add('expansion');
+      ordersStatus.textContent = 'Expanding';
+      ordersStatus.className = 'metric-status expansion';
+    } else {
+      ordersMetric.classList.add('contraction');
+      ordersStatus.textContent = 'Contracting';
+      ordersStatus.className = 'metric-status contraction';
+    }
+  }
+
+  // Employment
+  if (rawData.employment.length > 0) {
+    const latest = rawData.employment[rawData.employment.length - 1];
+    document.getElementById('employment').textContent = latest.value.toFixed(1);
+    
+    const empMetric = document.querySelector('#headline-metrics .metric:nth-child(4)');
+    const empStatus = document.getElementById('emp-status');
+    if (latest.value > 50) {
+      empMetric.classList.add('expansion');
+      empStatus.textContent = 'Growing';
+      empStatus.className = 'metric-status expansion';
+    } else {
+      empMetric.classList.add('contraction');
+      empStatus.textContent = 'Declining';
+      empStatus.className = 'metric-status contraction';
+    }
+  }
+}
+
+function formatDate(dateStr) {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+}
+
+function filterByPeriod(data, period) {
+  if (period === 'all') return data;
+  
+  const years = parseInt(period);
+  const cutoff = new Date();
+  cutoff.setFullYear(cutoff.getFullYear() - years);
+  const cutoffStr = cutoff.toISOString().split('T')[0];
+  
+  return data.filter(d => d.date >= cutoffStr);
+}
+
+function drawCharts() {
+  drawMfgChart();
+  drawSvcChart();
+  drawCompChart();
+}
+
+function drawMfgChart() {
+  const data = filterByPeriod(rawData.mfgPmi, periods.mfg);
+  const dates = data.map(d => d.date);
+  const values = data.map(d => d.value);
+
+  if (charts.mfg) charts.mfg.destroy();
+
+  const ctx = document.getElementById('mfg-chart');
+  charts.mfg = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: dates,
+      datasets: [{
+        label: 'Manufacturing PMI',
+        data: values,
+        borderColor: '#1a3d5f',
+        backgroundColor: 'rgba(26, 61, 95, 0.1)',
+        borderWidth: 2,
+        tension: 0.3,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+        fill: true
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(15, 45, 30, 0.95)',
+          callbacks: {
+            label: (context) => 'PMI: ' + context.parsed.y.toFixed(1)
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { 
+            font: { size: 10 },
+            color: '#7a8c80',
+            maxTicksLimit: 8
+          }
+        },
+        y: {
+          min: 30,
+          max: 70,
+          grid: { color: 'rgba(230, 223, 210, 0.5)' },
+          ticks: { 
+            font: { size: 10 },
+            color: '#3a5a47'
+          }
+        }
+      },
+      annotation: {
+        annotations: [{
+          type: 'line',
+          yMin: 50,
+          yMax: 50,
+          borderColor: '#E24B4A',
+          borderWidth: 2,
+          borderDash: [5, 5],
+          label: {
+            content: 'Expansion/Contraction Line',
+            enabled: true
+          }
+        }]
+      }
+    },
+    plugins: [{
+      id: 'expansionLine',
+      beforeDraw: (chart) => {
+        const ctx = chart.ctx;
+        const yAxis = chart.scales.y;
+        const y50 = yAxis.getPixelForValue(50);
+        
+        ctx.save();
+        ctx.strokeStyle = '#E24B4A';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath();
+        ctx.moveTo(chart.chartArea.left, y50);
+        ctx.lineTo(chart.chartArea.right, y50);
+        ctx.stroke();
+        ctx.restore();
+      }
+    }]
+  });
+}
+
+function drawSvcChart() {
+  const data = filterByPeriod(rawData.svcPmi, periods.svc);
+  const dates = data.map(d => d.date);
+  const values = data.map(d => d.value);
+
+  if (charts.svc) charts.svc.destroy();
+
+  const ctx = document.getElementById('svc-chart');
+  charts.svc = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: dates,
+      datasets: [{
+        label: 'Services PMI',
+        data: values,
+        borderColor: '#1D9E75',
+        backgroundColor: 'rgba(29, 158, 117, 0.1)',
+        borderWidth: 2,
+        tension: 0.3,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+        fill: true
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(15, 45, 30, 0.95)',
+          callbacks: {
+            label: (context) => 'PMI: ' + context.parsed.y.toFixed(1)
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { 
+            font: { size: 10 },
+            color: '#7a8c80',
+            maxTicksLimit: 8
+          }
+        },
+        y: {
+          min: 30,
+          max: 70,
+          grid: { color: 'rgba(230, 223, 210, 0.5)' },
+          ticks: { 
+            font: { size: 10 },
+            color: '#3a5a47'
+          }
+        }
+      }
+    },
+    plugins: [{
+      id: 'expansionLine',
+      beforeDraw: (chart) => {
+        const ctx = chart.ctx;
+        const yAxis = chart.scales.y;
+        const y50 = yAxis.getPixelForValue(50);
+        
+        ctx.save();
+        ctx.strokeStyle = '#E24B4A';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath();
+        ctx.moveTo(chart.chartArea.left, y50);
+        ctx.lineTo(chart.chartArea.right, y50);
+        ctx.stroke();
+        ctx.restore();
+      }
+    }]
+  });
+}
+
+function drawCompChart() {
+  const newOrders = filterByPeriod(rawData.newOrders, periods.comp);
+  const employment = filterByPeriod(rawData.employment, periods.comp);
+  const production = filterByPeriod(rawData.production, periods.comp);
+
+  // Get common dates
+  const dates = newOrders.map(d => d.date);
+
+  if (charts.comp) charts.comp.destroy();
+
+  const ctx = document.getElementById('comp-chart');
+  charts.comp = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: dates,
+      datasets: [
+        {
+          label: 'New Orders',
+          data: newOrders.map(d => d.value),
+          borderColor: '#185FA5',
+          backgroundColor: 'transparent',
+          borderWidth: 2,
+          tension: 0.3,
+          pointRadius: 0,
+          pointHoverRadius: 4
+        },
+        {
+          label: 'Employment',
+          data: employment.map(d => d.value),
+          borderColor: '#BA7517',
+          backgroundColor: 'transparent',
+          borderWidth: 2,
+          tension: 0.3,
+          pointRadius: 0,
+          pointHoverRadius: 4
+        },
+        {
+          label: 'Production',
+          data: production.map(d => d.value),
+          borderColor: '#1D9E75',
+          backgroundColor: 'transparent',
+          borderWidth: 2,
+          tension: 0.3,
+          pointRadius: 0,
+          pointHoverRadius: 4
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { 
+          display: true,
+          position: 'top',
+          labels: {
+            usePointStyle: true,
+            padding: 15,
+            font: { size: 11 }
+          }
+        },
+        tooltip: {
+          backgroundColor: 'rgba(15, 45, 30, 0.95)',
+          callbacks: {
+            label: (context) => context.dataset.label + ': ' + context.parsed.y.toFixed(1)
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { 
+            font: { size: 10 },
+            color: '#7a8c80',
+            maxTicksLimit: 10
+          }
+        },
+        y: {
+          min: 30,
+          max: 70,
+          grid: { color: 'rgba(230, 223, 210, 0.5)' },
+          ticks: { 
+            font: { size: 10 },
+            color: '#3a5a47'
+          }
+        }
+      }
+    },
+    plugins: [{
+      id: 'expansionLine',
+      beforeDraw: (chart) => {
+        const ctx = chart.ctx;
+        const yAxis = chart.scales.y;
+        const y50 = yAxis.getPixelForValue(50);
+        
+        ctx.save();
+        ctx.strokeStyle = '#E24B4A';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath();
+        ctx.moveTo(chart.chartArea.left, y50);
+        ctx.lineTo(chart.chartArea.right, y50);
+        ctx.stroke();
+        ctx.restore();
+      }
+    }]
+  });
+}
+
+function setPeriod(chartType, period) {
+  periods[chartType] = period;
+  
+  // Update button states
+  const container = chartType === 'mfg' ? 0 : chartType === 'svc' ? 1 : 2;
+  const controls = document.querySelectorAll('.chart-controls')[container];
+  controls.querySelectorAll('.chart-btn').forEach(btn => {
+    if (btn.textContent.toLowerCase().includes(period.replace('y', 'y').replace('all', 'all'))) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+  
+  // Redraw chart
+  if (chartType === 'mfg') drawMfgChart();
+  else if (chartType === 'svc') drawSvcChart();
+  else drawCompChart();
+}
+
+// Initialize
+fetchData();
+</script>
+
+</body>
+</html>
